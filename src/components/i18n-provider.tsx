@@ -5,6 +5,32 @@ import { useMemo } from "react";
 
 type Messages = Record<string, Record<string, string>>;
 
+export function I18nProvider({
+  children,
+  initialLocale = "zh",
+}: {
+  children: React.ReactNode;
+  initialLocale?: string;
+}) {
+  const locale = useMemo(() => {
+    if (typeof document === "undefined") return initialLocale;
+    const cookie = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("NEXT_LOCALE="))
+      ?.split("=")[1];
+    if (cookie === "en" || cookie === "zh") return cookie;
+    return initialLocale;
+  }, [initialLocale]);
+
+  const messages = locale === "en" ? en : zh;
+
+  return (
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      {children}
+    </NextIntlClientProvider>
+  );
+}
+
 const zh: Messages = {
   common: {
     home: "首页",
@@ -23,6 +49,7 @@ const zh: Messages = {
     bio: "记录编程语言、AI、Agent 工具的学习与使用心得。",
     recent: "· · · 最近文章",
     noArticles: "还没有发布文章。",
+    viewAll: "查看全部 →",
     github: "GitHub",
     articles: "文章",
   },
@@ -108,6 +135,7 @@ const en: Messages = {
     bio: "Writing about programming languages, AI, and agent tools.",
     recent: "· · · Recent",
     noArticles: "No articles published yet.",
+    viewAll: "View all →",
     github: "GitHub",
     articles: "Articles",
   },
@@ -174,27 +202,3 @@ const en: Messages = {
     label: "Language",
   },
 };
-
-const messagesMap: Record<string, Messages> = { zh, en };
-
-export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const locale = useMemo(() => {
-    // Read from cookie or navigator
-    if (typeof document === "undefined") return "zh";
-    const cookie = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("NEXT_LOCALE="))
-      ?.split("=")[1];
-    if (cookie === "en" || cookie === "zh") return cookie;
-    const nav = navigator.language?.startsWith("zh") ? "zh" : "en";
-    return nav;
-  }, []);
-
-  const messages = messagesMap[locale] ?? zh;
-
-  return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      {children}
-    </NextIntlClientProvider>
-  );
-}

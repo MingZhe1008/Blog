@@ -14,7 +14,7 @@ export function AdminPageView({ articles }: { articles: Article[] }) {
         <h1 className="font-display text-2xl font-black">{t("articles")}</h1>
         <Link
           href="/admin/editor"
-          className="font-ui text-sm px-4 py-2 bg-accent text-white rounded-md hover:bg-accent-hover transition-colors"
+          className="font-ui text-sm px-4 py-2 bg-accent text-bg-base font-semibold rounded-md hover:bg-accent-hover transition-colors"
         >
           + {t("newPost")}
         </Link>

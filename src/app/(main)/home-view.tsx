@@ -10,7 +10,8 @@ export function HomeView({ articles }: { articles: Article[] }) {
 
   return (
     <main className="min-h-screen">
-      <section className="max-w-2xl mx-auto px-6 pt-32 pb-16 text-center">
+      {/* Hero */}
+      <section className="max-w-xl mx-auto px-6 pt-32 pb-20 text-center">
         <p className="font-ui text-text-muted text-sm mb-6 tracking-widest uppercase">
           {t("greeting")}
         </p>
@@ -36,8 +37,9 @@ export function HomeView({ articles }: { articles: Article[] }) {
         </div>
       </section>
 
-      <section className="max-w-2xl mx-auto px-6 pb-24">
-        <div className="flex items-center justify-between mb-8">
+      {/* Articles grid */}
+      <section className="max-w-5xl mx-auto px-6 pb-24">
+        <div className="flex items-center justify-between mb-10">
           <h2 className="font-display text-lg font-bold text-text-muted">
             {t("recent")}
           </h2>
@@ -45,16 +47,20 @@ export function HomeView({ articles }: { articles: Article[] }) {
             href="/blog"
             className="font-ui text-xs text-text-muted hover:text-accent transition-colors"
           >
-            {t("viewAll", { defaultValue: "View all →" })}
+            {t("viewAll")}
           </Link>
         </div>
 
         {articles.length === 0 ? (
-          <p className="font-ui text-text-muted text-sm text-center py-12">
+          <p className="font-ui text-text-muted text-sm text-center py-20">
             {t("noArticles")}
           </p>
         ) : (
-          articles.map((a) => <ArticleCard key={a.id} article={a} />)
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {articles.map((a) => (
+              <ArticleCard key={a.id} article={a} variant="grid" />
+            ))}
+          </div>
         )}
       </section>
 

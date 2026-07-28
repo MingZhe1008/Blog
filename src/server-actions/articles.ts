@@ -10,8 +10,6 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-export type { Article } from "@/lib/data";
-
 export async function createArticle(data: {
   title: string; slug: string; content: string;
   excerpt?: string; coverImage?: string; tags?: string[];

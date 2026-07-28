@@ -3,7 +3,8 @@
 import { useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { createArticle, updateArticle, type Article } from "@/server-actions/articles";
+import { createArticle, updateArticle } from "@/server-actions/articles";
+import type { Article } from "@/lib/data";
 
 interface Props {
   article?: Article;
