@@ -2,7 +2,6 @@
 
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { MDXContent } from "@/components/mdx-renderer";
 import { GiscusComments } from "@/components/giscus";
 import { TableOfContents } from "@/components/toc";
 import type { Article } from "@/lib/data";
@@ -11,17 +10,18 @@ export function PostView({
   article,
   prev,
   next,
+  children,
 }: {
   article: Article;
   prev: { slug: string; title: string } | null;
   next: { slug: string; title: string } | null;
+  children: React.ReactNode;
 }) {
   const t = useTranslations("post");
 
   return (
     <main className="min-h-screen">
       <div className="max-w-5xl mx-auto px-6 pt-8 pb-24">
-        {/* Back link */}
         <Link
           href="/blog"
           className="inline-block font-ui text-xs text-text-muted hover:text-accent transition-colors mb-12"
@@ -30,11 +30,10 @@ export function PostView({
         </Link>
 
         <div className="flex gap-10 lg:gap-16">
-          {/* Main content */}
           <article className="flex-1 min-w-0 max-w-[640px]">
             <header className="mb-12">
               <p className="font-ui text-xs text-text-muted tracking-wide uppercase mb-3">
-                {new Date(article.createdAt).toLocaleDateString("en-US", {
+                {new Date(article.createdAt).toLocaleDateString("zh-CN", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
@@ -50,17 +49,18 @@ export function PostView({
                     href={`/blog?tag=${encodeURIComponent(tag)}`}
                     className="font-ui text-xs text-accent bg-accent/10 px-2.5 py-0.5 rounded-full hover:bg-accent/20 transition-colors"
                   >
-                    #{tag}
+                    {tag}
                   </a>
                 ))}
                 <span className="font-ui text-xs text-text-muted ml-auto">
                   ~{Math.ceil((article.content.length || 0) / 1500)}{" "}
-                  {t("minRead", { defaultValue: "min read" })}
+                  {t("minRead")}
                 </span>
               </div>
             </header>
 
-            <MDXContent source={article.content} />
+            {/* Server-rendered MDX content */}
+            {children}
 
             <hr className="my-16" />
 
@@ -99,7 +99,6 @@ export function PostView({
             </section>
           </article>
 
-          {/* Sidebar — TOC */}
           <aside className="hidden lg:block w-56 shrink-0">
             <TableOfContents content={article.content} />
           </aside>

@@ -1,6 +1,7 @@
 import { getArticleBySlug, getAdjacentArticles } from "@/lib/data";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { MDXContent } from "@/components/mdx-renderer";
 import { PostView } from "./post-view";
 
 export const dynamic = "force-dynamic";
@@ -34,5 +35,9 @@ export default async function BlogPostPage({ params }: Props) {
 
   const { prev, next } = await getAdjacentArticles(slug);
 
-  return <PostView article={article} prev={prev} next={next} />;
+  return (
+    <PostView article={article} prev={prev} next={next}>
+      <MDXContent source={article.content} />
+    </PostView>
+  );
 }

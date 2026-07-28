@@ -34,8 +34,8 @@ const dmsans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Blog — Thoughts on Code & Learning",
-    template: "%s — Blog",
+    default: "MingZhe",
+    template: "%s — MingZhe",
   },
   description: "Personal blog about programming languages, AI, and agent tools.",
 };
@@ -49,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="min-h-screen bg-bg-base text-text-primary font-body antialiased">
         <I18nProvider>
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             {children}
           </ThemeProvider>
         </I18nProvider>

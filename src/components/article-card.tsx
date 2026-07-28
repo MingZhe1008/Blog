@@ -20,7 +20,7 @@ export function ArticleCard({
     >
       <Link href={`/blog/${article.slug}`} className="block">
         <p className="font-ui text-xs text-text-muted mb-1.5 tracking-wide uppercase">
-          {new Date(article.createdAt).toLocaleDateString("en-US", {
+          {new Date(article.createdAt).toLocaleDateString("zh-CN", {
             year: "numeric",
             month: "long",
             day: "numeric",
@@ -48,7 +48,7 @@ export function ArticleCard({
               key={t}
               className="font-ui text-xs text-text-muted bg-bg-muted px-2 py-0.5 rounded-full"
             >
-              #{t}
+              {t}
             </span>
           ))}
           <span className="font-ui text-xs text-text-muted ml-auto">

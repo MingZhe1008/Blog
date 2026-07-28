@@ -31,22 +31,38 @@
   --radius-full: 9999px;
 }
 
-/* Light mode overrides */
+/* Light mode — clean cool white */
 .light {
-  --color-bg-base: #faf7f2;
-  --color-bg-surface: #f3efe8;
-  --color-bg-elevated: #ede7dd;
-  --color-bg-muted: #e8e2d7;
+  --color-bg-base: #ffffff;
+  --color-bg-surface: #f6f8fa;
+  --color-bg-elevated: #eef0f2;
+  --color-bg-muted: #f0f0f0;
 
-  --color-text-primary: #2d2218;
-  --color-text-secondary: #6b5d4f;
-  --color-text-muted: #9b8d7f;
+  --color-text-primary: #0d1117;
+  --color-text-secondary: #57606a;
+  --color-text-muted: #8b949e;
 
-  --color-accent: #b87333;
-  --color-accent-hover: #965a26;
+  --color-accent: #0969da;
+  --color-accent-hover: #0550ae;
 
-  --color-border: #e0d8cc;
-  --color-border-hover: #c4b8a4;
+  --color-border: #d0d7de;
+  --color-border-hover: #afb8c1;
+}
+
+/* ===== Animations ===== */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: fade-up 0.5s ease-out both;
 }
 
 /* ===== Base Styles ===== */
@@ -105,14 +121,14 @@ blockquote::before {
   line-height: 1;
 }
 
-/* Links */
-a {
+/* Links — only inside article content */
+.prose a {
   color: var(--color-accent);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
   transition: color 0.2s ease;
 }
-a:hover {
+.prose a:hover {
   color: var(--color-accent-hover);
 }
 
