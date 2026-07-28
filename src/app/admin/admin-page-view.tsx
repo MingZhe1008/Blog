@@ -40,10 +40,10 @@ export function AdminPageView({ articles }: { articles: Article[] }) {
                   <td className="py-3 pr-4 font-medium">{a.title}</td>
                   <td className="py-3 pr-4">
                     <span
-                      className={`inline-block px-2 py-0.5 rounded-full text-xs font-ui ${
+                      className={`inline-block px-2.5 py-0.5 rounded text-xs font-ui border ${
                         a.status === "published"
-                          ? "bg-green-900/30 text-green-400"
-                          : "bg-amber-900/30 text-amber-400"
+                          ? "bg-bg-muted text-text-secondary border-border"
+                          : "text-text-muted border-border/50"
                       }`}
                     >
                       {a.status === "published" ? t("published") : t("draft")}
