@@ -1,11 +1,6 @@
-import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
-import { routing } from "@/i18n/routing";
-
-const intlMiddleware = createMiddleware(routing);
 
 export function middleware(request: NextRequest) {
-  // Admin routes — Basic Auth check
   if (request.nextUrl.pathname.startsWith("/admin")) {
     const authHeader = request.headers.get("authorization");
 
@@ -30,10 +25,9 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // i18n middleware for all routes
-  return intlMiddleware(request);
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!_next|api|favicon.ico|.*\\.).*)"],
+  matcher: ["/admin/:path*"],
 };

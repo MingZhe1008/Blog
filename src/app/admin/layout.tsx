@@ -1,8 +1,10 @@
-import { getTranslations } from "next-intl/server";
+"use client";
+
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const t = await getTranslations("admin");
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const t = useTranslations("admin");
 
   return (
     <div className="min-h-screen flex">
@@ -27,7 +29,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </Link>
         </div>
       </aside>
-
       <main className="flex-1 p-8 overflow-auto">{children}</main>
     </div>
   );

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 import { Playfair_Display, Crimson_Pro, JetBrains_Mono, DM_Sans } from "next/font/google";
+import { I18nProvider } from "@/components/i18n-provider";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -41,22 +40,19 @@ export const metadata: Metadata = {
   description: "Personal blog about programming languages, AI, and agent tools.",
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const locale = await getLocale();
-  const messages = await getMessages();
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
-      lang={locale}
+      lang="zh"
       suppressHydrationWarning
       className={`${playfair.variable} ${crimson.variable} ${jetbrains.variable} ${dmsans.variable}`}
     >
       <body className="min-h-screen bg-bg-base text-text-primary font-body antialiased">
-        <NextIntlClientProvider messages={messages}>
+        <I18nProvider>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             {children}
           </ThemeProvider>
-        </NextIntlClientProvider>
+        </I18nProvider>
       </body>
     </html>
   );
