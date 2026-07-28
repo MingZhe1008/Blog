@@ -22,7 +22,7 @@ export function BlogListView({
 
   return (
     <main className="min-h-screen">
-      <div className="max-w-2xl mx-auto px-6 pt-24 pb-24">
+      <div className="max-w-5xl mx-auto px-6 pt-24 pb-24">
         <h1 className="font-display text-3xl font-black mb-8">{t("title")}</h1>
 
         <TagFilter tags={tags} activeTag={activeTag} allLabel={t("all")} />
