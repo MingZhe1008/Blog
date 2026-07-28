@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+/* ===== Warm Terminal — Design Tokens ===== */
+@theme {
+  /* Fonts */
+  --font-display: "Playfair Display", serif;
+  --font-body: "Crimson Pro", serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-ui: "DM Sans", sans-serif;
+
+  /* Dark mode (default) */
+  --color-bg-base: #1b1814;
+  --color-bg-surface: #231f1a;
+  --color-bg-elevated: #2a2520;
+  --color-bg-muted: #171411;
+
+  --color-text-primary: #f0e6d9;
+  --color-text-secondary: #a39788;
+  --color-text-muted: #6b6258;
+
+  --color-accent: #d4913e;
+  --color-accent-hover: #e5a84f;
+
+  --color-border: #2e2923;
+  --color-border-hover: #4a4138;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+}
+
+/* Light mode overrides */
+.light {
+  --color-bg-base: #faf7f2;
+  --color-bg-surface: #f3efe8;
+  --color-bg-elevated: #ede7dd;
+  --color-bg-muted: #e8e2d7;
+
+  --color-text-primary: #2d2218;
+  --color-text-secondary: #6b5d4f;
+  --color-text-muted: #9b8d7f;
+
+  --color-accent: #b87333;
+  --color-accent-hover: #965a26;
+
+  --color-border: #e0d8cc;
+  --color-border-hover: #c4b8a4;
+}
+
+/* ===== Base Styles ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  line-height: 1.8;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Typography ===== */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+h1 { font-size: 2.5rem; font-weight: 900; }
+h2 { font-size: 1.75rem; font-weight: 700; margin-top: 2.5rem; }
+h3 { font-size: 1.25rem; font-weight: 600; font-family: var(--font-ui); }
+
+/* Inline code */
+:not(pre) > code {
+  background-color: var(--color-bg-muted);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm);
+}
+
+/* Blockquotes — 「 prefix style */
+blockquote {
+  position: relative;
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  border-left: none;
+}
+blockquote::before {
+  content: "「";
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+  font-size: 1.5rem;
+  font-style: normal;
+  line-height: 1;
+}
+
+/* Links */
+a {
+  color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+a:hover {
+  color: var(--color-accent-hover);
+}
+
+/* Horizontal rule — decorative dots */
+hr {
+  border: none;
+  text-align: center;
+  margin: 2.5rem 0;
+}
+hr::after {
+  content: "· · ·";
+  color: var(--color-text-muted);
+  font-size: 1.5rem;
+  letter-spacing: 0.5em;
+}
+
+/* ===== Prose container ===== */
+.prose {
+  max-width: 65ch;
+  margin: 0 auto;
+}
+.prose p {
+  margin-bottom: 1.25rem;
+}
+.prose img {
+  border-radius: var(--radius-lg);
+  margin: 2rem auto;
+}
+.prose ul, .prose ol {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+.prose li::marker {
+  color: var(--color-accent);
+}
+
+/* ===== Code blocks (pre) ===== */
+pre {
+  background-color: #1a1a2e !important; /* always dark */
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.65;
+  margin: 1.5rem 0;
+}
+pre code {
+  background: transparent !important;
+  color: inherit !important;
+  padding: 0 !important;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-base);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-hover);
+  border-radius: 3px;
+}
+
+/* ===== Selection ===== */
+::selection {
+  background-color: rgba(212, 145, 62, 0.3);
+  color: var(--color-text-primary);
+}
