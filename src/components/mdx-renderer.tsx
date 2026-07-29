@@ -1,5 +1,3 @@
-"use client";
-
 import { MDXRemote, type MDXRemoteProps } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";

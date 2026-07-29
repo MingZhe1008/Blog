@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { createArticle, updateArticle } from "@/server-actions/articles";
+import { ImageUploadButton } from "@/components/image-upload-button";
+import { uploadImageFile } from "@/server-actions/upload";
+import { renderMarkdown } from "@/server-actions/preview";
 import type { Article } from "@/lib/data";
 
 interface Props {
@@ -23,6 +26,10 @@ export function ArticleEditor({ article }: Props) {
   const [excerpt, setExcerpt] = useState(article?.excerpt ?? "");
   const [coverImage, setCoverImage] = useState(article?.coverImage ?? "");
   const [saving, setSaving] = useState(false);
+  const [preview, setPreview] = useState(false);
+  const [previewHtml, setPreviewHtml] = useState("");
+  const [coverDragOver, setCoverDragOver] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   function autoSlug(title: string) {
     return title
@@ -31,6 +38,100 @@ export function ArticleEditor({ article }: Props) {
       .replace(/[^a-z0-9-]/g, "")
       .replace(/-+/g, "-")
       .replace(/^-|-$/g, "") || "untitled";
+  }
+
+  function insertImageAtCursor(url: string) {
+    const ta = textareaRef.current;
+    if (!ta) return;
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const before = content.slice(0, start);
+    const after = content.slice(end);
+    const md = `![image](${url})`;
+    const newContent = before + md + after;
+    setContent(newContent);
+    // 在 React 重渲染后恢复光标到插入文本的末尾
+    requestAnimationFrame(() => {
+      ta.selectionStart = ta.selectionEnd = start + md.length;
+      ta.focus();
+    });
+  }
+
+  async function handlePaste(e: React.ClipboardEvent<HTMLTextAreaElement>) {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    // 查找剪切板中的图片数据
+    for (const item of Array.from(items)) {
+      if (item.type.startsWith("image/")) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        if (!file) continue;
+
+        const formData = new FormData();
+        formData.append("file", file);
+        const result = await uploadImageFile(formData);
+
+        if ("url" in result) {
+          insertImageAtCursor(result.url);
+        }
+        return;
+      }
+    }
+  }
+
+  async function togglePreview() {
+    if (!preview) {
+      const html = await renderMarkdown(content);
+      setPreviewHtml(html);
+    }
+    setPreview(!preview);
+  }
+
+  async function uploadCoverFromClipboardOrFile(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+    const result = await uploadImageFile(formData);
+    if ("url" in result) {
+      setCoverImage(result.url);
+    }
+  }
+
+  async function handleCoverPaste(e: React.ClipboardEvent<HTMLInputElement>) {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of Array.from(items)) {
+      if (item.type.startsWith("image/")) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        if (file) await uploadCoverFromClipboardOrFile(file);
+        return;
+      }
+    }
+  }
+
+  function handleCoverDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      setCoverDragOver(true);
+    }
+  }
+
+  function handleCoverDragLeave(e: React.DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setCoverDragOver(false);
+  }
+
+  async function handleCoverDrop(e: React.DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setCoverDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith("image/")) {
+      await uploadCoverFromClipboardOrFile(file);
+    }
   }
 
   function handleTitleChange(val: string) {
@@ -157,14 +258,48 @@ export function ArticleEditor({ article }: Props) {
           <label className="block font-ui text-text-secondary text-xs mb-1 uppercase tracking-wider">
             {t("label_coverImage")}
           </label>
-          <input
-            type="text"
-            value={coverImage}
-            onChange={(e) => setCoverImage(e.target.value)}
-            className="w-full bg-bg-surface border border-border rounded-md px-3 py-1.5 font-mono text-sm
-                       focus:outline-none focus:border-accent transition-colors"
-            placeholder={t("placeholder_coverImage")}
-          />
+          <div className="flex gap-2 mb-2">
+            <input
+              type="text"
+              value={coverImage}
+              onChange={(e) => setCoverImage(e.target.value)}
+              onPaste={handleCoverPaste}
+              className="flex-1 bg-bg-surface border border-border rounded-md px-3 py-1.5 font-mono text-sm
+                         focus:outline-none focus:border-accent transition-colors"
+              placeholder={t("placeholder_coverImage")}
+            />
+            <ImageUploadButton onUploaded={(url) => setCoverImage(url)} />
+          </div>
+          <div
+            onDragOver={handleCoverDragOver}
+            onDragLeave={handleCoverDragLeave}
+            onDrop={handleCoverDrop}
+            className={`relative rounded-md border-2 border-dashed transition-all min-h-[2rem]
+              ${coverDragOver
+                ? "border-accent bg-accent/5"
+                : coverImage
+                  ? "border-transparent"
+                  : "border-border bg-bg-surface/50"
+              }`}
+          >
+            {coverImage ? (
+              <img
+                src={coverImage}
+                alt="封面预览"
+                className="h-32 w-full rounded-md object-cover bg-bg-surface"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+              />
+            ) : (
+              <div className="flex items-center justify-center h-24 text-text-muted font-ui text-xs">
+                {coverDragOver ? "释放以上传封面图" : "拖拽图片到此处，或点击上方按钮上传"}
+              </div>
+            )}
+            {coverDragOver && (
+              <div className="absolute inset-0 rounded-md bg-accent/10 flex items-center justify-center">
+                <span className="font-ui text-xs text-accent font-medium">释放以上传封面图</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -183,17 +318,53 @@ export function ArticleEditor({ article }: Props) {
       </div>
 
       <div className="mb-6">
-        <label className="block font-ui text-text-secondary text-xs mb-1 uppercase tracking-wider">
-          {t("label_content")}
-        </label>
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          rows={24}
-          className="w-full bg-bg-surface border border-border rounded-md px-4 py-3 font-mono text-sm leading-relaxed
-                     focus:outline-none focus:border-accent transition-colors resize-y"
-          placeholder={t("placeholder_content")}
-        />
+        <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center gap-2">
+            <label className="block font-ui text-text-secondary text-xs uppercase tracking-wider">
+              {t("label_content")}
+            </label>
+            <button
+              type="button"
+              onClick={togglePreview}
+              className={`font-ui text-[11px] px-2 py-0.5 rounded border transition-colors
+                ${preview
+                  ? "bg-accent/20 text-accent border-accent/30"
+                  : "bg-bg-elevated text-text-muted border-border hover:border-accent"
+                }`}
+            >
+              {preview ? t("editMode") : t("previewMode")}
+            </button>
+          </div>
+          {!preview && <ImageUploadButton onUploaded={insertImageAtCursor} />}
+        </div>
+        {preview ? (
+          <div
+            className="w-full min-h-[400px] bg-bg-surface border border-border rounded-md px-6 py-4
+                       prose prose-sm max-w-none text-text-primary
+                       prose-headings:font-display prose-headings:text-text-primary
+                       prose-p:text-text-secondary prose-p:font-body prose-p:leading-relaxed
+                       prose-a:text-accent prose-a:no-underline hover:prose-a:underline
+                       prose-strong:text-text-primary prose-code:font-mono prose-code:text-sm
+                       prose-pre:bg-bg-elevated prose-pre:border prose-pre:border-border prose-pre:rounded-lg
+                       prose-img:rounded-md prose-img:max-w-full
+                       prose-li:text-text-secondary prose-li:font-body
+                       prose-blockquote:border-l-accent prose-blockquote:text-text-muted
+                       [&_pre_code]:bg-transparent [&_pre]:bg-[#22272e] [&_pre]:p-4 [&_pre]:rounded-lg
+                       [&_pre_code]:text-[#adbac7] [&_.line]:text-[#adbac7]"
+            dangerouslySetInnerHTML={{ __html: previewHtml }}
+          />
+        ) : (
+          <textarea
+            ref={textareaRef}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            onPaste={handlePaste}
+            rows={24}
+            className="w-full bg-bg-surface border border-border rounded-md px-4 py-3 font-mono text-sm leading-relaxed
+                       focus:outline-none focus:border-accent transition-colors resize-y"
+            placeholder={t("placeholder_content")}
+          />
+        )}
       </div>
 
       <div className="flex items-center gap-3 pt-4 border-t border-border">

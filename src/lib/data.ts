@@ -1,5 +1,6 @@
 import { getDb, saveDb, schema } from "@/lib/db";
 import { eq, desc } from "drizzle-orm";
+import crypto from "crypto";
 
 export type Article = typeof schema.articles.$inferSelect;
 
@@ -87,9 +88,22 @@ export async function insertArticle(data: {
 }) {
   const db = await getDb();
   const now = new Date().toISOString();
+
+  // 检查 slug 是否已存在，重复则追加随机后缀
+  let slug = data.slug;
+  const existing = db
+    .select({ slug: schema.articles.slug })
+    .from(schema.articles)
+    .where(eq(schema.articles.slug, slug))
+    .all();
+  if (existing.length > 0) {
+    const suffix = crypto.randomBytes(3).toString("hex");
+    slug = `${slug}-${suffix}`;
+  }
+
   db.insert(schema.articles).values({
     title: data.title,
-    slug: data.slug,
+    slug,
     content: data.content,
     excerpt: data.excerpt ?? "",
     coverImage: data.coverImage ?? "",

@@ -14,16 +14,16 @@ export function GiscusComments() {
   return (
     <Giscus
       repo="MingZhe1008/Blog"
-      repoId="R_kgxxxxx"
+      repoId="R_kgDOTlgJYQ"
       category="Announcements"
-      categoryId="DIC_kwxxxxx"
+      categoryId="DIC_kwDOTlgJYc4DCM1N"
       mapping="pathname"
       strict="0"
       reactionsEnabled="1"
       emitMetadata="0"
-      inputPosition="top"
+      inputPosition="bottom"
       theme={resolvedTheme === "dark" ? "dark" : "light"}
-      lang="en"
+      lang="zh-CN"
       loading="lazy"
     />
   );
