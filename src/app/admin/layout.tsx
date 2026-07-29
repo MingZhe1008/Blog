@@ -19,6 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <SidebarLink href="/admin">{t("articles")}</SidebarLink>
           <SidebarLink href="/admin/editor">{t("newPost")}</SidebarLink>
           <SidebarLink href="/admin/import">{t("importMD")}</SidebarLink>
+          <SidebarLink href="/admin/images">{t("images")}</SidebarLink>
         </nav>
         <div className="mt-auto pt-4 border-t border-border">
           <Link
