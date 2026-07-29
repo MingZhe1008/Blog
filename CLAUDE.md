@@ -3,6 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 > **Git 操作**: 涉及提交、分支、推送等 Git 操作时，先查阅 `docs/GIT.md`。Commit message 统一使用中文。
+> **自动提交**: 每完成一个功能点或维护任务后，自动 `git add -A` + `git commit` + `git push`，无需等待用户指令。提交信息概括本次改动内容。
 
 ## Commands
 
