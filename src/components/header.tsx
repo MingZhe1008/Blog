@@ -1,50 +1,60 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./theme-toggle";
 import { LocaleSwitcher } from "./locale-switcher";
 
 export function Header() {
   const t = useTranslations("common");
+  const pathname = usePathname();
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === href : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-50 bg-bg-base/80 backdrop-blur-sm border-b border-border">
-      <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-        {/* Left: logo + nav */}
-        <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2.5">
-            <Image
-              src="/images/logo.jpg"
-              alt="Logo"
-              width={28}
-              height={28}
-              className="rounded-md"
-            />
-            <span className="font-ui text-text-primary text-lg font-bold tracking-tight">
-              MingZhe
-            </span>
+    <header className="site-header">
+      <div className="site-header__inner">
+        <nav className="celestial-nav" aria-label={t("navLabel")}>
+          <Link
+            href="/"
+            className="celestial-nav__brand"
+            aria-label={t("home")}
+            aria-current={isActive("/") ? "page" : undefined}
+          >
+            <span className="nav-orb nav-orb--sun" aria-hidden="true" />
+            <span className="celestial-nav__brand-name">MingZhe</span>
           </Link>
 
-          <nav className="flex items-center gap-5">
-            <Link
-              href="/blog"
-              className="font-ui text-sm font-semibold text-text-secondary hover:text-text-primary transition-colors"
-            >
-              {t("articles")}
-            </Link>
-            <Link
-              href="/about"
-              className="font-ui text-sm font-semibold text-text-secondary hover:text-text-primary transition-colors"
-            >
-              {t("about")}
-            </Link>
-          </nav>
-        </div>
+          <span className="celestial-nav__orbit" aria-hidden="true" />
 
-        {/* Right: tools */}
-        <div className="flex items-center gap-4">
+          <Link
+            href="/blog"
+            className="celestial-nav__destination"
+            aria-label={t("articles")}
+            aria-current={isActive("/blog") ? "page" : undefined}
+          >
+            <span className="nav-orb nav-orb--cluster" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+            <span>{t("articles")}</span>
+          </Link>
+
+          <Link
+            href="/about"
+            className="celestial-nav__destination"
+            aria-label={t("about")}
+            aria-current={isActive("/about") ? "page" : undefined}
+          >
+            <span className="nav-orb nav-orb--comet" aria-hidden="true" />
+            <span>{t("about")}</span>
+          </Link>
+        </nav>
+
+        <div className="celestial-tools">
           <LocaleSwitcher />
           <ThemeToggle />
         </div>

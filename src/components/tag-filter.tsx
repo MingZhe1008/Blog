@@ -1,15 +1,17 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export function TagFilter({
   tags,
   activeTag,
   allLabel,
+  ariaLabel,
 }: {
   tags: string[];
   activeTag?: string;
   allLabel?: string;
+  ariaLabel?: string;
 }) {
   const router = useRouter();
 
@@ -24,28 +26,34 @@ export function TagFilter({
   if (tags.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap gap-2 mb-8">
+    <div
+      className="mb-10 flex flex-wrap gap-2"
+      role="group"
+      aria-label={ariaLabel ?? "Tag filter"}
+    >
       <button
         onClick={() => setTag(null)}
-        className={`font-ui text-xs px-3 py-1 rounded-full border transition-colors ${
+        aria-pressed={!activeTag}
+        className={`rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
           !activeTag
-            ? "border-accent text-accent bg-accent/10"
-            : "border-border text-text-secondary hover:border-border-hover hover:text-text-primary"
+            ? "border-accent/60 bg-accent/10 text-accent shadow-[0_0_16px_color-mix(in_srgb,var(--color-accent)_15%,transparent)]"
+            : "border-border/70 text-text-muted hover:border-accent/40 hover:text-text-primary"
         }`}
       >
-        {allLabel ?? "All"}
+        <span aria-hidden="true">✦ </span>{allLabel ?? "All"}
       </button>
       {tags.map((tag) => (
         <button
           key={tag}
           onClick={() => setTag(tag)}
-          className={`font-ui text-xs px-3 py-1 rounded-full border transition-colors ${
+          aria-pressed={activeTag === tag}
+          className={`rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
             activeTag === tag
-              ? "border-accent text-accent bg-accent/10"
-              : "border-border text-text-secondary hover:border-border-hover hover:text-text-primary"
+              ? "border-accent/60 bg-accent/10 text-accent shadow-[0_0_16px_color-mix(in_srgb,var(--color-accent)_15%,transparent)]"
+              : "border-border/70 text-text-muted hover:border-accent/40 hover:text-text-primary"
           }`}
         >
-          {tag}
+          <span aria-hidden="true">· </span>{tag}
         </button>
       ))}
     </div>

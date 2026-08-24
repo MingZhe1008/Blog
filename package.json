@@ -6,7 +6,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:galaxy": "node --test tests/galaxy-ui.test.mjs"
   },
   "dependencies": {
     "@bytemd/react": "^1.21.0",
