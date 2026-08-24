@@ -25,7 +25,7 @@ export function I18nProvider({
   const messages = locale === "en" ? en : zh;
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Shanghai">
       {children}
     </NextIntlClientProvider>
   );
@@ -33,6 +33,7 @@ export function I18nProvider({
 
 const zh: Messages = {
   common: {
+    navLabel: "主导航",
     home: "首页",
     articles: "博客",
     blog: "博客",
@@ -45,6 +46,7 @@ const zh: Messages = {
     poweredBy: "Built with curiosity",
   },
   home: {
+    fieldLog: "星域记录 / 01—05",
     greeting: "你好，我是",
     bio: "记录编程语言、AI、Agent 工具的学习与使用心得。",
     recent: "最近博客",
@@ -54,7 +56,10 @@ const zh: Messages = {
     articles: "博客",
   },
   blog: {
+    fieldLabel: "星域 01 / 观测归档",
+    filterLabel: "星域筛选",
     title: "博客",
+    subtitle: "沿着观测轨迹，寻找被记录下来的思想星体。",
     noArticles: "暂无博客。",
     newer: "← 较新",
     older: "较早 →",
@@ -131,6 +136,7 @@ const zh: Messages = {
 
 const en: Messages = {
   common: {
+    navLabel: "Primary navigation",
     home: "Home",
     articles: "Articles",
     blog: "Blog",
@@ -143,6 +149,7 @@ const en: Messages = {
     poweredBy: "Built with curiosity",
   },
   home: {
+    fieldLog: "Field log / 01—05",
     greeting: "Hello, I'm",
     bio: "Writing about programming languages, AI, and agent tools.",
     recent: "Recent",
@@ -152,7 +159,10 @@ const en: Messages = {
     articles: "Articles",
   },
   blog: {
+    fieldLabel: "Field 01 / archive",
+    filterLabel: "Star field filter",
     title: "Articles",
+    subtitle: "Follow the observation trail and find ideas recorded among the stars.",
     noArticles: "No articles yet.",
     newer: "← Newer",
     older: "Older →",
