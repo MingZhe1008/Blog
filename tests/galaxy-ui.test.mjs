@@ -53,6 +53,14 @@ test("light atlas tokens and filter state meet accessibility contracts", async (
   assert.match(filter, /role="group"/);
 });
 
+test("new visitors enter through the dark galaxy theme", async () => {
+  const rootLayout = await read("src/app/layout.tsx");
+
+  assert.match(rootLayout, /defaultTheme="dark"/);
+  assert.match(rootLayout, /storageKey="galaxy-theme"/);
+  assert.match(rootLayout, /enableSystem=\{false\}/);
+});
+
 test("new celestial interface copy stays inside the locale message catalog", async () => {
   const messages = await read("src/components/i18n-provider.tsx");
   const home = await read("src/app/(main)/home-view.tsx");
