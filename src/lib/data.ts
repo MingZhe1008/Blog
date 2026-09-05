@@ -8,6 +8,7 @@ export async function getPublishedArticles(opts?: {
   tags?: string[];
   page?: number;
   limit?: number;
+  query?: string;
 }) {
   const db = await getDb();
   const { tags, page = 1, limit = 10 } = opts ?? {};
@@ -19,9 +20,13 @@ export async function getPublishedArticles(opts?: {
     .orderBy(desc(schema.articles.createdAt))
     .all();
 
-  const filtered = tags?.length
+  const tagged = tags?.length
     ? all.filter((a) => tags.some((t) => (a.tags ?? []).includes(t)))
     : all;
+  const query = opts?.query?.trim().toLocaleLowerCase();
+  const filtered = query ? tagged.filter(a =>
+    [a.title, a.excerpt, a.content, ...(a.tags ?? [])].join(" ").toLocaleLowerCase().includes(query)
+  ) : tagged;
 
   const total = filtered.length;
   const offset = (page - 1) * limit;

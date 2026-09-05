@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { GiscusComments } from "@/components/giscus";
 import { TableOfContents } from "@/components/toc";
@@ -18,9 +18,10 @@ export function PostView({
   children: React.ReactNode;
 }) {
   const t = useTranslations("post");
+  const locale = useLocale();
 
   return (
-    <main className="min-h-screen">
+    <main className="reading-page min-h-screen">
       <div className="max-w-5xl mx-auto px-6 pt-8 pb-24">
         <Link
           href="/blog"
@@ -30,10 +31,11 @@ export function PostView({
         </Link>
 
         <div className="flex gap-10 lg:gap-16">
-          <article className="flex-1 min-w-0 max-w-[640px]">
+          <article className="reading-panel flex-1 min-w-0">
             <header className="mb-12">
               <p className="font-ui text-xs text-text-muted tracking-wide uppercase mb-3">
-                {new Date(article.createdAt).toLocaleDateString("zh-CN", {
+                {new Date(article.createdAt).toLocaleDateString(locale, {
+                  timeZone: "Asia/Shanghai",
                   year: "numeric",
                   month: "long",
                   day: "numeric",
@@ -53,7 +55,7 @@ export function PostView({
                   </a>
                 ))}
                 <span className="font-ui text-xs text-text-muted ml-auto">
-                  ~{Math.ceil((article.content.length || 0) / 1500)}{" "}
+                  ~{Math.max(1, Math.ceil((article.content.length || 0) / 1500))}{" "}
                   {t("minRead")}
                 </span>
               </div>

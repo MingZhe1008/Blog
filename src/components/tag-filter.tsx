@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export function TagFilter({
   tags,
@@ -14,13 +14,14 @@ export function TagFilter({
   ariaLabel?: string;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   function setTag(tag: string | null) {
-    if (tag) {
-      router.push(`/blog?tag=${encodeURIComponent(tag)}`);
-    } else {
-      router.push("/blog");
-    }
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("page");
+    if (tag) params.set("tag", tag);
+    else params.delete("tag");
+    router.push("/blog" + (params.size ? "?" + params.toString() : ""));
   }
 
   if (tags.length === 0) return null;
