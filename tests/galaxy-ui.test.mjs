@@ -13,7 +13,7 @@ test("public layout mounts the rotating space-portfolio star field", async () =>
   assert.match(background, /random\.inSphere\(new Float32Array\(5000\)/);
   assert.match(background, /rotation\.x -= delta \/ 10/);
   assert.match(background, /rotation\.y -= delta \/ 15/);
-  assert.match(background, /prefers-reduced-motion: reduce/);
+  assert.doesNotMatch(background, /motionEnabled/);
 });
 
 test("navigation uses celestial destinations with accessible labels", async () => {
@@ -34,13 +34,14 @@ test("home renders article destinations as galaxy nodes", async () => {
   assert.match(node, /\/blog\/\$\{article\.slug\}/);
 });
 
-test("motion stops when the visitor requests reduced motion", async () => {
+test("the star field keeps rotating independently from CSS motion preferences", async () => {
   const styles = await read("src/app/globals.css");
   const background = await read("src/components/star-background.tsx");
 
   assert.match(styles, /prefers-reduced-motion:\s*reduce/);
   assert.match(styles, /animation-duration:\s*0\.01ms/);
-  assert.match(background, /setMotionEnabled\(!mediaQuery\.matches\)/);
+  assert.doesNotMatch(background, /matchMedia/);
+  assert.match(background, /useFrame/);
 });
 
 test("light atlas tokens and filter state meet accessibility contracts", async () => {
