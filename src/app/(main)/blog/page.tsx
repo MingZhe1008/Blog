@@ -6,16 +6,17 @@ export const dynamic = "force-dynamic";
 export default async function BlogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tag?: string; page?: string }>;
+  searchParams: Promise<{ tag?: string; page?: string; q?: string }>;
 }) {
   const sp = await searchParams;
   const activeTag = sp.tag ?? undefined;
-  const page = sp.page ? parseInt(sp.page) : 1;
+  const page = Math.max(1, Number.parseInt(sp.page ?? "1", 10) || 1);
 
   const { articles, totalPages } = await getPublishedArticles({
     tags: activeTag ? [activeTag] : undefined,
     page,
     limit: 10,
+    query: sp.q,
   });
   const tags = await getAllTags();
 
@@ -26,6 +27,7 @@ export default async function BlogPage({
       activeTag={activeTag}
       page={page}
       totalPages={totalPages}
+      query={sp.q ?? ""}
     />
   );
 }

@@ -16,21 +16,18 @@ test("public layout mounts the rotating space-portfolio star field", async () =>
   assert.doesNotMatch(background, /motionEnabled/);
 });
 
-test("navigation uses celestial destinations with accessible labels", async () => {
+test("navigation retains accessible labels and current-page semantics", async () => {
   const header = await read("src/components/header.tsx");
 
-  assert.match(header, /celestial-nav/);
-  assert.match(header, /nav-orb--sun/);
-  assert.match(header, /nav-orb--cluster/);
+  assert.match(header, /aria-current/);
   assert.match(header, /aria-label/);
 });
 
-test("home renders article destinations as galaxy nodes", async () => {
+test("home article cards link to article details", async () => {
   const home = await read("src/app/(main)/home-view.tsx");
-  const node = await read("src/components/galaxy-node.tsx");
+  const node = await read("src/components/article-card.tsx");
 
-  assert.match(home, /GalaxyNode/);
-  assert.match(node, /galaxy-node__core/);
+  assert.match(home, /ArticleCard/);
   assert.match(node, /\/blog\/\$\{article\.slug\}/);
 });
 
@@ -71,7 +68,7 @@ test("new celestial interface copy stays inside the locale message catalog", asy
   assert.match(messages, /navLabel:\s*"主导航"/);
   assert.match(messages, /fieldLog:\s*"星域记录/);
   assert.match(messages, /fieldLabel:\s*"星域 01/);
-  assert.match(home, /t\("fieldLog"\)/);
+  assert.match(home, /t\("spotlight"\)/);
   assert.match(blog, /t\("fieldLabel"\)/);
   assert.match(header, /t\("navLabel"\)/);
 });

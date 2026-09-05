@@ -11,18 +11,25 @@ export function BlogListView({
   activeTag,
   page,
   totalPages,
+  query,
 }: {
   articles: Article[];
   tags: string[];
   activeTag?: string;
   page: number;
   totalPages: number;
+  query: string;
 }) {
   const t = useTranslations("blog");
   const locale = useLocale();
+  const common = useTranslations("common");
+  const pageHref = (value: number) => "/blog?" + new URLSearchParams({
+    ...(activeTag ? { tag: activeTag } : {}),
+    ...(query ? { q: query } : {}), page: String(value),
+  }).toString();
 
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <main className="archive-page relative min-h-screen overflow-hidden">
       <div className="mx-auto max-w-5xl px-6 pb-24 pt-20 md:pt-28">
         <header className="relative mb-12 border-l border-accent/30 pl-6 md:mb-16 md:pl-8">
           <div className="mb-4 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.3em] text-text-muted">
@@ -36,6 +43,11 @@ export function BlogListView({
           <span className="absolute -left-[5px] top-24 h-2 w-2 rounded-full border border-accent bg-bg-base" aria-hidden="true" />
         </header>
 
+        <form action="/blog" className="archive-search">
+          {activeTag && <input type="hidden" name="tag" value={activeTag} />}
+          <input key={query} name="q" type="search" defaultValue={query} placeholder={common("searchPlaceholder")} aria-label={common("search")} />
+          <button type="submit">{common("search")} ↗</button>
+        </form>
         <TagFilter
           tags={tags}
           activeTag={activeTag}
@@ -45,7 +57,7 @@ export function BlogListView({
 
         {articles.length === 0 ? (
           <p className="py-20 text-center font-mono text-xs uppercase tracking-[0.25em] text-text-muted">
-            {t("noArticles")}
+            {query ? common("noResults") : t("noArticles")}
           </p>
         ) : (
           <>
@@ -62,7 +74,7 @@ export function BlogListView({
             <div className="mt-12 flex items-center justify-between border-t border-border/70 pt-6">
               {page > 1 ? (
                 <a
-                  href={`/blog?${activeTag ? `tag=${activeTag}&` : ""}page=${page - 1}`}
+                  href={pageHref(page - 1)}
                   className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-secondary transition-colors hover:text-accent"
                 >
                   {t("newer")}
@@ -72,7 +84,7 @@ export function BlogListView({
               )}
               {page < totalPages && (
                 <a
-                  href={`/blog?${activeTag ? `tag=${activeTag}&` : ""}page=${page + 1}`}
+                  href={pageHref(page + 1)}
                   className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-secondary transition-colors hover:text-accent"
                 >
                   {t("older")}
