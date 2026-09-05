@@ -4,15 +4,16 @@ import test from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("public layout mounts a decorative galaxy background", async () => {
+test("public layout mounts the rotating space-portfolio star field", async () => {
   const layout = await read("src/app/(main)/layout.tsx");
-  const background = await read("src/components/galaxy-background.tsx");
+  const background = await read("src/components/star-background.tsx");
 
-  assert.match(layout, /GalaxyBackground/);
+  assert.match(layout, /StarsCanvas/);
   assert.match(background, /aria-hidden="true"/);
-  assert.match(background, /galaxy-star-stream/);
-  assert.match(background, /galaxy-background--static/);
-  assert.match(background, /usePathname/);
+  assert.match(background, /random\.inSphere\(new Float32Array\(5000\)/);
+  assert.match(background, /rotation\.x -= delta \/ 10/);
+  assert.match(background, /rotation\.y -= delta \/ 15/);
+  assert.match(background, /prefers-reduced-motion: reduce/);
 });
 
 test("navigation uses celestial destinations with accessible labels", async () => {
@@ -35,12 +36,11 @@ test("home renders article destinations as galaxy nodes", async () => {
 
 test("motion stops when the visitor requests reduced motion", async () => {
   const styles = await read("src/app/globals.css");
+  const background = await read("src/components/star-background.tsx");
 
   assert.match(styles, /prefers-reduced-motion:\s*reduce/);
   assert.match(styles, /animation-duration:\s*0\.01ms/);
-  assert.match(styles, /galaxy-background--static[\s\S]*animation:\s*none/);
-  assert.match(styles, /galaxy-background--static[\s\S]*opacity:\s*0\.18/);
-  assert.match(styles, /prefers-reduced-motion:[\s\S]*galaxy-nebula[\s\S]*opacity:\s*0\.18/);
+  assert.match(background, /setMotionEnabled\(!mediaQuery\.matches\)/);
 });
 
 test("light atlas tokens and filter state meet accessibility contracts", async () => {

@@ -65,26 +65,6 @@
   animation: fade-up 0.5s ease-out both;
 }
 
-@keyframes star-drift-far {
-  from { transform: translate3d(-3%, -2%, 0); }
-  to { transform: translate3d(7%, 8%, 0); }
-}
-
-@keyframes star-drift-near {
-  from { transform: translate3d(4%, -8%, 0); }
-  to { transform: translate3d(-9%, 10%, 0); }
-}
-
-@keyframes nebula-drift-cyan {
-  0%, 100% { opacity: 0.2; transform: translate3d(-4%, 1%, 0) scale(0.96); }
-  50% { opacity: 0.34; transform: translate3d(6%, -4%, 0) scale(1.08); }
-}
-
-@keyframes nebula-drift-violet {
-  0%, 100% { opacity: 0.15; transform: translate3d(5%, -2%, 0) scale(1.04); }
-  50% { opacity: 0.28; transform: translate3d(-5%, 5%, 0) scale(0.94); }
-}
-
 @keyframes celestial-orbit-spin {
   to { transform: rotate(360deg); }
 }
@@ -132,100 +112,28 @@ a {
   z-index: 1;
 }
 
-.galaxy-background {
+.star-background {
   position: fixed;
-  z-index: -1;
+  z-index: 0;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  background:
-    radial-gradient(circle at 49% -12%, rgba(119, 232, 214, 0.08), transparent 36%),
-    linear-gradient(160deg, var(--color-bg-base) 0%, #070a16 44%, #050711 100%);
+  background: #030014;
 }
 
-.galaxy-star-stream,
-.galaxy-nebula,
-.galaxy-noise {
-  position: absolute;
-  pointer-events: none;
+.star-background__canvas {
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0.88;
 }
 
-.galaxy-star-stream {
-  inset: -25%;
-  will-change: transform;
+.light .star-background {
+  background: var(--color-bg-base);
 }
 
-.galaxy-star-stream--far {
-  opacity: 0.45;
-  background-image:
-    radial-gradient(circle, rgba(244, 233, 201, 0.72) 0 0.7px, transparent 1px),
-    radial-gradient(circle, rgba(119, 232, 214, 0.58) 0 0.55px, transparent 0.9px),
-    radial-gradient(circle, rgba(167, 139, 250, 0.45) 0 0.6px, transparent 1px);
-  background-position: 7px 11px, 53px 39px, 91px 76px;
-  background-size: 113px 107px, 149px 137px, 181px 173px;
-  animation: star-drift-far 54s linear infinite alternate;
-}
-
-.galaxy-star-stream--near {
-  opacity: 0.68;
-  background-image:
-    radial-gradient(circle, rgba(244, 233, 201, 0.88) 0 1px, transparent 1.45px),
-    radial-gradient(circle, rgba(119, 232, 214, 0.78) 0 0.8px, transparent 1.25px);
-  background-position: 24px 20px, 116px 89px;
-  background-size: 229px 211px, 277px 251px;
-  animation: star-drift-near 72s linear infinite alternate;
-}
-
-.galaxy-nebula {
-  width: min(64rem, 80vw);
-  aspect-ratio: 1.7;
-  border-radius: 50%;
-  filter: blur(70px);
-  will-change: transform, opacity;
-}
-
-.galaxy-nebula--cyan {
-  top: 6%;
-  left: -20%;
-  background: radial-gradient(ellipse, rgba(50, 181, 179, 0.38), transparent 68%);
-  animation: nebula-drift-cyan 23s ease-in-out infinite;
-}
-
-.galaxy-nebula--violet {
-  right: -25%;
-  bottom: 2%;
-  background: radial-gradient(ellipse, rgba(116, 74, 193, 0.34), transparent 68%);
-  animation: nebula-drift-violet 29s ease-in-out infinite;
-}
-
-.galaxy-noise {
-  inset: 0;
-  opacity: 0.08;
-  background-image:
-    repeating-radial-gradient(circle at 13% 27%, transparent 0 2px, rgba(255,255,255,0.22) 2.5px 3px, transparent 3.5px 7px);
-  background-size: 67px 71px;
-  mix-blend-mode: soft-light;
-}
-
-.light .galaxy-background {
-  background:
-    radial-gradient(circle at 49% -12%, rgba(8, 127, 122, 0.12), transparent 37%),
-    linear-gradient(160deg, #f5f7f5 0%, var(--color-bg-base) 50%, #eaf0ef 100%);
-}
-
-.light .galaxy-star-stream--far { opacity: 0.2; }
-.light .galaxy-star-stream--near { opacity: 0.26; }
-.light .galaxy-nebula { opacity: 0.12; filter: blur(90px); }
-.light .galaxy-noise { opacity: 0.04; mix-blend-mode: multiply; }
-
-.galaxy-background--static .galaxy-star-stream,
-.galaxy-background--static .galaxy-nebula {
-  animation: none;
-  will-change: auto;
-}
-
-.galaxy-background--static .galaxy-nebula {
-  opacity: 0.18;
+.light .star-background__canvas {
+  filter: invert(1);
+  opacity: 0.32;
 }
 
 /* ===== Celestial navigation ===== */
@@ -667,12 +575,8 @@ pre code {
     padding-inline: 0.25rem;
   }
 
-  .galaxy-star-stream--far {
-    display: none;
-  }
-
-  .galaxy-star-stream--near {
-    opacity: 0.42;
+  .star-background__canvas {
+    opacity: 0.72;
   }
 }
 
@@ -690,7 +594,7 @@ pre code {
     transition-duration: 0.01ms !important;
   }
 
-  .galaxy-nebula {
-    opacity: 0.18 !important;
+  .star-background__canvas {
+    opacity: 0.68;
   }
 }
