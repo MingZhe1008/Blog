@@ -32,7 +32,19 @@ export function I18nProvider({
 }
 
 const zh: Messages = {
+  notes: {
+    title: "笔记", directory: "笔记目录", intro: "把零散经验整理成可以随时查阅的知识。按左侧目录，找到你需要的笔记。",
+    empty: "还没有发布笔记。", example: "目录示例：AI相关 → ClaudeCode → 常用快捷键指令",
+    manage: "笔记管理", new: "新建笔记", edit: "编辑笔记", back: "← 返回笔记管理", view: "查看笔记",
+    name: "笔记标题", hierarchy: "目录层级", addLevel: "添加子层级", removeLevel: "移除此层级",
+    hierarchyHelp: "每格代表一个目录，可选择已有目录或输入新名称；笔记标题自动作为最后一级。",
+    tags: "标签", tagsHelp: "多个标签用逗号分隔，例如：AI, ClaudeCode, 快捷键", content: "正文（Markdown / MDX）",
+    required: "请填写标题、每一级目录和正文。", saveFailed: "保存失败，请检查内容后重试。",
+    unauthorized: "认证已失效，请重新登录管理台。", saving: "保存中…", draft: "保存草稿", publish: "发布笔记",
+    published: "已发布", draftStatus: "草稿",
+  },
   common: {
+    notes: "笔记",
     navLabel: "主导航",
     home: "首页",
     articles: "博客",
@@ -81,6 +93,8 @@ const zh: Messages = {
     minRead: "分钟阅读",
   },
   admin: {
+    notes: "笔记管理",
+    newNote: "新建笔记",
     title: "管理后台",
     articles: "博客",
     newPost: "新建博客",
@@ -141,7 +155,19 @@ const zh: Messages = {
 };
 
 const en: Messages = {
+  notes: {
+    title: "Notes", directory: "Notes directory", intro: "A growing reference of practical knowledge. Explore the folders to find a note.",
+    empty: "No published notes yet.", example: "Example: AI → ClaudeCode → Keyboard shortcuts",
+    manage: "Manage notes", new: "New note", edit: "Edit note", back: "← Back to notes", view: "View note",
+    name: "Note title", hierarchy: "Folder hierarchy", addLevel: "Add subfolder", removeLevel: "Remove level",
+    hierarchyHelp: "Each field is a folder. Choose an existing name or enter a new one; the note title becomes the final level.",
+    tags: "Tags", tagsHelp: "Separate tags with commas: AI, ClaudeCode, shortcuts", content: "Content (Markdown / MDX)",
+    required: "Enter a title, all folder levels, and content.", saveFailed: "Could not save. Check the content and try again.",
+    unauthorized: "Authentication expired. Sign in to the admin again.", saving: "Saving…", draft: "Save draft", publish: "Publish note",
+    published: "Published", draftStatus: "Draft",
+  },
   common: {
+    notes: "Notes",
     navLabel: "Primary navigation",
     home: "Home",
     articles: "Articles",
@@ -190,6 +216,8 @@ const en: Messages = {
     minRead: "min read",
   },
   admin: {
+    notes: "Manage notes",
+    newNote: "New note",
     title: "Admin",
     articles: "Articles",
     newPost: "New Post",
