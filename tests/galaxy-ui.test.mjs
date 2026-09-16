@@ -23,12 +23,11 @@ test("navigation retains accessible labels and current-page semantics", async ()
   assert.match(header, /aria-label/);
 });
 
-test("home article cards link to article details", async () => {
+test("home keeps article lists hidden while retaining the blog entry point", async () => {
   const home = await read("src/app/(main)/home-view.tsx");
-  const node = await read("src/components/article-card.tsx");
 
-  assert.match(home, /ArticleCard/);
-  assert.match(node, /\/blog\/\$\{article\.slug\}/);
+  assert.doesNotMatch(home, /ArticleCard|featured-section|recent-section/);
+  assert.match(home, /href="\/blog"/);
 });
 
 test("the star field keeps rotating independently from CSS motion preferences", async () => {
@@ -83,7 +82,7 @@ test("new celestial interface copy stays inside the locale message catalog", asy
   assert.match(messages, /navLabel:\s*"主导航"/);
   assert.match(messages, /fieldLog:\s*"星域记录/);
   assert.match(messages, /fieldLabel:\s*"星域 01/);
-  assert.match(home, /t\("spotlight"\)/);
+  assert.doesNotMatch(home, /featured-section|recent-section|ArticleCard/);
   assert.match(blog, /t\("fieldLabel"\)/);
   assert.match(header, /t\("navLabel"\)/);
 });

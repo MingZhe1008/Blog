@@ -45,7 +45,6 @@
 .section-heading .eyebrow { margin: 0; }
 .section-heading h2 { margin: 0; font-size: 24px; font-weight: 600; }
 .section-heading>a,.section-heading>span { font-size: 12px; color: var(--color-text-muted); }
-.featured-section { margin-bottom: 64px; }
 .journal-card { background: color-mix(in srgb, var(--color-bg-surface) 88%, transparent); border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden; transition: border-color .2s, background .2s; }
 .journal-card:hover { border-color: var(--color-border-hover); background: color-mix(in srgb, var(--color-bg-elevated) 94%, transparent); }
 .journal-card__link { display: flex; flex-direction: column; height: 100%; }
@@ -131,7 +130,6 @@
   .journal-card--list .journal-card__cover { width: 90px; min-height: 0; }
   .journal-card--list h2 { font-size: 20px; }
   .journal-card__meta { gap: 8px; font-size: 10px; }
-  .featured-section { margin-bottom: 40px; }
   .editorial-footer { flex-wrap: wrap; }
   .editorial-footer p { order: 3; width: 100%; }
   .reading-page>div { padding: 24px 14px 48px; }
