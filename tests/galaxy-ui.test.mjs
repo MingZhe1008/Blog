@@ -31,6 +31,7 @@ test("home keeps article lists hidden while retaining the blog entry point", asy
   assert.match(home, /href="\/blog"/);
   assert.match(styles, /\.reading-excerpt[^}]*border-block:/);
   assert.doesNotMatch(styles, /\.topics-section[^}]*border-top:/);
+  assert.match(styles, /\.topic-links a,[^}]*background:\s*transparent/);
 });
 
 test("the star field keeps rotating independently from CSS motion preferences", async () => {
