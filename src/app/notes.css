@@ -1,6 +1,7 @@
 .notes-workspace { width: min(1280px,calc(100% - 48px)); margin: 40px auto 80px; display:grid; grid-template-columns: 260px minmax(0,1fr); gap:32px; min-height:65vh; }
 .notes-sidebar { align-self:start; position:sticky; top:110px; max-height:calc(100vh - 140px); overflow:auto; border:1px solid var(--color-border); border-radius:12px; background:color-mix(in srgb,var(--color-bg-surface) 94%,transparent); padding:20px 14px; }
 .notes-tree { font-size:13px; }
+.public-site .notes-sidebar { background:transparent; }
 .notes-tree-home { display:block; font-size:18px; font-weight:600; margin:0 10px 20px; color:var(--color-accent); }
 .notes-tree ul { list-style:none; padding-left:12px; }
 .notes-tree ul ul { margin-left:5px; border-left:1px solid var(--color-border); }

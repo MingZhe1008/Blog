@@ -90,6 +90,15 @@
 .about-panel p { color: var(--color-text-secondary); margin: 18px 0; }
 .about-panel .primary-link { margin-top: 30px; }
 .empty-message { padding: 36px; color: var(--color-text-muted); }
+/* Let the existing star field show through public blog and notebook surfaces.
+   Hover feedback uses borders rather than restoring an opaque panel. */
+.public-site .journal-card,
+.public-site .journal-card:hover,
+.public-site .reading-panel,
+.public-site .archive-search,
+.public-site .reading-panel .prose blockquote {
+  background: transparent;
+}
 @media(max-width: 700px) {
   .editorial-page,.site-header .editorial-nav,.editorial-footer { width: calc(100% - 36px); }
   .site-header .editorial-nav { gap: 12px; min-height: 70px; flex-wrap: wrap; padding: 12px 0; }
