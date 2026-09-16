@@ -64,7 +64,7 @@
 .journal-card--featured .journal-card__body { padding: 40px; }
 .journal-card--featured h2 { font-size: 32px; }
 .article-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 22px; }
-.topics-section { margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--color-border); }
+.topics-section { margin-top: 0; padding-top: 0; }
 .topic-links { display: flex; flex-wrap: wrap; gap: 12px; }
 .topic-links a,.topic-links>span { border: 1px solid var(--color-border); background: color-mix(in srgb,var(--color-bg-surface) 85%,transparent); padding: 9px 18px; border-radius: 6px; font-size: 13px; }
 .topic-links a:hover { border-color: var(--color-accent); color: var(--color-accent); }
