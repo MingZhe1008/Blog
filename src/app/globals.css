@@ -542,6 +542,16 @@ pre code {
   color: var(--color-text-primary);
 }
 
+/* Stable in-page admin sign-in; local development can submit it automatically. */
+.admin-login { min-height:100vh; display:grid; place-items:center; padding:24px; background:var(--color-bg-base); }
+.admin-login__panel { width:min(100%,440px); padding:36px; border:1px solid var(--color-border); border-radius:12px; background:var(--color-bg-surface); }
+.admin-login__panel h1 { margin:0 0 10px; font-family:var(--font-ui); font-size:30px; }
+.admin-login__panel>p:not(.eyebrow) { margin-bottom:24px; color:var(--color-text-secondary); }
+.admin-login__form { display:grid; gap:10px; }
+.admin-login__form label { margin-top:8px; color:var(--color-text-secondary); font:13px var(--font-ui); }
+.admin-login__form input:not([type="hidden"]) { width:100%; padding:11px 12px; border:1px solid var(--color-border); border-radius:6px; background:var(--color-bg-base); color:var(--color-text-primary); font:14px var(--font-ui); }
+.admin-login__form .primary-link { margin-top:16px; cursor:pointer; }
+
 @media (max-width: 640px) {
   .site-header__inner {
     width: min(100% - 1rem, 72rem);
