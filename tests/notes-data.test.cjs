@@ -46,5 +46,23 @@ test("notes persist hierarchy and tags, isolate drafts, and allow publishing and
     await assert.rejects(api.persistNote({ ...input, path: [""] }));
     await assert.rejects(api.persistNote({ ...input, id: 999 }));
     assert.equal(saves, 3);
+    database.run(dbSource.match(/CREATE TABLE IF NOT EXISTS reading_excerpts[\s\S]*?\n  \)/)[0]);
+    const excerpts = compile(path.join(root, "src/lib/reading-excerpts.ts"), {
+      "./db": { getDb: async () => db, schema, saveDb: () => saves++ }
+    });
+    assert.deepEqual(await excerpts.getReadingExcerpts(), []);
+    const entry = { text: " 摘录正文 ", source: " 测试书名 ", enabled: false };
+    const excerptId = await excerpts.persistReadingExcerpt(entry);
+    assert.equal((await excerpts.getReadingExcerpts()).length, 0);
+    assert.equal((await excerpts.getReadingExcerpts(false))[0].text, "摘录正文");
+    await excerpts.persistReadingExcerpt({ ...entry, id: excerptId, enabled: true });
+    assert.equal((await excerpts.getReadingExcerpts())[0].source, "测试书名");
+    await excerpts.persistReadingExcerpt({ ...entry, id: excerptId, text: "更新内容" });
+    assert.equal((await excerpts.getReadingExcerpts()).length, 0);
+    assert.equal((await excerpts.getReadingExcerpts(false))[0].text, "更新内容");
+    for (const invalid of [{ text: " " }, { source: " " }, { enabled: "true" }, { id: 999 }, { text: "a".repeat(2001) }]) {
+      await assert.rejects(excerpts.persistReadingExcerpt({ ...entry, ...invalid }));
+    }
+    assert.equal(saves, 6);
   } finally { database.close(); }
 });

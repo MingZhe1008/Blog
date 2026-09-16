@@ -21,6 +21,10 @@ async function getSQL(): Promise<SqlJsStatic> {
 }
 
 function ensureTables(database: SqlJsDb) {
+  database.run(`CREATE TABLE IF NOT EXISTS reading_excerpts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT NOT NULL,
+    source TEXT NOT NULL, enabled INTEGER NOT NULL DEFAULT 1, updated_at TEXT NOT NULL
+  )`);
   database.run(`
     CREATE TABLE IF NOT EXISTS notes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

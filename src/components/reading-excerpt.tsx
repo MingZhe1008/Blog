@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { readingExcerpts } from "@/lib/reading-excerpts";
+import type { ReadingExcerpt as Excerpt } from "@/lib/reading-excerpts";
 
-export function ReadingExcerpt() {
+export function ReadingExcerpt({ excerpts: readingExcerpts }: { excerpts: Excerpt[] }) {
   const t = useTranslations("home");
   const [index, setIndex] = useState(0);
-  useEffect(() => { setIndex(Math.floor(Math.random() * readingExcerpts.length)); }, []);
+  useEffect(() => { setIndex(readingExcerpts.length ? Math.floor(Math.random() * readingExcerpts.length) : 0); }, [readingExcerpts.length]);
   const excerpt = readingExcerpts[index];
   if (!excerpt) return null;
   const next = () => setIndex(current => (current + 1 + Math.floor(Math.random() * (readingExcerpts.length - 1))) % readingExcerpts.length);

@@ -20,6 +20,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <SidebarLink href="/admin/editor">{t("newPost")}</SidebarLink>
           <SidebarLink href="/admin/notes">{t("notes")}</SidebarLink>
           <SidebarLink href="/admin/notes/new">{t("newNote")}</SidebarLink>
+          <SidebarLink href="/admin/excerpts">{t("excerpts")}</SidebarLink>
           <SidebarLink href="/admin/import">{t("importMD")}</SidebarLink>
           <SidebarLink href="/admin/images">{t("images")}</SidebarLink>
         </nav>
