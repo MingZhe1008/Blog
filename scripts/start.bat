@@ -11,7 +11,13 @@ echo [33mStarting Next.js production server...[0m
 echo [90mPress Ctrl+C to stop[0m
 echo.
 
-cd /d E:\Blog\Blog
-npm run start
+cd /d "%~dp0.."
+call npm run build
+if errorlevel 1 (
+    echo Production build failed. Server was not started.
+    pause
+    exit /b 1
+)
+call npm run start
 
 pause

@@ -7,7 +7,7 @@ echo   Blog Build
 echo ================================
 echo.
 
-cd /d E:\Blog\Blog
+cd /d "%~dp0.."
 
 echo [33m[1/2] Building...[0m
 call npm run build
