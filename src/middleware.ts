@@ -1,33 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-
-export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    const authHeader = request.headers.get("authorization");
-
-    if (!authHeader) {
-      return new NextResponse("Authentication required", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="Admin"' },
-      });
-    }
-
-    const [scheme, encoded] = authHeader.split(" ");
-    if (scheme !== "Basic" || !encoded) {
-      return new NextResponse("Invalid authentication", { status: 401 });
-    }
-
-    const decoded = atob(encoded);
-    const [, password] = decoded.split(":");
-    const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
-
-    if (password !== adminPassword) {
-      return new NextResponse("Invalid credentials", { status: 401 });
-    }
-  }
-
-  return NextResponse.next();
+const COOKIE_NAME = "BLOG_ADMIN_SESSION";
+const SESSION_VALUE = "blog-admin-v1";
+async function sessionToken(password: string) {
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(SESSION_VALUE));
+  return Array.from(new Uint8Array(signature), byte => byte.toString(16).padStart(2, "0")).join("");
 }
-
-export const config = {
-  matcher: ["/admin/:path*"],
-};
+export async function middleware(request: NextRequest) {
+  const expected = await sessionToken(process.env.ADMIN_PASSWORD || "admin123");
+  if (request.cookies.get(COOKIE_NAME)?.value === expected) return NextResponse.next();
+  const loginUrl = new URL("/admin-login", request.url);
+  loginUrl.searchParams.set("next", `${request.nextUrl.pathname}${request.nextUrl.search}`);
+  return NextResponse.redirect(loginUrl);
+}
+export const config = { matcher: ["/admin/:path*"] };
