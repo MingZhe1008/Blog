@@ -7,6 +7,7 @@
 .notes-tree summary { cursor:pointer; padding:9px 4px; overflow-wrap:anywhere; color:var(--color-text-secondary); }
 .notes-tree li>a { display:block; padding:8px; border-radius:5px; color:var(--color-text-secondary); overflow-wrap:anywhere; }
 .notes-tree li>a:hover,.notes-tree li>a[aria-current] { color:var(--color-accent); background:color-mix(in srgb,var(--color-accent) 10%,transparent); }
+.notes-tree li>a[aria-current] { font-weight:600; box-shadow:inset 2px 0 var(--color-accent); }
 .notes-main { min-width:0; }
 .notes-main>h1 { font-size:38px; margin:0; }
 .notes-cards { display:grid; gap:16px; }
