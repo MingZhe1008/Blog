@@ -59,6 +59,8 @@ const zh: Messages = {
   },
   home: {
     notebook: "持续学习，认真记录",
+    excerptLabel: "读书摘录 · 示例",
+    nextExcerpt: "换一条",
     note: "把实践中的问题、尝试和发现，写成下一次出发的线索。",
     spotlight: "最新一篇",
     topics: "探索主题",
@@ -182,6 +184,8 @@ const en: Messages = {
   },
   home: {
     notebook: "Always learning",
+    excerptLabel: "Reading excerpts · Samples",
+    nextExcerpt: "Another excerpt",
     note: "Notes on problems, experiments, and discoveries — a starting point for what comes next.",
     spotlight: "Latest entry",
     topics: "Explore topics",
