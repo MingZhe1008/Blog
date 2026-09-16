@@ -32,6 +32,7 @@ export function I18nProvider({
 }
 
 const zh: Messages = {
+  search: { open: "打开站内搜索", placeholder: "搜索", prompt: "搜索已发布的博客和笔记", loading: "正在搜索…", empty: "没有找到相关内容", article: "博客", note: "笔记" },
   excerpts: {
     title: "读书摘录", help: "管理主页随机展示的摘录。编辑后取消启用即可停用；没有启用的摘录时，主页自动隐藏摘录栏。",
     new: "新增摘录", edit: "编辑摘录", text: "摘录正文", source: "出处（书名 / 作者）", enabled: "启用，在主页展示",
@@ -159,6 +160,7 @@ const zh: Messages = {
 };
 
 const en: Messages = {
+  search: { open: "Open site search", placeholder: "Search", prompt: "Search published articles and notes", loading: "Searching…", empty: "No matching content", article: "Article", note: "Note" },
   excerpts: {
     title: "Reading excerpts", help: "Manage the random excerpts on your homepage. Uncheck enabled to hide an entry. The section is hidden when no excerpts are enabled.",
     new: "New excerpt", edit: "Edit excerpt", text: "Excerpt", source: "Source (book / author)", enabled: "Enabled on homepage",
