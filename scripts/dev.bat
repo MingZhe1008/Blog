@@ -11,7 +11,7 @@ echo [33mStarting Next.js dev server...[0m
 echo [90mPress Ctrl+C to stop[0m
 echo.
 
-cd /d E:\Blog\Blog
-npm run dev
+cd /d "%~dp0.."
+call npm run dev
 
 pause
