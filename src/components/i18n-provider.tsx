@@ -32,6 +32,12 @@ export function I18nProvider({
 }
 
 const zh: Messages = {
+  excerpts: {
+    title: "读书摘录", help: "管理主页随机展示的摘录。编辑后取消启用即可停用；没有启用的摘录时，主页自动隐藏摘录栏。",
+    new: "新增摘录", edit: "编辑摘录", text: "摘录正文", source: "出处（书名 / 作者）", enabled: "启用，在主页展示",
+    save: "保存摘录", saving: "保存中…", saved: "已保存，主页展示已更新。", cancel: "取消编辑",
+    active: "已启用", inactive: "已停用", empty: "还没有摘录，请在上方添加。",
+  },
   notes: {
     title: "笔记", directory: "笔记目录", intro: "把零散经验整理成可以随时查阅的知识。按左侧目录，找到你需要的笔记。",
     empty: "还没有发布笔记。", example: "目录示例：AI相关 → ClaudeCode → 常用快捷键指令",
@@ -59,7 +65,7 @@ const zh: Messages = {
   },
   home: {
     notebook: "持续学习，认真记录",
-    excerptLabel: "读书摘录 · 示例",
+    excerptLabel: "读书摘录",
     nextExcerpt: "换一条",
     note: "把实践中的问题、尝试和发现，写成下一次出发的线索。",
     spotlight: "最新一篇",
@@ -95,6 +101,7 @@ const zh: Messages = {
     minRead: "分钟阅读",
   },
   admin: {
+    excerpts: "读书摘录",
     notes: "笔记管理",
     newNote: "新建笔记",
     title: "管理后台",
@@ -157,6 +164,12 @@ const zh: Messages = {
 };
 
 const en: Messages = {
+  excerpts: {
+    title: "Reading excerpts", help: "Manage the random excerpts on your homepage. Uncheck enabled to hide an entry. The section is hidden when no excerpts are enabled.",
+    new: "New excerpt", edit: "Edit excerpt", text: "Excerpt", source: "Source (book / author)", enabled: "Enabled on homepage",
+    save: "Save excerpt", saving: "Saving…", saved: "Saved. Homepage display updated.", cancel: "Cancel editing",
+    active: "Enabled", inactive: "Disabled", empty: "No excerpts yet. Add one above.",
+  },
   notes: {
     title: "Notes", directory: "Notes directory", intro: "A growing reference of practical knowledge. Explore the folders to find a note.",
     empty: "No published notes yet.", example: "Example: AI → ClaudeCode → Keyboard shortcuts",
@@ -184,7 +197,7 @@ const en: Messages = {
   },
   home: {
     notebook: "Always learning",
-    excerptLabel: "Reading excerpts · Samples",
+    excerptLabel: "Reading excerpts",
     nextExcerpt: "Another excerpt",
     note: "Notes on problems, experiments, and discoveries — a starting point for what comes next.",
     spotlight: "Latest entry",
@@ -223,6 +236,7 @@ const en: Messages = {
     notes: "Manage notes",
     newNote: "New note",
     title: "Admin",
+    excerpts: "Reading excerpts",
     articles: "Articles",
     newPost: "New Post",
     importMD: "Import MD",

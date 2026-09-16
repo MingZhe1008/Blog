@@ -1,4 +1,11 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+export const readingExcerpts = sqliteTable("reading_excerpts", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  text: text("text").notNull(),
+  source: text("source").notNull(),
+  enabled: integer("enabled", { mode: "boolean" }).notNull().default(true),
+  updatedAt: text("updated_at").notNull(),
+});
 
 export const notes = sqliteTable("notes", {
   id: integer("id").primaryKey({ autoIncrement: true }),
