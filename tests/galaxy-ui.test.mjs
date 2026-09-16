@@ -25,9 +25,12 @@ test("navigation retains accessible labels and current-page semantics", async ()
 
 test("home keeps article lists hidden while retaining the blog entry point", async () => {
   const home = await read("src/app/(main)/home-view.tsx");
+  const styles = await read("src/app/editorial.css");
 
   assert.doesNotMatch(home, /ArticleCard|featured-section|recent-section/);
   assert.match(home, /href="\/blog"/);
+  assert.match(styles, /\.reading-excerpt[^}]*border-block:/);
+  assert.doesNotMatch(styles, /\.topics-section[^}]*border-top:/);
 });
 
 test("the star field keeps rotating independently from CSS motion preferences", async () => {
