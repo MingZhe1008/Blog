@@ -1,9 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
   <defs>
-    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%" color-interpolation-filters="sRGB">
-      <feGaussianBlur stdDeviation="5"/>
-    </filter>
+    <radialGradient id="glow">
+      <stop offset="0" stop-color="#439cff" stop-opacity=".75"/>
+      <stop offset=".3" stop-color="#2685ff" stop-opacity=".5"/>
+      <stop offset=".6" stop-color="#1e6ff4" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#1e6ff4" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <path d="M22 20 Q20 19 21 23 L27 42 Q28 45 30 42 L33 33 L42 30 Q45 28 41 26Z" fill="#268cff" stroke="#268cff" stroke-width="5" opacity=".65" filter="url(#glow)"/>
+  <circle cx="31" cy="31" r="30" fill="url(#glow)"/>
   <path d="M22 20 Q20 19 21 23 L27 42 Q28 45 30 42 L33 33 L42 30 Q45 28 41 26Z" fill="#080b10" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"/>
 </svg>
