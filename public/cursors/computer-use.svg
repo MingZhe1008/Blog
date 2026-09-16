@@ -1,3 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="36" viewBox="0 0 32 36">
-  <path d="M4 3 25 21 15 22 10 31Z" fill="#e99b57" stroke="#fff4e8" stroke-width="1.5" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+  </defs>
+  <path d="M22 20 Q20 19 21 23 L27 42 Q28 45 30 42 L33 33 L42 30 Q45 28 41 26Z" fill="#268cff" stroke="#268cff" stroke-width="5" opacity=".65" filter="url(#glow)"/>
+  <path d="M22 20 Q20 19 21 23 L27 42 Q28 45 30 42 L33 33 L42 30 Q45 28 41 26Z" fill="#080b10" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"/>
 </svg>
