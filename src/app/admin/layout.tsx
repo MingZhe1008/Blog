@@ -18,6 +18,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <nav className="flex flex-col gap-1">
           <SidebarLink href="/admin">{t("articles")}</SidebarLink>
           <SidebarLink href="/admin/editor">{t("newPost")}</SidebarLink>
+          <SidebarLink href="/admin/notes">{t("notes")}</SidebarLink>
+          <SidebarLink href="/admin/notes/new">{t("newNote")}</SidebarLink>
           <SidebarLink href="/admin/import">{t("importMD")}</SidebarLink>
           <SidebarLink href="/admin/images">{t("images")}</SidebarLink>
         </nav>

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./editorial.css";
+@import "./notes.css";
 
 /* ===== Celestial Atlas — Design Tokens ===== */
 @theme {

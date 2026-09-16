@@ -1,5 +1,16 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
+export const notes = sqliteTable("notes", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  path: text("path", { mode: "json" }).$type<string[]>().notNull(),
+  tags: text("tags", { mode: "json" }).$type<string[]>().notNull(),
+  content: text("content").notNull(),
+  status: text("status", { enum: ["draft", "published"] }).notNull().default("draft"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
 export const articles = sqliteTable("articles", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull(),
