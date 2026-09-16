@@ -1,6 +1,6 @@
 /* Foreground journal design. The star canvas remains unchanged. */
 @media (hover:hover) and (pointer:fine) {
-  .public-site, .public-site :is(a,button,summary,[role="button"]) { cursor:url("/cursors/computer-use.svg?v=4") 28 26, auto; }
+  .public-site, .public-site :is(a,button,summary,[role="button"]) { cursor:url("/cursors/computer-use.svg?v=5") 28 26, auto; }
   .public-site :is(input,textarea,[contenteditable="true"]) { cursor:text; }
   .public-site :is(button,input):disabled { cursor:not-allowed; }
 }
