@@ -1,5 +1,7 @@
 /* Foreground journal design. The star canvas remains unchanged. */
+.cursor-blue-glow { display:none; }
 @media (hover:hover) and (pointer:fine) {
+  .cursor-blue-glow { display:block; position:fixed; top:0; left:0; width:64px; height:64px; z-index:1000; pointer-events:none; opacity:0; border-radius:50%; background:radial-gradient(circle,rgba(67,156,255,.52) 0%,rgba(38,133,255,.30) 24%,rgba(30,111,244,.12) 46%,transparent 72%); filter:blur(3px); }
   .public-site, .public-site :is(a,button,summary,[role="button"]) { cursor:url("/cursors/computer-use.svg?v=2") 22 20, auto; }
   .public-site :is(input,textarea,[contenteditable="true"]) { cursor:text; }
   .public-site :is(button,input):disabled { cursor:not-allowed; }
