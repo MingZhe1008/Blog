@@ -45,8 +45,23 @@ test("light atlas tokens and filter state meet accessibility contracts", async (
   const styles = await read("src/app/globals.css");
   const filter = await read("src/components/tag-filter.tsx");
 
-  assert.match(styles, /--color-text-muted:\s*#526879/);
-  assert.match(styles, /--color-accent:\s*#006d6a/);
+  const luminance = (hex) => {
+    const rgb = hex.match(/\w{2}/g).map(v => parseInt(v, 16) / 255)
+      .map(v => v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+    return rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722;
+  };
+  for (const selector of ["@theme", ".light"]) {
+    const block = styles.slice(styles.indexOf(selector)).split("}")[0];
+    const token = name => block.match(new RegExp(`--color-${name}:\\s*#([a-f0-9]{6})`))[1];
+    const surface = luminance(token("bg-surface"));
+    for (const name of ["text-primary", "text-secondary", "text-muted", "accent"]) {
+      const hex = token(name);
+      assert.equal(hex.slice(0, 2), hex.slice(2, 4), `${name} is neutral`);
+      assert.equal(hex.slice(2, 4), hex.slice(4, 6), `${name} is neutral`);
+      const ink = luminance(hex);
+      assert.ok((Math.max(ink, surface) + 0.05) / (Math.min(ink, surface) + 0.05) >= 4.5, `${selector} ${name} contrast`);
+    }
+  }
   assert.match(filter, /aria-pressed/);
   assert.match(filter, /role="group"/);
 });

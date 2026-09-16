@@ -1,16 +1,8 @@
 /* Foreground journal design. The star canvas remains unchanged. */
 .public-site {
-  --color-text-primary: #e9edf3;
-  --color-text-secondary: #b2bdce;
-  --color-text-muted: #8898ae;
   font-family: var(--font-ui), "Microsoft YaHei", sans-serif;
   font-size: 15px;
   line-height: 1.75;
-}
-.light .public-site {
-  --color-text-primary: #172536;
-  --color-text-secondary: #40546a;
-  --color-text-muted: #566b80;
 }
 .public-site h1,.public-site h2,.public-site h3 { font-family: var(--font-ui), "Microsoft YaHei", sans-serif; }
 .public-site a:focus-visible,.public-site button:focus-visible,.public-site input:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 5px; }
@@ -21,6 +13,7 @@
 .text-navigation { display: flex; gap: 32px; margin-left: auto; font-size: 13px; }
 .text-navigation a { padding: 12px 0; color: var(--color-text-muted); position: relative; }
 .text-navigation a:hover,.text-navigation a[aria-current] { color: var(--color-text-primary); }
+.text-navigation a[aria-current] { font-weight: 600; }
 .text-navigation a[aria-current]::after { content: ""; position: absolute; bottom: 4px; left: 0; width: 16px; height: 2px; background: var(--color-accent); }
 .editorial-nav .celestial-tools { margin-left: 0; padding-left: 24px; border-left: 1px solid var(--color-border); }
 .editorial-hero { display: grid; grid-template-columns: 1.7fr 1fr; align-items: center; gap: 90px; padding: 88px 0 76px; }
