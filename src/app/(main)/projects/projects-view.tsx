@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import type { Project } from "@/lib/projects";
 import { useTranslations } from "next-intl";
 
-export function ProjectsView() {
+export function ProjectsView({ projects }: { projects: Project[] }) {
   const t = useTranslations("projects");
   return (
     <main className="editorial-page projects-page">
@@ -12,28 +13,29 @@ export function ProjectsView() {
         <p className="hero-intro">{t("intro")}</p>
       </header>
       <section className="projects-list" aria-label={t("title")}>
-        <article className="project-entry">
-          <Link href="/blog" className="project-cover" aria-label={t("visit")}>
-            <div className="project-badges"><span>{t("status")}</span><span>{t("type")}</span></div>
-            <div className="project-preview" aria-hidden="true">
+        {projects.map(project => <article className="project-entry" key={project.id}>
+          <Link href={project.url || project.sourceUrl || "/projects"} className="project-cover" aria-label={t("visit")}>
+            <div className="project-badges"><span>{project.status}</span><span>{t("type")}</span></div>
+            {project.coverImage ? <img className="project-cover__image" src={project.coverImage} alt={project.title} loading="lazy" /> : <div className="project-preview" aria-hidden="true">
               <span className="project-preview__brand">MingZhe.</span>
-              <span className="project-preview__title">{t("blogTitle")}</span>
+              <span className="project-preview__title">{project.title}</span>
               <span className="project-preview__line" /><span className="project-preview__line" />
               <span className="project-preview__tags">Blog / Notes / Projects</span>
-            </div>
+            </div>}
           </Link>
           <div className="project-entry__body">
-          <h2>{t("blogTitle")}</h2>
-          <p className="project-description">{t("blogDescription")}</p>
+          <h2>{project.title}</h2>
+          <p className="project-description">{project.description}</p>
           <ul className="project-stack" aria-label="Tech stack">
-            {["Next.js", "TypeScript", "SQLite", "Tailwind CSS"].map(tech => <li key={tech}>{tech}</li>)}
+            {project.tags.map(tech => <li key={tech}>{tech}</li>)}
           </ul>
           <div className="project-links">
-            <a className="primary-link" href="https://github.com/MingZhe1008/Blog" target="_blank" rel="noopener noreferrer">{t("source")}</a>
-            <Link className="primary-link" href="/blog">{t("visit")}</Link>
+            {project.sourceUrl && <a className="primary-link" href={project.sourceUrl} target="_blank" rel="noopener noreferrer">{t("source")}</a>}
+            {project.url && <Link className="primary-link" href={project.url}>{t("visit")}</Link>}
           </div>
           </div>
-        </article>
+        </article>)}
+        {projects.length === 0 && <p>{t("empty")}</p>}
       </section>
     </main>
   );

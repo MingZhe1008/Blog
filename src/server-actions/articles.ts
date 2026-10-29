@@ -9,12 +9,15 @@ import {
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
+async function requireAdmin() { if (!await isAdminAuthenticated()) throw new Error("登录已失效，请重新登录管理台。"); }
 
 export async function createArticle(data: {
   title: string; slug: string; content: string;
   excerpt?: string; coverImage?: string; tags?: string[];
   status?: "draft" | "published";
 }) {
+  await requireAdmin();
   await insertArticle(data);
   revalidatePath("/");
   revalidatePath("/blog");
@@ -28,6 +31,7 @@ export async function updateArticle(
     status: "draft" | "published";
   }>
 ) {
+  await requireAdmin();
   await updateArticleById(id, data);
   revalidatePath("/");
   revalidatePath("/blog");
@@ -35,12 +39,14 @@ export async function updateArticle(
 }
 
 export async function deleteArticle(id: number) {
+  await requireAdmin();
   await deleteArticleById(id);
   revalidatePath("/");
   revalidatePath("/blog");
 }
 
 export async function importMarkdownFile(filePath: string) {
+  await requireAdmin();
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
   const title = data.title ?? path.basename(filePath, ".md");

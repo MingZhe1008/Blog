@@ -33,7 +33,7 @@ export function I18nProvider({
 
 const zh: Messages = {
   projects: {
-    title: "项目", intro: "记录正在构建与持续完善的作品。",
+    empty: "暂无公开项目。", title: "项目", intro: "记录正在构建与持续完善的作品。",
     blogTitle: "MingZhe 个人博客", blogDescription: "记录编程与 AI 实践，整理学习笔记，分享读书摘录。这个博客也是我持续打磨的个人项目。",
     source: "查看源码", visit: "访问博客", status: "持续更新", type: "个人项目",
   },
@@ -165,7 +165,7 @@ const zh: Messages = {
 
 const en: Messages = {
   projects: {
-    title: "Projects", intro: "Things I am building and refining over time.",
+    empty: "No published projects yet.", title: "Projects", intro: "Things I am building and refining over time.",
     blogTitle: "MingZhe Personal Blog", blogDescription: "Writing about programming and AI, organizing learning notes, and sharing reading excerpts. This blog is also a personal project I continue to refine.",
     source: "View source", visit: "Visit blog", status: "In progress", type: "Personal project",
   },
