@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["sql.js"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "**" },
