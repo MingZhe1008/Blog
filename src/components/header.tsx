@@ -11,7 +11,7 @@ export function Header() {
   return <header className="site-header"><div className="site-header__inner editorial-nav">
     <Link href="/" className="wordmark" aria-label="MingZhe">MingZhe<span>.</span></Link>
     <GlobalSearch />
-    <nav className="text-navigation" aria-label={t("navLabel")}>{[["/", "home"], ["/blog", "articles"], ["/notes", "notes"], ["/about", "about"]].map(([href, key]) => <Link key={href} href={href} aria-current={(href === "/" ? pathname === href : pathname.startsWith(href)) ? "page" : undefined}>{t(key)}</Link>)}</nav>
+    <nav className="text-navigation" aria-label={t("navLabel")}>{[["/", "home"], ["/blog", "articles"], ["/notes", "notes"], ["/projects", "projects"], ["/about", "about"]].map(([href, key]) => <Link key={href} href={href} aria-current={(href === "/" ? pathname === href : pathname.startsWith(href)) ? "page" : undefined}>{t(key)}</Link>)}</nav>
     <div className="celestial-tools"><LocaleSwitcher /><ThemeToggle /></div>
   </div></header>;
 }

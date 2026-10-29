@@ -32,6 +32,11 @@ export function I18nProvider({
 }
 
 const zh: Messages = {
+  projects: {
+    title: "项目", intro: "记录正在构建与持续完善的作品。",
+    blogTitle: "MingZhe 个人博客", blogDescription: "记录编程与 AI 实践，整理学习笔记，分享读书摘录。这个博客也是我持续打磨的个人项目。",
+    source: "查看源码", visit: "访问博客",
+  },
   search: { open: "打开站内搜索", placeholder: "搜索", prompt: "搜索已发布的博客和笔记", loading: "正在搜索…", empty: "没有找到相关内容", article: "博客", note: "笔记" },
   excerpts: {
     title: "读书摘录", help: "管理主页随机展示的摘录。编辑后取消启用即可停用；没有启用的摘录时，主页自动隐藏摘录栏。",
@@ -51,6 +56,7 @@ const zh: Messages = {
     published: "已发布", draftStatus: "草稿",
   },
   common: {
+    projects: "项目",
     notes: "笔记",
     navLabel: "主导航",
     home: "首页",
@@ -158,6 +164,11 @@ const zh: Messages = {
 };
 
 const en: Messages = {
+  projects: {
+    title: "Projects", intro: "Things I am building and refining over time.",
+    blogTitle: "MingZhe Personal Blog", blogDescription: "Writing about programming and AI, organizing learning notes, and sharing reading excerpts. This blog is also a personal project I continue to refine.",
+    source: "View source", visit: "Visit blog",
+  },
   search: { open: "Open site search", placeholder: "Search", prompt: "Search published articles and notes", loading: "Searching…", empty: "No matching content", article: "Article", note: "Note" },
   excerpts: {
     title: "Reading excerpts", help: "Manage the random excerpts on your homepage. Uncheck enabled to hide an entry. The section is hidden when no excerpts are enabled.",
@@ -178,6 +189,7 @@ const en: Messages = {
   },
   common: {
     notes: "Notes",
+    projects: "Projects",
     navLabel: "Primary navigation",
     home: "Home",
     articles: "Articles",
