@@ -32,10 +32,6 @@ export function BlogListView({
     <main className="archive-page relative min-h-screen overflow-hidden">
       <div className="mx-auto max-w-5xl px-6 pb-24 pt-20 md:pt-28">
         <header className="archive-heading">
-          <div className="mb-4 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.3em] text-text-muted">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_12px_var(--color-accent)]" />
-            {t("fieldLabel")}
-          </div>
           <h1 className="mb-4 font-display text-4xl font-black md:text-6xl">{t("title")}</h1>
           <p className="max-w-xl font-body text-base text-text-secondary md:text-lg">
             {t("subtitle")}
@@ -45,7 +41,7 @@ export function BlogListView({
         <form action="/blog" className="archive-search">
           {activeTag && <input type="hidden" name="tag" value={activeTag} />}
           <input key={query} name="q" type="search" defaultValue={query} placeholder={common("searchPlaceholder")} aria-label={common("search")} />
-          <button type="submit">{common("search")} ↗</button>
+          <button type="submit">{common("search")}</button>
         </form>
         <TagFilter
           tags={tags}

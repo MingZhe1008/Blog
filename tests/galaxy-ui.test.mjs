@@ -77,16 +77,15 @@ test("new visitors enter through the dark galaxy theme", async () => {
   assert.match(rootLayout, /enableSystem=\{false\}/);
 });
 
-test("new celestial interface copy stays inside the locale message catalog", async () => {
+test("navigation and blog filter labels stay inside the locale message catalog", async () => {
   const messages = await read("src/components/i18n-provider.tsx");
   const home = await read("src/app/(main)/home-view.tsx");
   const blog = await read("src/app/(main)/blog/blog-list-view.tsx");
   const header = await read("src/components/header.tsx");
 
   assert.match(messages, /navLabel:\s*"主导航"/);
-  assert.match(messages, /fieldLog:\s*"星域记录/);
-  assert.match(messages, /fieldLabel:\s*"星域 01/);
+  assert.match(messages, /filterLabel:\s*"按标签筛选博客"/);
   assert.doesNotMatch(home, /featured-section|recent-section|ArticleCard/);
-  assert.match(blog, /t\("fieldLabel"\)/);
+  assert.match(blog, /t\("filterLabel"\)/);
   assert.match(header, /t\("navLabel"\)/);
 });
