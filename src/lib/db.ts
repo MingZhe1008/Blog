@@ -9,6 +9,7 @@ const DB_PATH = path.join(process.cwd(), "data", "blog.db");
 let drizzleDb: SQLJsDatabase<typeof schema> | null = null;
 let sqlDb: SqlJsDb | null = null;
 let SQL: SqlJsStatic | null = null;
+let initialization: Promise<SQLJsDatabase<typeof schema>> | null = null;
 
 async function getSQL(): Promise<SqlJsStatic> {
   if (!SQL) {
@@ -21,6 +22,14 @@ async function getSQL(): Promise<SqlJsStatic> {
 }
 
 function ensureTables(database: SqlJsDb) {
+  const hasProjects = database.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='projects'").length > 0;
+  database.run(`CREATE TABLE IF NOT EXISTS projects (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, description TEXT NOT NULL,
+    cover_image TEXT NOT NULL DEFAULT '', url TEXT NOT NULL DEFAULT '', source_url TEXT NOT NULL DEFAULT '',
+    tags TEXT NOT NULL DEFAULT '[]', status TEXT NOT NULL DEFAULT '持续更新', published INTEGER NOT NULL DEFAULT 0
+  )`);
+  if (!hasProjects) database.run(`INSERT INTO projects (title, description, url, source_url, tags, published)
+    VALUES ('MingZhe 个人博客', '记录编程与 AI 实践，整理学习笔记，分享读书摘录。', '/blog', 'https://github.com/MingZhe1008/Blog', '["Next.js","TypeScript","SQLite","Tailwind CSS"]', 1)`);
   database.run(`CREATE TABLE IF NOT EXISTS reading_excerpts (
     id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT NOT NULL,
     source TEXT NOT NULL, enabled INTEGER NOT NULL DEFAULT 1, updated_at TEXT NOT NULL
@@ -55,7 +64,11 @@ function ensureTables(database: SqlJsDb) {
 
 export async function getDb(): Promise<SQLJsDatabase<typeof schema>> {
   if (drizzleDb) return drizzleDb;
+  if (!initialization) initialization = initializeDb().catch(error => { initialization = null; throw error; });
+  return initialization;
+}
 
+async function initializeDb(): Promise<SQLJsDatabase<typeof schema>> {
   const sql = await getSQL();
 
   if (fs.existsSync(DB_PATH)) {
@@ -67,6 +80,7 @@ export async function getDb(): Promise<SQLJsDatabase<typeof schema>> {
 
   ensureTables(sqlDb);
   drizzleDb = drizzle(sqlDb, { schema });
+  saveDb();
   return drizzleDb;
 }
 

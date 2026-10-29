@@ -1,4 +1,13 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+export const projects = sqliteTable("projects", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(), description: text("description").notNull(),
+  coverImage: text("cover_image").notNull().default(""),
+  url: text("url").notNull().default(""), sourceUrl: text("source_url").notNull().default(""),
+  tags: text("tags", { mode: "json" }).$type<string[]>().notNull(),
+  status: text("status").notNull().default("持续更新"),
+  published: integer("published", { mode: "boolean" }).notNull().default(false),
+});
 export const readingExcerpts = sqliteTable("reading_excerpts", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   text: text("text").notNull(),

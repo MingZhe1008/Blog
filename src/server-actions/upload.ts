@@ -4,6 +4,7 @@ import fs from "fs/promises";
 import path from "path";
 import { revalidatePath } from "next/cache";
 import crypto from "crypto";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
 
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"];
@@ -19,6 +20,7 @@ export interface UploadedImage {
 export async function uploadImageFile(
   formData: FormData
 ): Promise<{ url: string } | { error: string }> {
+  if (!await isAdminAuthenticated()) return { error: "登录已失效，请重新登录管理台。" };
   try {
     const file = formData.get("file");
     if (!file || !(file instanceof File)) {
@@ -37,7 +39,7 @@ export async function uploadImageFile(
     await fs.mkdir(UPLOAD_DIR, { recursive: true });
 
     // 生成唯一文件名
-    const ext = path.extname(file.name) || ".jpg";
+    const ext = ({ "image/jpeg": ".jpg", "image/png": ".png", "image/gif": ".gif", "image/webp": ".webp", "image/svg+xml": ".svg" } as Record<string, string>)[file.type];
     const randomHex = crypto.randomBytes(4).toString("hex");
     const uniqueName = `${Date.now()}-${randomHex}${ext}`;
 
@@ -53,6 +55,7 @@ export async function uploadImageFile(
 }
 
 export async function listUploadedImages(): Promise<UploadedImage[]> {
+  if (!await isAdminAuthenticated()) return [];
   try {
     await fs.mkdir(UPLOAD_DIR, { recursive: true });
     const entries = await fs.readdir(UPLOAD_DIR, { withFileTypes: true });
@@ -85,6 +88,7 @@ export async function listUploadedImages(): Promise<UploadedImage[]> {
 }
 
 export async function deleteUploadedImage(filename: string): Promise<{ success: true } | { error: string }> {
+  if (!await isAdminAuthenticated()) return { error: "登录已失效，请重新登录管理台。" };
   // 路径穿越防护
   if (filename.includes("..") || filename.includes("/") || filename.includes("\\")) {
     return { error: "无效的文件名" };
