@@ -18,11 +18,11 @@ export function ThemeToggle() {
   const isDark = resolvedTheme === "dark";
   const label = isDark
     ? locale === "zh"
-      ? "切换到明亮星图"
-      : "Switch to light star chart"
+      ? "切换到浅色模式"
+      : "Switch to light mode"
     : locale === "zh"
-      ? "切换到深空星图"
-      : "Switch to dark star chart";
+      ? "切换到深色模式"
+      : "Switch to dark mode";
 
   return (
     <button
