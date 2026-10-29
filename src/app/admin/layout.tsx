@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link, { useLinkStatus } from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const t = useTranslations("admin");
@@ -40,14 +40,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
 function SidebarLink({ href, children }: { href: string; children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const active = href === "/admin" ? pathname === href || pathname.startsWith("/admin/editor") : pathname === href || pathname.startsWith(href + "/");
   return (
     <Link
       href={href}
+      onMouseEnter={() => router.prefetch(href)}
+      onFocus={() => router.prefetch(href)}
       aria-current={active ? "page" : undefined}
       className="font-ui text-text-secondary text-sm px-3 py-2 rounded-md hover:bg-bg-elevated hover:text-text-primary transition-colors"
     >
-      {children}
+      <SidebarLabel>{children}</SidebarLabel>
     </Link>
   );
+}
+
+function SidebarLabel({ children }: { children: React.ReactNode }) {
+  const { pending } = useLinkStatus();
+  return <span className="admin-nav-label" aria-busy={pending}>{children}{pending && <span className="admin-spinner" aria-hidden="true" />}</span>;
 }

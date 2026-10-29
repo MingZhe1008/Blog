@@ -28,6 +28,9 @@ export function ArticleEditor({ article }: Props) {
   const [saving, setSaving] = useState(false);
   const [preview, setPreview] = useState(false);
   const [previewHtml, setPreviewHtml] = useState("");
+  const [previewing, setPreviewing] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const previewCache = useRef<{ source: string; html: string } | null>(null);
   const [coverDragOver, setCoverDragOver] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -81,11 +84,15 @@ export function ArticleEditor({ article }: Props) {
   }
 
   async function togglePreview() {
-    if (!preview) {
-      const html = await renderMarkdown(content);
-      setPreviewHtml(html);
-    }
-    setPreview(!preview);
+    if (preview) { setPreview(false); return; }
+    if (previewing) return;
+    setPreviewing(true); setFeedback("");
+    try {
+      const html = previewCache.current?.source === content ? previewCache.current.html : await renderMarkdown(content);
+      previewCache.current = { source: content, html };
+      setPreviewHtml(html); setPreview(true);
+    } catch { setFeedback("预览失败，请重试。"); }
+    finally { setPreviewing(false); }
   }
 
   async function uploadCoverFromClipboardOrFile(file: File) {
@@ -153,6 +160,7 @@ export function ArticleEditor({ article }: Props) {
     async (s: "draft" | "published") => {
       if (!title.trim() || !content.trim()) return;
       setSaving(true);
+      setFeedback("");
       try {
         if (isEdit && article) {
           await updateArticle(article.id, {
@@ -164,7 +172,7 @@ export function ArticleEditor({ article }: Props) {
             tags,
             status: s,
           });
-          router.refresh();
+          setFeedback("已保存。");
         } else {
           await createArticle({
             title,
@@ -179,6 +187,7 @@ export function ArticleEditor({ article }: Props) {
         }
       } catch (e) {
         console.error("Save failed:", e);
+        setFeedback("保存失败，请重试或重新登录。");
       } finally {
         setSaving(false);
       }
@@ -188,6 +197,7 @@ export function ArticleEditor({ article }: Props) {
 
   return (
     <div className="max-w-4xl">
+      {feedback && <p role="status" className="admin-feedback">{feedback}</p>}
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
           <label className="block font-ui text-text-secondary text-xs mb-1 uppercase tracking-wider">
@@ -326,13 +336,15 @@ export function ArticleEditor({ article }: Props) {
             <button
               type="button"
               onClick={togglePreview}
+              disabled={previewing}
+              aria-busy={previewing}
               className={`font-ui text-[11px] px-2 py-0.5 rounded border transition-colors
                 ${preview
                   ? "bg-accent/20 text-accent border-accent/30"
                   : "bg-bg-elevated text-text-muted border-border hover:border-accent"
                 }`}
             >
-              {preview ? t("editMode") : t("previewMode")}
+              {previewing ? "…" : preview ? t("editMode") : t("previewMode")}
             </button>
           </div>
           {!preview && <ImageUploadButton onUploaded={insertImageAtCursor} />}

@@ -3,6 +3,18 @@ import { eq, desc } from "drizzle-orm";
 import crypto from "crypto";
 
 export type Article = typeof schema.articles.$inferSelect;
+export type ArticleSummary = Pick<Article, "id" | "title" | "status" | "tags" | "updatedAt">;
+
+export async function getArticleById(id: number) {
+  if (!Number.isSafeInteger(id) || id < 1) return undefined;
+  return (await getDb()).select().from(schema.articles).where(eq(schema.articles.id, id)).get();
+}
+
+export async function getArticleSummaries(): Promise<ArticleSummary[]> {
+  return (await getDb()).select({ id: schema.articles.id, title: schema.articles.title,
+    status: schema.articles.status, tags: schema.articles.tags, updatedAt: schema.articles.updatedAt,
+  }).from(schema.articles).orderBy(desc(schema.articles.updatedAt)).all();
+}
 
 export async function getPublishedArticles(opts?: {
   tags?: string[];

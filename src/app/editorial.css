@@ -36,6 +36,10 @@
 .admin-sidebar { width: 200px; flex-shrink: 0; padding: 28px 20px; border-right: 1px solid var(--color-border); display: flex; flex-direction: column; gap: 16px; }
 .admin-sidebar a[aria-current="page"] { background: var(--color-bg-elevated); color: var(--color-text-primary); font-weight: 600; }
 .admin-content { flex: 1; min-width: 0; padding: 36px; overflow-x: auto; }
+.admin-nav-label { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.admin-spinner { display: inline-block; width: 14px; height: 14px; flex-shrink: 0; border: 1.5px solid var(--color-border); border-top-color: currentColor; border-radius: 50%; animation: admin-spin .7s linear infinite; }
+.admin-loading { display: flex; gap: 12px; align-items: center; min-height: 100px; color: var(--color-text-secondary); font-size: 14px; }
+@keyframes admin-spin { to { transform: rotate(360deg); } }
 .admin-content h1 { font-size: 26px; }
 .admin-content button { cursor: pointer; }
 .admin-content button:disabled { cursor: wait; opacity: .55; }

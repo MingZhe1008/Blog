@@ -2,13 +2,11 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { createArticle } from "@/server-actions/articles";
 import matter from "gray-matter";
 
 export function ImportForm() {
   const t = useTranslations("admin");
-  const router = useRouter();
   const [dragOver, setDragOver] = useState(false);
   const [importing, setImporting] = useState(false);
   const [message, setMessage] = useState("");
@@ -46,7 +44,6 @@ export function ImportForm() {
       });
 
       setMessage(`${t("importSuccess")}: "${title}"`);
-      router.refresh();
     } catch (e) {
       setMessage(`${t("importFailed")}: ${e instanceof Error ? e.message : "Unknown error"}`);
     } finally {

@@ -19,6 +19,7 @@ export async function createArticle(data: {
 }) {
   await requireAdmin();
   await insertArticle(data);
+  revalidatePath("/admin");
   revalidatePath("/");
   revalidatePath("/blog");
 }
@@ -33,6 +34,8 @@ export async function updateArticle(
 ) {
   await requireAdmin();
   await updateArticleById(id, data);
+  revalidatePath("/admin");
+  revalidatePath(`/admin/editor/${id}`);
   revalidatePath("/");
   revalidatePath("/blog");
   if (data.slug) revalidatePath(`/blog/${data.slug}`);
@@ -41,6 +44,7 @@ export async function updateArticle(
 export async function deleteArticle(id: number) {
   await requireAdmin();
   await deleteArticleById(id);
+  revalidatePath("/admin");
   revalidatePath("/");
   revalidatePath("/blog");
 }

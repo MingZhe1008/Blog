@@ -22,7 +22,7 @@ export function NoteEditor({ note, paths }: { note?: Note; paths: string[][] }) 
     try {
       const result = await saveNote({ id: note?.id, title, path: levels, tags: tags.split(/[,，]/).map(t => t.trim()).filter(Boolean), content, status });
       if (result.error) { setError(t(result.error)); return; }
-      router.push("/admin/notes"); router.refresh();
+      router.push("/admin/notes");
     } catch { setError(t("saveFailed")); }
     finally { setBusy(false); }
   }
