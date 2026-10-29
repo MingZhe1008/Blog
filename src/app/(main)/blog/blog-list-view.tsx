@@ -31,7 +31,7 @@ export function BlogListView({
   return (
     <main className="archive-page relative min-h-screen overflow-hidden">
       <div className="mx-auto max-w-5xl px-6 pb-24 pt-20 md:pt-28">
-        <header className="relative mb-12 border-l border-accent/30 pl-6 md:mb-16 md:pl-8">
+        <header className="archive-heading">
           <div className="mb-4 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.3em] text-text-muted">
             <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_12px_var(--color-accent)]" />
             {t("fieldLabel")}
@@ -40,7 +40,6 @@ export function BlogListView({
           <p className="max-w-xl font-body text-base text-text-secondary md:text-lg">
             {t("subtitle")}
           </p>
-          <span className="absolute -left-[5px] top-24 h-2 w-2 rounded-full border border-accent bg-bg-base" aria-hidden="true" />
         </header>
 
         <form action="/blog" className="archive-search">
@@ -71,7 +70,7 @@ export function BlogListView({
                 />
               ))}
             </section>
-            <div className="mt-12 flex items-center justify-between border-t border-border/70 pt-6">
+            {totalPages > 1 && <div className="mt-12 flex items-center justify-between border-t border-border/70 pt-6">
               {page > 1 ? (
                 <a
                   href={pageHref(page - 1)}
@@ -90,7 +89,7 @@ export function BlogListView({
                   {t("older")}
                 </a>
               )}
-            </div>
+            </div>}
           </>
         )}
       </div>
