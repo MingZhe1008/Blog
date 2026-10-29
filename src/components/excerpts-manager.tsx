@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { saveReadingExcerpt } from "@/server-actions/reading-excerpts";
 import type { ReadingExcerpt } from "@/lib/reading-excerpts";
@@ -8,7 +7,6 @@ import type { ReadingExcerpt } from "@/lib/reading-excerpts";
 export function ExcerptsManager({ excerpts }: { excerpts: ReadingExcerpt[] }) {
   const t = useTranslations("excerpts");
   const errors = useTranslations("notes");
-  const router = useRouter();
   const [editing, setEditing] = useState<number | undefined>();
   const [text, setText] = useState("");
   const [source, setSource] = useState("");
@@ -25,7 +23,7 @@ export function ExcerptsManager({ excerpts }: { excerpts: ReadingExcerpt[] }) {
       try {
         const result = await saveReadingExcerpt({ id: editing, text, source, enabled });
         if (result.error) { setError(errors(result.error)); return; }
-        reset(); setMessage(t("saved")); router.refresh();
+        reset(); setMessage(t("saved"));
       } catch { setError(errors("saveFailed")); }
       finally { setBusy(false); }
     }}>

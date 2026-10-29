@@ -1,7 +1,7 @@
 "use client";
 
 import { deleteArticle } from "@/server-actions/articles";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function AdminActions({
   articleId,
@@ -12,20 +12,25 @@ export function AdminActions({
   confirmMsg: string;
   deleteLabel: string;
 }) {
-  const router = useRouter();
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleDelete() {
-    if (!confirm(confirmMsg)) return;
-    await deleteArticle(articleId);
-    router.refresh();
+    if (pending || !confirm(confirmMsg)) return;
+    setPending(true); setError("");
+    try { await deleteArticle(articleId); }
+    catch { setError("删除失败，请重试。"); }
+    finally { setPending(false); }
   }
 
   return (
-    <button
+    <><button
+      disabled={pending}
+      aria-busy={pending}
       onClick={handleDelete}
       className="text-red-400 hover:text-red-300 transition-colors"
     >
-      {deleteLabel}
-    </button>
+      {pending ? "…" : deleteLabel}
+    </button>{error && <span role="alert">{error}</span>}</>
   );
 }

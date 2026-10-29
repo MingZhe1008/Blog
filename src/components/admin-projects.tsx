@@ -1,13 +1,11 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import type { Project } from "@/lib/projects";
 import { saveProject, deleteProject } from "@/server-actions/projects";
 import { uploadImageFile } from "@/server-actions/upload";
 
 const blank = { title: "", description: "", coverImage: "", url: "", sourceUrl: "", tags: [] as string[], status: "持续更新", published: false };
 export function AdminProjects({ projects }: { projects: Project[] }) {
-  const router = useRouter();
   const [editing, setEditing] = useState<(typeof blank & { id?: number }) | null>(null);
   const [tags, setTags] = useState("");
   const [busy, setBusy] = useState(false);
@@ -19,7 +17,7 @@ export function AdminProjects({ projects }: { projects: Project[] }) {
     try {
       const result = await saveProject({ ...editing, tags: tags.split(/[,，]/).map(t => t.trim()).filter(Boolean) });
       if (result.error) setMessage(result.error);
-      else { setEditing(null); setMessage("已保存，项目页面已更新。"); router.refresh(); }
+      else { setEditing(null); setMessage("已保存，项目页面已更新。"); }
     } catch { setMessage("保存失败，请重试。"); } finally { setBusy(false); }
   }
   return <div>
@@ -52,7 +50,7 @@ export function AdminProjects({ projects }: { projects: Project[] }) {
       <div className="project-links"><button disabled={busy} onClick={() => edit(project)}>编辑</button><button disabled={busy} onClick={async () => {
         if (!confirm(`确定删除「${project.title}」？`)) return;
         setBusy(true);
-        try { const result = await deleteProject(project.id); setMessage(result.error || "已删除项目。"); if (!result.error) { if (editing?.id === project.id) setEditing(null); router.refresh(); } }
+        try { const result = await deleteProject(project.id); setMessage(result.error || "已删除项目。"); if (!result.error && editing?.id === project.id) setEditing(null); }
         catch { setMessage("删除失败，请重试。"); } finally { setBusy(false); }
       }}>删除</button></div>
     </article>)}</div>

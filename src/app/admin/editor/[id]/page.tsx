@@ -1,5 +1,5 @@
 import { ArticleEditor } from "@/components/article-editor";
-import { getAllArticles } from "@/lib/data";
+import { getArticleById } from "@/lib/data";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -10,8 +10,7 @@ export default async function EditPostPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const articles = await getAllArticles();
-  const article = articles.find((a) => a.id === parseInt(id));
+  const article = await getArticleById(Number(id));
   if (!article) notFound();
 
   return (

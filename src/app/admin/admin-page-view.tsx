@@ -3,9 +3,9 @@
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { AdminActions } from "./admin-actions";
-import type { Article } from "@/lib/data";
+import type { ArticleSummary } from "@/lib/data";
 
-export function AdminPageView({ articles }: { articles: Article[] }) {
+export function AdminPageView({ articles }: { articles: ArticleSummary[] }) {
   const t = useTranslations("admin");
 
   return (

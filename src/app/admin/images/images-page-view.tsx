@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { deleteUploadedImage, type UploadedImage } from "@/server-actions/upload";
 import { CopyIcon, Trash2Icon, ExternalLinkIcon, ImageIcon } from "lucide-react";
 
@@ -12,7 +11,8 @@ interface Props {
 
 export function ImagesPageView({ images }: Props) {
   const t = useTranslations("admin");
-  const router = useRouter();
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [error, setError] = useState("");
   const [copiedName, setCopiedName] = useState<string | null>(null);
 
   function formatSize(bytes: number) {
@@ -26,9 +26,11 @@ export function ImagesPageView({ images }: Props) {
   }
 
   async function handleDelete(name: string) {
-    if (!confirm(t("confirmDeleteImage"))) return;
-    await deleteUploadedImage(name);
-    router.refresh();
+    if (deleting || !confirm(t("confirmDeleteImage"))) return;
+    setDeleting(name); setError("");
+    try { const result = await deleteUploadedImage(name); if ("error" in result) setError(result.error); }
+    catch { setError("删除失败，请重试。"); }
+    finally { setDeleting(null); }
   }
 
   async function handleCopy(url: string, name: string) {
@@ -51,6 +53,7 @@ export function ImagesPageView({ images }: Props) {
 
   return (
     <div className="max-w-5xl">
+      {error && <p role="alert">{error}</p>}
       <div className="flex items-center gap-3 mb-8">
         <h1 className="font-display text-2xl font-black">{t("images")}</h1>
         <span className="font-ui text-xs text-text-muted bg-bg-surface border border-border px-2 py-0.5 rounded-full">
@@ -120,6 +123,9 @@ export function ImagesPageView({ images }: Props) {
                   <button
                     type="button"
                     onClick={() => handleDelete(img.name)}
+                    disabled={deleting !== null}
+                    aria-busy={deleting === img.name}
+                    aria-label={t("delete")}
                     className="inline-flex items-center gap-1 px-2 py-1 font-ui text-[11px] rounded
                                text-red-400 hover:bg-red-950/30 transition-colors ml-auto"
                   >
