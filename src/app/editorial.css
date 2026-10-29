@@ -12,6 +12,14 @@
 .public-site h1,.public-site h2,.public-site h3 { font-family: var(--font-ui), "Microsoft YaHei", sans-serif; }
 .public-site a:focus-visible,.public-site button:focus-visible,.public-site input:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 5px; }
 .editorial-page { width: min(1120px, calc(100% - 64px)); margin: auto; padding-bottom: 80px; }
+.projects-page { padding-top: 64px; }
+.projects-page h1 { font-size: clamp(36px, 6vw, 56px); line-height: 1.2; }
+.projects-list { margin-top: 36px; }
+.project-entry { padding: 32px 0; border-bottom: 1px solid var(--color-border); }
+.project-entry h2 { font-size: clamp(23px, 4vw, 30px); margin-bottom: 16px; }
+.project-description { max-width: 640px; color: var(--color-text-secondary); line-height: 1.9; }
+.project-stack { display: flex; flex-wrap: wrap; gap: 10px 20px; list-style: none; padding: 0; margin: 24px 0; color: var(--color-text-muted); font-size: 12px; }
+.project-links { display: flex; flex-wrap: wrap; gap: 24px; }
 .site-header .editorial-nav { width: min(1120px, calc(100% - 64px)); min-height: 80px; gap: 32px; }
 .wordmark { font-family: var(--font-display), serif; font-size: 24px; font-weight: 900; letter-spacing: -1px; color: var(--color-text-primary); white-space: nowrap; }
 .wordmark span { color: var(--color-accent); }
