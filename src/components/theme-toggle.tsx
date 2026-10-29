@@ -3,6 +3,7 @@
 import { useTheme } from "next-themes";
 import { useLocale } from "next-intl";
 import { useEffect, useState } from "react";
+import { Sun, Moon } from "lucide-react";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -32,7 +33,7 @@ export function ThemeToggle() {
       aria-label={label}
       title={label}
     >
-      <span className={`nav-orb nav-orb--moon${isDark ? " is-dark" : ""}`} aria-hidden="true" />
+      {isDark ? <Sun size={19} strokeWidth={1.6} aria-hidden="true" /> : <Moon size={19} strokeWidth={1.6} aria-hidden="true" />}
       <span className="sr-only">{label}</span>
     </button>
   );

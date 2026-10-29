@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { ThemeProvider } from "next-themes";
 import { Playfair_Display, Crimson_Pro, JetBrains_Mono, DM_Sans } from "next/font/google";
 import { I18nProvider } from "@/components/i18n-provider";
@@ -40,15 +41,16 @@ export const metadata: Metadata = {
   description: "Personal blog about programming languages, AI, and agent tools.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = (await cookies()).get("NEXT_LOCALE")?.value === "en" ? "en" : "zh";
   return (
     <html
-      lang="zh"
+      lang={locale}
       suppressHydrationWarning
       className={`${playfair.variable} ${crimson.variable} ${jetbrains.variable} ${dmsans.variable}`}
     >
       <body className="min-h-screen bg-bg-base text-text-primary font-body antialiased">
-        <I18nProvider>
+        <I18nProvider initialLocale={locale}>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"

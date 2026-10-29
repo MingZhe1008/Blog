@@ -1,7 +1,15 @@
 "use client";
 
 import { NextIntlClientProvider } from "next-intl";
-import { useMemo } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+
+type Locale = "zh" | "en";
+const LocaleContext = createContext<((locale: Locale) => void) | null>(null);
+export function useSetLocale() {
+  const update = useContext(LocaleContext);
+  if (!update) throw new Error("Locale provider is missing");
+  return update;
+}
 
 type Messages = Record<string, Record<string, string>>;
 
@@ -12,22 +20,21 @@ export function I18nProvider({
   children: React.ReactNode;
   initialLocale?: string;
 }) {
-  const locale = useMemo(() => {
-    if (typeof document === "undefined") return initialLocale;
-    const cookie = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("NEXT_LOCALE="))
-      ?.split("=")[1];
-    if (cookie === "en" || cookie === "zh") return cookie;
-    return initialLocale;
-  }, [initialLocale]);
+  const [locale, setLocale] = useState<Locale>(initialLocale === "en" ? "en" : "zh");
+  useEffect(() => { document.documentElement.lang = locale; }, [locale]);
+  function updateLocale(next: Locale) {
+    document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`;
+    setLocale(next);
+  }
 
   const messages = locale === "en" ? en : zh;
 
   return (
+    <LocaleContext.Provider value={updateLocale}>
     <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Shanghai">
       {children}
     </NextIntlClientProvider>
+    </LocaleContext.Provider>
   );
 }
 
