@@ -35,7 +35,7 @@ const zh: Messages = {
   projects: {
     title: "项目", intro: "记录正在构建与持续完善的作品。",
     blogTitle: "MingZhe 个人博客", blogDescription: "记录编程与 AI 实践，整理学习笔记，分享读书摘录。这个博客也是我持续打磨的个人项目。",
-    source: "查看源码", visit: "访问博客",
+    source: "查看源码", visit: "访问博客", status: "持续更新", type: "个人项目",
   },
   search: { open: "打开站内搜索", placeholder: "搜索", prompt: "搜索已发布的博客和笔记", loading: "正在搜索…", empty: "没有找到相关内容", article: "博客", note: "笔记" },
   excerpts: {
@@ -167,7 +167,7 @@ const en: Messages = {
   projects: {
     title: "Projects", intro: "Things I am building and refining over time.",
     blogTitle: "MingZhe Personal Blog", blogDescription: "Writing about programming and AI, organizing learning notes, and sharing reading excerpts. This blog is also a personal project I continue to refine.",
-    source: "View source", visit: "Visit blog",
+    source: "View source", visit: "Visit blog", status: "In progress", type: "Personal project",
   },
   search: { open: "Open site search", placeholder: "Search", prompt: "Search published articles and notes", loading: "Searching…", empty: "No matching content", article: "Article", note: "Note" },
   excerpts: {
