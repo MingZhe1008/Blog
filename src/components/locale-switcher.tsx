@@ -1,17 +1,17 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
+import { Languages } from "lucide-react";
+import { useSetLocale } from "./i18n-provider";
 
 export function LocaleSwitcher() {
   const locale = useLocale();
-  const router = useRouter();
+  const setLocale = useSetLocale();
   const label = locale === "zh" ? "Switch to English" : "切换到中文";
 
   function toggle() {
     const next = locale === "zh" ? "en" : "zh";
-    document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=${365 * 24 * 60 * 60}`;
-    router.refresh();
+    setLocale(next);
   }
 
   return (
@@ -22,7 +22,7 @@ export function LocaleSwitcher() {
       title={label}
       aria-label={label}
     >
-      <span className="locale-switcher__reticle" aria-hidden="true" />
+      <Languages size={17} strokeWidth={1.6} aria-hidden="true" />
       <span className="locale-switcher__code">{locale === "zh" ? "EN" : "中"}</span>
     </button>
   );
