@@ -1,5 +1,6 @@
 "use server";
 
+import { withImageContentWrite } from "@/lib/image-library";
 import { revalidatePath } from "next/cache";
 import {
   insertArticle,
@@ -18,8 +19,9 @@ export async function createArticle(data: {
   status?: "draft" | "published";
 }) {
   await requireAdmin();
-  await insertArticle(data);
+  await withImageContentWrite(() => insertArticle(data));
   revalidatePath("/admin");
+  revalidatePath("/admin/images");
   revalidatePath("/");
   revalidatePath("/blog");
 }
@@ -33,8 +35,9 @@ export async function updateArticle(
   }>
 ) {
   await requireAdmin();
-  await updateArticleById(id, data);
+  await withImageContentWrite(() => updateArticleById(id, data));
   revalidatePath("/admin");
+  revalidatePath("/admin/images");
   revalidatePath(`/admin/editor/${id}`);
   revalidatePath("/");
   revalidatePath("/blog");
@@ -43,8 +46,9 @@ export async function updateArticle(
 
 export async function deleteArticle(id: number) {
   await requireAdmin();
-  await deleteArticleById(id);
+  await withImageContentWrite(() => deleteArticleById(id));
   revalidatePath("/admin");
+  revalidatePath("/admin/images");
   revalidatePath("/");
   revalidatePath("/blog");
 }
@@ -58,7 +62,9 @@ export async function importMarkdownFile(filePath: string) {
   const tags = data.tags ? (Array.isArray(data.tags) ? data.tags : [data.tags]) : [];
   const excerpt = data.excerpt ?? content.slice(0, 200).replace(/\n/g, " ") + "...";
 
-  await insertArticle({ title, slug, content, excerpt, tags, status: "draft" });
+  await withImageContentWrite(() => insertArticle({ title, slug, content, excerpt, tags, status: "draft" }));
   revalidatePath("/");
+  revalidatePath("/admin/images");
+  revalidatePath("/admin");
   return slug;
 }

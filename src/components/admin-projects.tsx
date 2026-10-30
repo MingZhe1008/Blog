@@ -46,7 +46,7 @@ export function AdminProjects({ projects }: { projects: Project[] }) {
         <div className="project-links"><button type="submit">{busy ? "处理中…" : "保存项目"}</button><button type="button" onClick={() => setEditing(null)}>取消</button></div>
       </fieldset>
     </form>}
-    <div className="admin-project-list">{projects.map(project => <article key={project.id}>
+    <div className="admin-project-list">{projects.map(project => <article key={project.id} id={`project-${project.id}`}>
       <div className="admin-project-identity">{project.coverImage && <AdminImagePreview src={project.coverImage} alt={project.title} />}<div><h2>{project.title}</h2><p>{project.published ? "已展示" : "草稿"} · {project.status}</p></div></div>
       <div className="project-links"><button disabled={busy} onClick={() => edit(project)}>编辑</button><button disabled={busy} onClick={async () => {
         if (!confirm(`确定删除「${project.title}」？`)) return;

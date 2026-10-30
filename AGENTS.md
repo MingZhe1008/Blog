@@ -80,6 +80,7 @@ Next.js 15 App Router、React 19、TypeScript、Tailwind v4、SQLite（sql.js WA
 - Server Action 可被独立调用，不能只依赖路由保护；受保护入口必须校验 `isAdminAuthenticated()`。
 - 账号密码通过 `ADMIN_USERNAME` / `ADMIN_PASSWORD` 配置；实际凭据不能写入文档或提交 Git。
 - 图片保存在 `public/uploads/`，支持 JPG、PNG、GIF、WebP、SVG，单文件最大 10MB；Server Action 请求上限 11MB，为表单开销留余量。
+- 图片生命周期由 `src/lib/image-library.ts` 与 `image_assets` 表维护：保存的文章（含草稿）、笔记、项目引用均保护图片；首次纳管旧图片、新上传、重复上传、复制和移除最后一处引用后，未引用图片保留 7 天。批量清理只接受用户确认的过期名单，并在服务端重新检查；不后台自动删除旧内容，不改写历史图片地址。文章、笔记、项目写入必须经过 `withImageContentWrite()`，与上传和清理共用单进程队列。
 - 项目链接只允许 HTTP(S) 或站内路径，输入必须校验，前台只展示公开项目。
 - 文章使用 Markdown/MDX，gray-matter 解析 frontmatter，next-mdx-remote/rsc 渲染，配合 GFM、代码高亮与标题锚点。MDX 不等于已配置不可信代码沙箱。
 - Giscus 组件已存在，实际可用性取决于 GitHub 配置，不得直接宣称评论已配置。

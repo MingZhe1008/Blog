@@ -1,105 +1,54 @@
 "use server";
 
-import fs from "fs/promises";
-import path from "path";
 import { revalidatePath } from "next/cache";
-import crypto from "crypto";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { getImageLibrary, storeImage, retainImage, removeImages, type UploadedImage } from "@/lib/image-library";
 
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"];
-const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+const EXTENSIONS: Record<string, string> = { "image/jpeg": ".jpg", "image/png": ".png", "image/gif": ".gif", "image/webp": ".webp", "image/svg+xml": ".svg" };
+const unauthorized = "登录已失效，请重新登录管理台。 / Please sign in again.";
 
-export interface UploadedImage {
-  name: string;
-  url: string;
-  size: number;
-  lastModified: string;
-}
-
-export async function uploadImageFile(
-  formData: FormData
-): Promise<{ url: string } | { error: string }> {
-  if (!await isAdminAuthenticated()) return { error: "登录已失效，请重新登录管理台。" };
+export async function uploadImageFile(formData: FormData): Promise<{ url: string; reused: boolean } | { error: string }> {
+  if (!await isAdminAuthenticated()) return { error: unauthorized };
   try {
     const file = formData.get("file");
-    if (!file || !(file instanceof File)) {
-      return { error: "未找到文件" };
-    }
-
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      return { error: `不支持的文件类型: ${file.type}。仅支持 JPG、PNG、GIF、WebP、SVG` };
-    }
-
-    if (file.size > MAX_SIZE) {
-      return { error: `文件过大 (${(file.size / 1024 / 1024).toFixed(1)}MB)，最大 10MB` };
-    }
-
-    // 确保上传目录存在
-    await fs.mkdir(UPLOAD_DIR, { recursive: true });
-
-    // 生成唯一文件名
-    const ext = ({ "image/jpeg": ".jpg", "image/png": ".png", "image/gif": ".gif", "image/webp": ".webp", "image/svg+xml": ".svg" } as Record<string, string>)[file.type];
-    const randomHex = crypto.randomBytes(4).toString("hex");
-    const uniqueName = `${Date.now()}-${randomHex}${ext}`;
-
-    // 写入文件
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await fs.writeFile(path.join(UPLOAD_DIR, uniqueName), buffer);
-
-    return { url: `/uploads/${uniqueName}` };
-  } catch (e) {
-    console.error("Upload failed:", e);
-    return { error: "上传失败，请稍后重试" };
+    if (!(file instanceof File) || !file.size) return { error: "未找到图片文件 / Image file missing" };
+    const ext = EXTENSIONS[file.type];
+    if (!ext) return { error: "仅支持 JPG、PNG、GIF、WebP、SVG / Unsupported image format" };
+    if (file.size > 10 * 1024 * 1024) return { error: "图片最大 10MB / Maximum image size: 10MB" };
+    const result = await storeImage(Buffer.from(await file.arrayBuffer()), ext);
+    revalidatePath("/admin/images");
+    return result;
+  } catch (error) {
+    console.error("Image upload failed:", error);
+    return { error: "上传失败，请重试。 / Upload failed. Please try again." };
   }
 }
 
 export async function listUploadedImages(): Promise<UploadedImage[]> {
   if (!await isAdminAuthenticated()) return [];
-  try {
-    await fs.mkdir(UPLOAD_DIR, { recursive: true });
-    const entries = await fs.readdir(UPLOAD_DIR, { withFileTypes: true });
-
-    const images = await Promise.all(
-      entries
-        .filter((e) => {
-          if (!e.isFile()) return false;
-          const ext = path.extname(e.name).toLowerCase();
-          return [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"].includes(ext);
-        })
-        .map(async (e) => {
-          const filePath = path.join(UPLOAD_DIR, e.name);
-          const stat = await fs.stat(filePath);
-          return {
-            name: e.name,
-            url: `/uploads/${e.name}`,
-            size: stat.size,
-            lastModified: stat.mtime.toISOString(),
-          };
-        })
-    );
-
-    // 按修改时间降序排列
-    images.sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime());
-    return images;
-  } catch {
-    return [];
-  }
+  return getImageLibrary();
 }
 
-export async function deleteUploadedImage(filename: string): Promise<{ success: true } | { error: string }> {
-  if (!await isAdminAuthenticated()) return { error: "登录已失效，请重新登录管理台。" };
-  // 路径穿越防护
-  if (filename.includes("..") || filename.includes("/") || filename.includes("\\")) {
-    return { error: "无效的文件名" };
-  }
+export async function retainUploadedImage(name: string) {
+  if (!await isAdminAuthenticated()) return { error: unauthorized };
+  try { await retainImage(name); revalidatePath("/admin/images"); return { success: true }; }
+  catch { return { error: "图片不存在或续期失败 / Image unavailable" }; }
+}
 
+export async function deleteUploadedImage(name: string): Promise<{ success: true } | { error: string }> {
+  if (!await isAdminAuthenticated()) return { error: unauthorized };
   try {
-    const filePath = path.join(UPLOAD_DIR, filename);
-    await fs.unlink(filePath);
+    const result = await removeImages([name], false);
     revalidatePath("/admin/images");
+    if (!result.deleted.length) return { error: "图片正在使用或已不存在，未删除。 / Image is in use or no longer exists." };
     return { success: true };
-  } catch {
-    return { error: "删除失败，文件可能不存在" };
-  }
+  } catch { return { error: "删除失败，请重试。 / Delete failed. Please try again." }; }
+}
+
+export async function cleanupUnusedImages(names: string[]) {
+  if (!await isAdminAuthenticated()) return { error: unauthorized };
+  try {
+    const result = await removeImages(names, true);
+    revalidatePath("/admin/images"); return result;
+  } catch { return { error: "清理失败，请刷新后重试。 / Cleanup failed. Please refresh and retry." }; }
 }
