@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { ImageUploadButton } from "@/components/image-upload-button";
+import { renderMarkdown } from "@/server-actions/preview";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -8,11 +10,16 @@ import type { Note } from "@/lib/notes";
 
 export function NoteEditor({ note, paths }: { note?: Note; paths: string[][] }) {
   const t = useTranslations("notes");
+  const admin = useTranslations("admin");
   const router = useRouter();
   const [title, setTitle] = useState(note?.title ?? "");
   const [levels, setLevels] = useState(note?.path.length ? note.path : [""]);
   const [tags, setTags] = useState(note?.tags.join(", ") ?? "");
   const [content, setContent] = useState(note?.content ?? "");
+  const textarea = useRef<HTMLTextAreaElement>(null);
+  const [preview, setPreview] = useState(false);
+  const [previewHtml, setPreviewHtml] = useState("");
+  const [previewing, setPreviewing] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   async function submit(status: "draft" | "published") {
@@ -39,7 +46,22 @@ export function NoteEditor({ note, paths }: { note?: Note; paths: string[][] }) 
         <p className="note-breadcrumb">{[...levels.map(l => l || "…"), title || "…"].join(" → ")}</p>
         <label htmlFor="note-tags">{t("tags")}</label><input id="note-tags" value={tags} onChange={e => setTags(e.target.value)} placeholder={t("tagsHelp")} />
         <div className="note-tags">{tags.split(/[,，]/).map(t => t.trim()).filter(Boolean).map((tag,i) => <span className="article-tag" key={i}>{tag}</span>)}</div>
-        <label htmlFor="note-content">{t("content")}</label><textarea id="note-content" rows={22} value={content} onChange={e => setContent(e.target.value)} required />
+        <div className="note-level-heading"><label htmlFor="note-content">{t("content")}</label><div className="admin-cover-tools">
+          <button type="button" disabled={previewing} onClick={async () => {
+            if (preview) { setPreview(false); return; }
+            setPreviewing(true); setError("");
+            try { setPreviewHtml(await renderMarkdown(content)); setPreview(true); }
+            catch { setError(admin("previewFailed")); }
+            finally { setPreviewing(false); }
+          }}>{previewing ? "…" : preview ? admin("editMode") : admin("previewMode")}</button>
+          {!preview && <ImageUploadButton onUploaded={url => {
+            const start = textarea.current?.selectionStart ?? content.length;
+            const end = textarea.current?.selectionEnd ?? start;
+            const image = `![image](${url})`;
+            setContent(content.slice(0, start) + image + content.slice(end));
+            requestAnimationFrame(() => { textarea.current?.focus(); textarea.current?.setSelectionRange(start + image.length, start + image.length); });
+          }} />}
+        </div></div>{preview ? <div className="prose admin-note-preview" dangerouslySetInnerHTML={{ __html: previewHtml }} /> : <textarea ref={textarea} id="note-content" rows={22} value={content} onChange={e => setContent(e.target.value)} required />}
         {error && <p role="alert" className="note-error">{error}</p>}
         <div className="hero-actions"><button type="submit">{busy ? t("saving") : t("draft")}</button><button type="button" className="primary-link" onClick={() => void submit("published")}>{t("publish")}</button></div>
       </fieldset>

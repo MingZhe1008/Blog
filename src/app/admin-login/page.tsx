@@ -1,4 +1,5 @@
 import { LoginForm } from "./login-form";
+import "../admin/admin.css";
 export default async function AdminLoginPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
   const { next = "/admin" } = await searchParams;
   const developmentPassword = process.env.NODE_ENV === "development" ? (process.env.ADMIN_PASSWORD || "admin123") : "";

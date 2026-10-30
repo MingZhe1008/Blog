@@ -4,6 +4,7 @@ import { useState, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { createArticle, updateArticle } from "@/server-actions/articles";
+import { AdminImagePreview } from "@/components/admin-image-preview";
 import { ImageUploadButton } from "@/components/image-upload-button";
 import { uploadImageFile } from "@/server-actions/upload";
 import { renderMarkdown } from "@/server-actions/preview";
@@ -196,9 +197,9 @@ export function ArticleEditor({ article }: Props) {
   );
 
   return (
-    <div className="max-w-4xl">
+    <div className="admin-article-editor">
       {feedback && <p role="status" className="admin-feedback">{feedback}</p>}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="admin-editor-meta grid grid-cols-2 gap-4 mb-6">
         <div>
           <label className="block font-ui text-text-secondary text-xs mb-1 uppercase tracking-wider">
             {t("label_title")}
@@ -227,7 +228,7 @@ export function ArticleEditor({ article }: Props) {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="admin-editor-details grid grid-cols-3 gap-4 mb-6">
         <div className="col-span-2">
           <label className="block font-ui text-text-secondary text-xs mb-1 uppercase tracking-wider">
             {t("label_tags")}
@@ -268,8 +269,8 @@ export function ArticleEditor({ article }: Props) {
           <label className="block font-ui text-text-secondary text-xs mb-1 uppercase tracking-wider">
             {t("label_coverImage")}
           </label>
-          <div className="flex gap-2 mb-2">
-            <input
+          <div className="admin-cover-tools">
+            <details className="admin-url-editor"><summary>{t("editImageUrl")}</summary><input
               type="text"
               value={coverImage}
               onChange={(e) => setCoverImage(e.target.value)}
@@ -278,7 +279,8 @@ export function ArticleEditor({ article }: Props) {
                          focus:outline-none focus:border-accent transition-colors"
               placeholder={t("placeholder_coverImage")}
             />
-            <ImageUploadButton onUploaded={(url) => setCoverImage(url)} />
+            </details><ImageUploadButton onUploaded={(url) => setCoverImage(url)} />
+            {coverImage && <button type="button" onClick={() => setCoverImage("")}>{t("removeImage")}</button>}
           </div>
           <div
             onDragOver={handleCoverDragOver}
@@ -293,12 +295,7 @@ export function ArticleEditor({ article }: Props) {
               }`}
           >
             {coverImage ? (
-              <img
-                src={coverImage}
-                alt="封面预览"
-                className="h-32 w-full rounded-md object-cover bg-bg-surface"
-                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-              />
+              <AdminImagePreview src={coverImage} alt={t("label_coverImage")} />
             ) : (
               <div className="flex items-center justify-center h-24 text-text-muted font-ui text-xs">
                 {coverDragOver ? "释放以上传封面图" : "拖拽图片到此处，或点击上方按钮上传"}

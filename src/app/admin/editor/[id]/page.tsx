@@ -1,3 +1,4 @@
+import { AdminPageHeading } from "@/components/admin-page-heading";
 import { ArticleEditor } from "@/components/article-editor";
 import { getArticleById } from "@/lib/data";
 import { notFound } from "next/navigation";
@@ -15,7 +16,7 @@ export default async function EditPostPage({
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-black mb-8">Edit Post</h1>
+      <AdminPageHeading message="editPost" />
       <ArticleEditor article={article} />
     </div>
   );
