@@ -1,4 +1,5 @@
 "use client";
+import { MarkdownImageEditor, type MarkdownImageEditorHandle } from "@/components/markdown-image-editor";
 import { ImageUploadButton } from "@/components/image-upload-button";
 import { renderMarkdown } from "@/server-actions/preview";
 import { useState, useRef } from "react";
@@ -16,7 +17,7 @@ export function NoteEditor({ note, paths }: { note?: Note; paths: string[][] }) 
   const [levels, setLevels] = useState(note?.path.length ? note.path : [""]);
   const [tags, setTags] = useState(note?.tags.join(", ") ?? "");
   const [content, setContent] = useState(note?.content ?? "");
-  const textarea = useRef<HTMLTextAreaElement>(null);
+  const textarea = useRef<MarkdownImageEditorHandle>(null);
   const [preview, setPreview] = useState(false);
   const [previewHtml, setPreviewHtml] = useState("");
   const [previewing, setPreviewing] = useState(false);
@@ -54,14 +55,8 @@ export function NoteEditor({ note, paths }: { note?: Note; paths: string[][] }) 
             catch { setError(admin("previewFailed")); }
             finally { setPreviewing(false); }
           }}>{previewing ? "…" : preview ? admin("editMode") : admin("previewMode")}</button>
-          {!preview && <ImageUploadButton onUploaded={url => {
-            const start = textarea.current?.selectionStart ?? content.length;
-            const end = textarea.current?.selectionEnd ?? start;
-            const image = `![image](${url})`;
-            setContent(content.slice(0, start) + image + content.slice(end));
-            requestAnimationFrame(() => { textarea.current?.focus(); textarea.current?.setSelectionRange(start + image.length, start + image.length); });
-          }} />}
-        </div></div>{preview ? <div className="prose admin-note-preview" dangerouslySetInnerHTML={{ __html: previewHtml }} /> : <textarea ref={textarea} id="note-content" rows={22} value={content} onChange={e => setContent(e.target.value)} required />}
+          {!preview && <ImageUploadButton onUploaded={url => textarea.current?.insertImage(url)} />}
+        </div></div>{preview ? <div className="prose admin-note-preview" dangerouslySetInnerHTML={{ __html: previewHtml }} /> : <MarkdownImageEditor ref={textarea} id="note-content" value={content} onChange={setContent} disabled={busy} />}
         {error && <p role="alert" className="note-error">{error}</p>}
         <div className="hero-actions"><button type="submit">{busy ? t("saving") : t("draft")}</button><button type="button" className="primary-link" onClick={() => void submit("published")}>{t("publish")}</button></div>
       </fieldset>

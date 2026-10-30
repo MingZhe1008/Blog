@@ -4,6 +4,7 @@ import { useState, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { createArticle, updateArticle } from "@/server-actions/articles";
+import { MarkdownImageEditor, type MarkdownImageEditorHandle } from "@/components/markdown-image-editor";
 import { AdminImagePreview } from "@/components/admin-image-preview";
 import { ImageUploadButton } from "@/components/image-upload-button";
 import { uploadImageFile } from "@/server-actions/upload";
@@ -33,7 +34,7 @@ export function ArticleEditor({ article }: Props) {
   const [feedback, setFeedback] = useState("");
   const previewCache = useRef<{ source: string; html: string } | null>(null);
   const [coverDragOver, setCoverDragOver] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const textareaRef = useRef<MarkdownImageEditorHandle>(null);
 
   function autoSlug(title: string) {
     return title
@@ -44,45 +45,7 @@ export function ArticleEditor({ article }: Props) {
       .replace(/^-|-$/g, "") || "untitled";
   }
 
-  function insertImageAtCursor(url: string) {
-    const ta = textareaRef.current;
-    if (!ta) return;
-    const start = ta.selectionStart;
-    const end = ta.selectionEnd;
-    const before = content.slice(0, start);
-    const after = content.slice(end);
-    const md = `![image](${url})`;
-    const newContent = before + md + after;
-    setContent(newContent);
-    // 在 React 重渲染后恢复光标到插入文本的末尾
-    requestAnimationFrame(() => {
-      ta.selectionStart = ta.selectionEnd = start + md.length;
-      ta.focus();
-    });
-  }
-
-  async function handlePaste(e: React.ClipboardEvent<HTMLTextAreaElement>) {
-    const items = e.clipboardData?.items;
-    if (!items) return;
-
-    // 查找剪切板中的图片数据
-    for (const item of Array.from(items)) {
-      if (item.type.startsWith("image/")) {
-        e.preventDefault();
-        const file = item.getAsFile();
-        if (!file) continue;
-
-        const formData = new FormData();
-        formData.append("file", file);
-        const result = await uploadImageFile(formData);
-
-        if ("url" in result) {
-          insertImageAtCursor(result.url);
-        }
-        return;
-      }
-    }
-  }
+  function insertImageAtCursor(url: string) { textareaRef.current?.insertImage(url); }
 
   async function togglePreview() {
     if (preview) { setPreview(false); return; }
@@ -363,14 +326,11 @@ export function ArticleEditor({ article }: Props) {
             dangerouslySetInnerHTML={{ __html: previewHtml }}
           />
         ) : (
-          <textarea
+          <MarkdownImageEditor
             ref={textareaRef}
             value={content}
-            onChange={(e) => setContent(e.target.value)}
-            onPaste={handlePaste}
-            rows={24}
-            className="w-full bg-bg-surface border border-border rounded-md px-4 py-3 font-mono text-sm leading-relaxed
-                       focus:outline-none focus:border-accent transition-colors resize-y"
+            onChange={setContent}
+            disabled={saving}
             placeholder={t("placeholder_content")}
           />
         )}
