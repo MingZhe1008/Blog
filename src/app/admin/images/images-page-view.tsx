@@ -1,9 +1,10 @@
 "use client";
 
+import { AdminImagePreview } from "@/components/admin-image-preview";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { deleteUploadedImage, type UploadedImage } from "@/server-actions/upload";
-import { CopyIcon, Trash2Icon, ExternalLinkIcon, ImageIcon } from "lucide-react";
+import { CopyIcon, Trash2Icon, ImageIcon } from "lucide-react";
 
 interface Props {
   images: UploadedImage[];
@@ -52,7 +53,7 @@ export function ImagesPageView({ images }: Props) {
   }
 
   return (
-    <div className="max-w-5xl">
+    <div className="admin-media-library">
       {error && <p role="alert">{error}</p>}
       <div className="flex items-center gap-3 mb-8">
         <h1 className="font-display text-2xl font-black">{t("images")}</h1>
@@ -74,19 +75,7 @@ export function ImagesPageView({ images }: Props) {
               className="bg-bg-surface border border-border rounded-lg overflow-hidden hover:border-accent/50 transition-colors"
             >
               {/* 缩略图 */}
-              <a href={img.url} target="_blank" rel="noopener noreferrer" className="block">
-                <div className="aspect-video bg-bg-elevated flex items-center justify-center">
-                  <img
-                    src={img.url}
-                    alt={img.name}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = "none";
-                    }}
-                  />
-                </div>
-              </a>
+              <AdminImagePreview src={img.url} alt={img.name} />
 
               {/* 信息区 */}
               <div className="p-3 space-y-2">
@@ -110,16 +99,6 @@ export function ImagesPageView({ images }: Props) {
                     <CopyIcon size={12} />
                     {copiedName === img.name ? t("copied") : t("copyUrl")}
                   </button>
-                  <a
-                    href={img.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 px-2 py-1 font-ui text-[11px] rounded
-                               hover:bg-bg-elevated transition-colors"
-                    title={t("viewImage")}
-                  >
-                    <ExternalLinkIcon size={12} />
-                  </a>
                   <button
                     type="button"
                     onClick={() => handleDelete(img.name)}

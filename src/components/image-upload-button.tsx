@@ -22,14 +22,15 @@ export function ImageUploadButton({ onUploaded, className = "" }: Props) {
     const formData = new FormData();
     formData.append("file", file);
 
-    const result = await uploadImageFile(formData);
-    setUploading(false);
-
-    if ("url" in result) {
-      onUploaded(result.url);
-    } else {
-      setError(result.error);
-    }
+    try {
+      const result = await uploadImageFile(formData);
+      if ("url" in result) {
+        onUploaded(result.url);
+      } else {
+        setError(result.error);
+      }
+    } catch { setError("上传失败，请重试 / Upload failed"); }
+    finally { setUploading(false); }
   }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {

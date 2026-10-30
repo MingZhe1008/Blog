@@ -12,6 +12,7 @@ export function ImportForm() {
   const [message, setMessage] = useState("");
 
   async function handleFile(file: File) {
+    if (importing) return;
     setImporting(true);
     setMessage("");
     try {
@@ -63,7 +64,7 @@ export function ImportForm() {
           e.preventDefault();
           setDragOver(false);
           const file = e.dataTransfer.files[0];
-          if (file?.name.endsWith(".md")) handleFile(file);
+          if (file && /\.mdx?$/i.test(file.name)) handleFile(file);
         }}
         className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors ${
           dragOver
@@ -77,6 +78,7 @@ export function ImportForm() {
         <label className="cursor-pointer inline-block px-4 py-2 font-ui text-xs bg-bg-elevated border border-border rounded-md hover:border-accent transition-colors">
           {t("chooseFile")}
           <input
+            disabled={importing}
             type="file"
             accept=".md,.mdx"
             className="hidden"
@@ -89,7 +91,7 @@ export function ImportForm() {
       </div>
 
       {message && (
-        <p className="mt-4 font-ui text-sm text-text-secondary">{message}</p>
+        <p role="status" className="mt-4 font-ui text-sm text-text-secondary">{message}</p>
       )}
 
       <div className="mt-8 p-4 bg-bg-surface rounded-lg border border-border">

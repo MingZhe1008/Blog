@@ -1,4 +1,5 @@
 "use client";
+import { AdminImagePreview } from "@/components/admin-image-preview";
 import { useState } from "react";
 import type { Project } from "@/lib/projects";
 import { saveProject, deleteProject } from "@/server-actions/projects";
@@ -28,7 +29,7 @@ export function AdminProjects({ projects }: { projects: Project[] }) {
       <fieldset disabled={busy}>
         <label>项目名称<input required maxLength={200} value={editing.title} onChange={e => setEditing({ ...editing, title: e.target.value })} /></label>
         <label>项目简介<textarea required rows={4} maxLength={5000} value={editing.description} onChange={e => setEditing({ ...editing, description: e.target.value })} /></label>
-        <label>封面地址<input value={editing.coverImage} onChange={e => setEditing({ ...editing, coverImage: e.target.value })} placeholder="上传图片或输入 https:// 地址" /></label>
+        <details className="admin-url-editor"><summary>编辑图片地址 / Image URL</summary><label>封面地址<input value={editing.coverImage} onChange={e => setEditing({ ...editing, coverImage: e.target.value })} placeholder="上传图片或输入 https:// 地址" /></label></details>
         <label>上传封面（最大 10MB）<input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml" onChange={async e => {
           const file = e.target.files?.[0]; e.target.value = ""; if (!file) return;
           setBusy(true); setMessage("");
@@ -36,7 +37,7 @@ export function AdminProjects({ projects }: { projects: Project[] }) {
             if ("error" in result) setMessage(result.error); else setEditing(current => current && ({ ...current, coverImage: result.url }));
           } catch { setMessage("上传失败，请重试。"); } finally { setBusy(false); }
         }} /></label>
-        {editing.coverImage && <div><img className="admin-cover-preview" src={editing.coverImage} alt="封面预览" /><button type="button" onClick={() => setEditing({ ...editing, coverImage: "" })}>移除封面</button></div>}
+        {editing.coverImage && <div><AdminImagePreview src={editing.coverImage} alt="项目封面 / Project cover" /><button type="button" onClick={() => setEditing({ ...editing, coverImage: "" })}>移除封面</button></div>}
         <label>项目地址<input value={editing.url} onChange={e => setEditing({ ...editing, url: e.target.value })} placeholder="https://… 或 /blog" /></label>
         <label>源码地址<input value={editing.sourceUrl} onChange={e => setEditing({ ...editing, sourceUrl: e.target.value })} placeholder="https://github.com/…" /></label>
         <label>标签（逗号分隔）<input value={tags} onChange={e => setTags(e.target.value)} /></label>
@@ -46,7 +47,7 @@ export function AdminProjects({ projects }: { projects: Project[] }) {
       </fieldset>
     </form>}
     <div className="admin-project-list">{projects.map(project => <article key={project.id}>
-      <div><h2>{project.title}</h2><p>{project.published ? "已展示" : "草稿"} · {project.status}</p></div>
+      <div className="admin-project-identity">{project.coverImage && <AdminImagePreview src={project.coverImage} alt={project.title} />}<div><h2>{project.title}</h2><p>{project.published ? "已展示" : "草稿"} · {project.status}</p></div></div>
       <div className="project-links"><button disabled={busy} onClick={() => edit(project)}>编辑</button><button disabled={busy} onClick={async () => {
         if (!confirm(`确定删除「${project.title}」？`)) return;
         setBusy(true);

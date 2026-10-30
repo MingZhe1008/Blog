@@ -1,8 +1,11 @@
 "use client";
 
+import "./admin.css";
+
 import { useTranslations } from "next-intl";
 import Link, { useLinkStatus } from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { FileText, FolderKanban, NotebookPen, Quote, Import, Images, ArrowLeft, Layers } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const t = useTranslations("admin");
@@ -12,24 +15,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="admin-sidebar">
         <Link
           href="/admin"
-          className="font-display text-accent text-xl font-black mb-4 hover:text-accent-hover transition-colors"
+          className="admin-brand"
         >
-          {t("title")}
+          <Layers size={22} />{t("title")}
         </Link>
         <nav className="flex flex-col gap-1">
-          <SidebarLink href="/admin">{t("articles")}</SidebarLink>
-          <SidebarLink href="/admin/projects">项目管理</SidebarLink>
-          <SidebarLink href="/admin/notes">{t("notes")}</SidebarLink>
-          <SidebarLink href="/admin/excerpts">{t("excerpts")}</SidebarLink>
-          <SidebarLink href="/admin/import">{t("importMD")}</SidebarLink>
-          <SidebarLink href="/admin/images">{t("images")}</SidebarLink>
+          <SidebarLink href="/admin"><FileText size={17} />{t("articles")}</SidebarLink>
+          <SidebarLink href="/admin/projects"><FolderKanban size={17} />项目管理</SidebarLink>
+          <SidebarLink href="/admin/notes"><NotebookPen size={17} />{t("notes")}</SidebarLink>
+          <SidebarLink href="/admin/excerpts"><Quote size={17} />{t("excerpts")}</SidebarLink>
+          <SidebarLink href="/admin/import"><Import size={17} />{t("importMD")}</SidebarLink>
+          <SidebarLink href="/admin/images"><Images size={17} />{t("images")}</SidebarLink>
         </nav>
         <div className="mt-auto pt-4 border-t border-border">
           <Link
             href="/"
-            className="font-ui text-text-muted text-sm hover:text-accent transition-colors"
+            className="admin-back-link"
           >
-            {t("backToBlog")}
+            <ArrowLeft size={16} />{t("backToBlog").replace(/^←\s*/, "")}
           </Link>
         </div>
       </aside>
