@@ -1,4 +1,10 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+export const imageAssets = sqliteTable("image_assets", {
+  name: text("name").primaryKey(),
+  createdAt: text("created_at").notNull(),
+  lastUploadedAt: text("last_uploaded_at").notNull(),
+  unreferencedSince: text("unreferenced_since"),
+});
 export const projects = sqliteTable("projects", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull(), description: text("description").notNull(),

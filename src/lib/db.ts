@@ -6,22 +6,30 @@ import * as schema from "./db-schema";
 
 const DB_PATH = path.join(process.cwd(), "data", "blog.db");
 
-let drizzleDb: SQLJsDatabase<typeof schema> | null = null;
-let sqlDb: SqlJsDb | null = null;
-let SQL: SqlJsStatic | null = null;
-let initialization: Promise<SQLJsDatabase<typeof schema>> | null = null;
+// Share the database across route/action module instances and development reloads.
+const globalDb = globalThis as typeof globalThis & { blogDatabase?: {
+  drizzleDb: SQLJsDatabase<typeof schema> | null;
+  sqlDb: SqlJsDb | null;
+  SQL: SqlJsStatic | null;
+  initialization: Promise<SQLJsDatabase<typeof schema>> | null;
+} };
+const state = globalDb.blogDatabase ??= { drizzleDb: null, sqlDb: null, SQL: null, initialization: null };
 
 async function getSQL(): Promise<SqlJsStatic> {
-  if (!SQL) {
+  if (!state.SQL) {
     const wasmPath = path.join(
       process.cwd(), "node_modules", "sql.js", "dist", "sql-wasm.wasm"
     );
-    SQL = await initSqlJs({ locateFile: () => wasmPath });
+    state.SQL = await initSqlJs({ locateFile: () => wasmPath });
   }
-  return SQL;
+  return state.SQL;
 }
 
 function ensureTables(database: SqlJsDb) {
+  database.run(`CREATE TABLE IF NOT EXISTS image_assets (
+    name TEXT PRIMARY KEY, created_at TEXT NOT NULL,
+    last_uploaded_at TEXT NOT NULL, unreferenced_since TEXT
+  )`);
   const hasProjects = database.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='projects'").length > 0;
   database.run(`CREATE TABLE IF NOT EXISTS projects (
     id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, description TEXT NOT NULL,
@@ -63,9 +71,9 @@ function ensureTables(database: SqlJsDb) {
 }
 
 export async function getDb(): Promise<SQLJsDatabase<typeof schema>> {
-  if (drizzleDb) return drizzleDb;
-  if (!initialization) initialization = initializeDb().catch(error => { initialization = null; throw error; });
-  return initialization;
+  if (state.drizzleDb) return state.drizzleDb;
+  if (!state.initialization) state.initialization = initializeDb().catch(error => { state.initialization = null; throw error; });
+  return state.initialization;
 }
 
 async function initializeDb(): Promise<SQLJsDatabase<typeof schema>> {
@@ -73,20 +81,20 @@ async function initializeDb(): Promise<SQLJsDatabase<typeof schema>> {
 
   if (fs.existsSync(DB_PATH)) {
     const buffer = fs.readFileSync(DB_PATH);
-    sqlDb = new sql.Database(buffer);
+    state.sqlDb = new sql.Database(buffer);
   } else {
-    sqlDb = new sql.Database();
+    state.sqlDb = new sql.Database();
   }
 
-  ensureTables(sqlDb);
-  drizzleDb = drizzle(sqlDb, { schema });
+  ensureTables(state.sqlDb);
+  state.drizzleDb = drizzle(state.sqlDb, { schema });
   saveDb();
-  return drizzleDb;
+  return state.drizzleDb;
 }
 
 export function saveDb() {
-  if (!sqlDb) return;
-  const data = sqlDb.export();
+  if (!state.sqlDb) return;
+  const data = state.sqlDb.export();
   const buffer = Buffer.from(data);
   fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
   fs.writeFileSync(DB_PATH, buffer);
