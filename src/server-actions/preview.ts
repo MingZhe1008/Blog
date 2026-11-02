@@ -8,6 +8,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeStringify from "rehype-stringify";
+import remarkUnderline from "@/lib/remark-underline";
 
 export async function renderMarkdown(source: string): Promise<string> {
   if (!source.trim()) return "";
@@ -17,6 +18,7 @@ export async function renderMarkdown(source: string): Promise<string> {
   const pipeline = unified()
     .use(remarkParse as any)
     .use(remarkGfm as any)
+    .use(remarkUnderline as any)
     .use(remarkRehype as any)
     .use(rehypeSlug as any)
     .use(rehypeAutolinkHeadings as any, { behavior: "wrap" })

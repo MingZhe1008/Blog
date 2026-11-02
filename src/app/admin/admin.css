@@ -131,6 +131,22 @@
 .markdown-image-editor { border: 1px solid var(--color-border); border-radius: 10px; overflow: hidden; min-width: 0; }
 .markdown-image-editor-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--color-border); color: var(--color-text-muted); font-size: 11px; }
 .markdown-image-editor-bar button { flex-shrink: 0; font: inherit; color: var(--color-text-secondary); padding: 4px 8px; border: 1px solid var(--color-border); border-radius: 5px; }
+.markdown-format-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--color-border); background: color-mix(in srgb,var(--color-bg-elevated) 40%,transparent); }
+.markdown-format-group { display: flex; align-items: center; gap: 2px; padding-left: 6px; border-left: 1px solid var(--color-border); }
+.admin-content .markdown-format-toolbar button { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid transparent; border-radius: 5px; color: var(--color-text-secondary); }
+.admin-content .markdown-format-toolbar button:hover:not(:disabled) { color: var(--color-text-primary); background: var(--color-bg-elevated); border-color: var(--color-border); }
+.admin-content .markdown-format-toolbar select { width: 122px; padding: 5px 8px; font-family: var(--font-ui); font-size: 12px; line-height: 1.6; }
+.markdown-format-toolbar button:disabled { cursor: not-allowed; opacity: .35; }
+.admin-content .markdown-image-editor .cm-header { color: var(--color-text-primary); font-weight: 700; }
+.admin-content .markdown-image-editor .cm-header-1 { font-size: 1.65em; }
+.admin-content .markdown-image-editor .cm-header-2 { font-size: 1.4em; }
+.admin-content .markdown-image-editor .cm-header-3 { font-size: 1.2em; }
+.admin-content .markdown-image-editor .cm-header-4 { font-size: 1.1em; }
+.admin-content .markdown-image-editor .cm-header-6 { font-size: .95em; }
+.admin-content .markdown-image-editor .cm-strong { color: var(--color-text-primary); font-weight: 700; }
+.admin-content .markdown-image-editor .cm-em { color: var(--color-text-primary); font-style: italic; }
+.admin-content .markdown-image-editor .cm-strikethrough { text-decoration: line-through; }
+.admin-content .markdown-image-editor :is(.cm-keyword,.cm-number,.cm-atom,.cm-def,.cm-variable,.cm-variable-2,.cm-variable-3,.cm-string,.cm-string-2,.cm-tag,.cm-attribute,.cm-meta,.cm-property,.cm-link,.cm-comment,.cm-quote,.cm-hr,.cm-builtin,.cm-qualifier,.cm-operator,.cm-bracket) { color: var(--color-text-secondary); }
 .markdown-image-editor .CodeMirror { height: auto; min-height: 420px; background: transparent; color: var(--color-text-primary); font-family: var(--font-mono); font-size: 14px; line-height: 1.9; }
 .markdown-image-editor .CodeMirror-scroll { min-height: 420px; max-height: 75vh; }
 .markdown-image-editor .CodeMirror-lines { padding: 20px 0; }
