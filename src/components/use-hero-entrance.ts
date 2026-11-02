@@ -2,12 +2,11 @@
 
 import { useLayoutEffect, useRef } from "react";
 
-export function useHeroEntrance(preview = false) {
+export function useHeroEntrance() {
   const ref = useRef<HTMLElement>(null);
   useLayoutEffect(() => {
     const hero = ref.current;
-    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (!hero || (!preview && preference.matches) || !Element.prototype.animate) return;
+    if (!hero || !Element.prototype.animate) return;
     const groups = ["h1", ".hero-intro", ".hero-actions", ".hero-note"]
       .map(selector => hero.querySelector<HTMLElement>(selector));
     const animations: Animation[] = [];
@@ -35,13 +34,10 @@ export function useHeroEntrance(preview = false) {
     // A slow font request must not keep the introduction hidden indefinitely.
     const timeout = window.setTimeout(start, 1500);
     void document.fonts.ready.then(start);
-    const onPreferenceChange = () => { if (!preview && preference.matches) reveal(); };
-    preference.addEventListener("change", onPreferenceChange);
     return () => {
       window.clearTimeout(timeout);
-      preference.removeEventListener("change", onPreferenceChange);
       reveal();
     };
-  }, [preview]);
+  }, []);
   return ref;
 }

@@ -7,8 +7,8 @@ import { ReadingExcerpt } from "@/components/reading-excerpt";
 import type { ReadingExcerpt as Excerpt } from "@/lib/reading-excerpts";
 import { useHeroEntrance } from "@/components/use-hero-entrance";
 
-export function HomeView({ articles, excerpts, previewMotion = false }: { articles: Article[]; excerpts: Excerpt[]; previewMotion?: boolean }) {
-  const heroRef = useHeroEntrance(previewMotion);
+export function HomeView({ articles, excerpts }: { articles: Article[]; excerpts: Excerpt[] }) {
+  const heroRef = useHeroEntrance();
   const t = useTranslations("home");
   const topics = [...new Set(articles.flatMap(a => a.tags ?? []))].slice(0, 8);
   return <main className="editorial-page">
