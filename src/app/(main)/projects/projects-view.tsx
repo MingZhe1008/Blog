@@ -16,7 +16,6 @@ export function ProjectsView({ projects }: { projects: Project[] }) {
       <section className="projects-list" aria-label={t("title")}>
         {projects.map(project => <article className="project-entry" key={project.id}>
           <Link href={appPath(contentUrl(project.url || project.sourceUrl || "/projects"))} className="project-cover" aria-label={t("visit")}>
-            <div className="project-badges"><span>{project.status}</span><span>{t("type")}</span></div>
             {project.coverImage ? <img className="project-cover__image" src={sitePath(project.coverImage)} alt={project.title} loading="lazy" /> : <div className="project-preview" aria-hidden="true">
               <span className="project-preview__brand">MingZhe.</span>
               <span className="project-preview__title">{project.title}</span>
@@ -25,6 +24,7 @@ export function ProjectsView({ projects }: { projects: Project[] }) {
             </div>}
           </Link>
           <div className="project-entry__body">
+          <div className="project-badges"><span>{project.status}</span><span>{t("type")}</span></div>
           <h2>{project.title}</h2>
           <p className="project-description">{project.description}</p>
           <ul className="project-stack" aria-label="Tech stack">
