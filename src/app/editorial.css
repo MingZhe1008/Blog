@@ -156,8 +156,6 @@ body.search-is-open { overflow:hidden; }
 .archive-page .journal-card--list h2 { font-size:26px; letter-spacing:-.02em; margin-bottom:12px; }
 .archive-page .journal-card--list .journal-card__bottom { padding-top:12px; }
 .archive-page .journal-card--list .journal-card__cover { width:240px; height:150px; min-height:0; border-radius:8px; background:transparent; }
-.archive-page .journal-card--list .article-tag { border:0; padding:0; color:var(--color-text-muted); }
-.archive-page .journal-card--list .article-tag::before { content:'#'; margin-right:3px; opacity:.5; }
 .archive-page section[aria-label] { gap:0; }
 @media(max-width:700px) {
   .archive-page .journal-card--list .journal-card__link { gap:20px; padding:26px 0; }
