@@ -1,13 +1,9 @@
-.entrance-demo-stage .editorial-hero :is(h1,.hero-intro,.hero-actions,.hero-note) {
+.entrance-demo-stage .editorial-hero {
   animation: demo-entrance 900ms cubic-bezier(.22,1,.36,1) both;
 }
-.entrance-demo-stage .editorial-hero h1 { animation-delay: 80ms; }
-.entrance-demo-stage .editorial-hero .hero-intro { animation-delay: 240ms; }
-.entrance-demo-stage .editorial-hero .hero-actions { animation-delay: 400ms; }
-.entrance-demo-stage .editorial-hero .hero-note { animation-delay: 300ms; }
 @keyframes demo-entrance {
-  from { opacity: 0; transform: translateY(18px); filter: blur(4px); }
-  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .entrance-demo-controls {
   position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 40;
@@ -30,5 +26,5 @@
   .entrance-demo-stage .editorial-hero { min-height: calc(100svh - 124px); align-content: center; padding-bottom: 120px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .entrance-demo-stage .editorial-hero :is(h1,.hero-intro,.hero-actions,.hero-note) { animation: none; }
+  .entrance-demo-stage .editorial-hero { animation: none; }
 }
