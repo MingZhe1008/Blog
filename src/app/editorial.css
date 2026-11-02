@@ -88,7 +88,10 @@ body.search-is-open { overflow:hidden; }
 .text-navigation a[aria-current] { font-weight: 600; }
 .text-navigation a[aria-current]::after { content: ""; position: absolute; bottom: 4px; left: 0; width: 16px; height: 2px; background: var(--color-accent); }
 .editorial-nav .celestial-tools { margin-left: 0; padding-left: 24px; border-left: 1px solid var(--color-border); }
-.editorial-hero { display: grid; grid-template-columns: 1.7fr 1fr; align-items: center; gap: 90px; padding: 68px 0 96px; }
+.editorial-hero { display: grid; grid-template-columns: 1.7fr 1fr; align-items: center; gap: 90px; padding: 64px 0; }
+@media (min-width: 901px) {
+  .editorial-hero { box-sizing: border-box; min-height: calc(100svh - 80px); align-content: center; }
+}
 .eyebrow { margin: 0 0 22px; font: 11px/1.6 var(--font-mono); letter-spacing: .16em; color: var(--color-accent); text-transform: uppercase; }
 .editorial-hero h1 { font-family: var(--font-display), serif; font-size: clamp(64px, 8vw, 104px); letter-spacing: -.065em; margin: 0; line-height: 1.06; }
 .editorial-hero h1 span { color: var(--color-accent); }
