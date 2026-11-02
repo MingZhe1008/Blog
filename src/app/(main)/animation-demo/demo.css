@@ -1,9 +1,6 @@
-.entrance-demo-stage .editorial-hero {
-  animation: demo-entrance 900ms cubic-bezier(.22,1,.36,1) both;
-}
-@keyframes demo-entrance {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+.entrance-demo-stage .editorial-hero :is(h1,.hero-intro,.hero-actions,.hero-note) {
+  /* The explicit demo uses Web Animations after hydration and font loading. */
+  opacity: 0;
 }
 .entrance-demo-controls {
   position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 40;
@@ -24,7 +21,4 @@
 @media (max-width: 700px) {
   .entrance-demo-controls { gap: 16px; bottom: 16px; padding-left: 14px; }
   .entrance-demo-stage .editorial-hero { min-height: calc(100svh - 124px); align-content: center; padding-bottom: 120px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .entrance-demo-stage .editorial-hero { animation: none; }
 }
