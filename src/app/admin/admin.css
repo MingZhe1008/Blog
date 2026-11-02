@@ -179,3 +179,36 @@
   .admin-image-dialog { padding: 14px; }
 }
 @media(prefers-reduced-motion:reduce) { .admin-shell * { transition: none !important; animation-duration: .01ms !important; } }
+
+/* Visual editing and a shared, high-contrast selection treatment for the workspace. */
+.admin-shell,.admin-login { --admin-selection-bg: #bad8ff; --admin-selection-fg: #10243d; }
+.light .admin-shell,.light .admin-login { --admin-selection-bg: #244d7a; --admin-selection-fg: #fff; }
+:is(.admin-shell,.admin-login) ::selection { background: var(--admin-selection-bg); color: var(--admin-selection-fg); -webkit-text-fill-color: var(--admin-selection-fg); text-shadow: none; }
+.admin-content .markdown-image-editor .CodeMirror *::selection { background: var(--admin-selection-bg) !important; color: var(--admin-selection-fg) !important; -webkit-text-fill-color: var(--admin-selection-fg) !important; }
+.admin-content .markdown-image-editor .CodeMirror-selected { background: var(--admin-selection-bg) !important; }
+.admin-content .markdown-image-editor .CodeMirror-selectedtext { color: var(--admin-selection-fg) !important; -webkit-text-fill-color: var(--admin-selection-fg); background: var(--admin-selection-bg); }
+.admin-content .markdown-image-editor .CodeMirror pre { background: transparent !important; border: 0; border-radius: 0; margin: 0; overflow: visible; }
+.markdown-image-editor .mdv-heading,.markdown-image-editor .mdv-bold { font-weight: 700; color: var(--color-text-primary); }
+.markdown-image-editor .mdv-heading-1 { font-size: 1.65em; }
+.markdown-image-editor .mdv-heading-2 { font-size: 1.4em; }
+.markdown-image-editor .mdv-heading-3 { font-size: 1.2em; }
+.markdown-image-editor .mdv-heading-4 { font-size: 1.1em; }
+.markdown-image-editor .mdv-italic { font-style: italic; }
+.markdown-image-editor .mdv-underline,.markdown-image-editor .mdv-link { text-decoration: underline; text-underline-offset: 3px; }
+.markdown-image-editor .mdv-strike { text-decoration: line-through; }
+.markdown-image-editor .mdv-inline-code { background: var(--color-bg-elevated); border-radius: 3px; padding: 2px 3px; }
+.markdown-image-editor .mdv-code { font-family: var(--font-mono); background: color-mix(in srgb,var(--color-text-primary) 5%,transparent); }
+.markdown-image-editor .mdv-quote { color: var(--color-text-secondary); font-style: italic; }
+.markdown-image-editor .mdv-bullet,.markdown-image-editor .mdv-task { display: inline-block; min-width: 26px; color: var(--color-text-secondary); vertical-align: baseline; }
+.markdown-image-editor .mdv-task input { width: 14px; height: 14px; margin: 0 10px 0 0; accent-color: var(--color-text-primary); }
+.markdown-image-editor .mdv-rule { display: inline-block; width: 100%; padding-block: 18px; }
+.markdown-image-editor .mdv-rule hr { border: 0; border-top: 1px solid var(--color-border); }
+.markdown-image-editor .mdv-table { display: inline-block; max-width: 100%; overflow-x: auto; padding-block: 14px; vertical-align: top; }
+.admin-content .mdv-table table { min-width: 0; width: auto; }
+.admin-content .mdv-table :is(td,th) { min-width: 110px; padding: 10px 16px; border: 1px solid var(--color-border); white-space: normal; }
+.admin-content .mdv-table button { font: 11px var(--font-ui); padding: 6px 10px; border: 1px solid var(--color-border); border-radius: 6px; margin-top: 8px; }
+.markdown-table-dialog { width: min(760px,94vw); max-height: 85dvh; margin: auto; padding: 24px; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-bg-base); color: var(--color-text-primary); }
+.markdown-table-dialog::backdrop { background: #0009; backdrop-filter: blur(5px); }
+.markdown-table-inputs { overflow-x: auto; margin: 24px 0; }
+.markdown-table-inputs>div { display: flex; gap: 8px; margin-bottom: 8px; }
+.markdown-table-inputs input { width: 180px; flex: 0 0 180px; }

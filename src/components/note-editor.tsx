@@ -34,7 +34,7 @@ export function NoteEditor({ note, paths }: { note?: Note; paths: string[][] }) 
     } catch { setError(t("saveFailed")); }
     finally { setBusy(false); }
   }
-  return <div className="note-admin"><Link href="/admin/notes">{t("back")}</Link><h1>{note ? t("edit") : t("new")}</h1>
+  return <div className="note-admin"><Link href="/admin/notes">{admin("backToNotes")}</Link><h1>{note ? t("edit") : t("new")}</h1>
     <form className="note-editor" onSubmit={e => { e.preventDefault(); void submit("draft"); }}>
       <fieldset disabled={busy}>
         <label htmlFor="note-title">{t("name")}</label><input id="note-title" maxLength={200} value={title} onChange={e => setTitle(e.target.value)} required />
@@ -44,7 +44,7 @@ export function NoteEditor({ note, paths }: { note?: Note; paths: string[][] }) 
           const suggestions = [...new Set(paths.filter(p => levels.slice(0,index).every((v,i) => p[i] === v.trim())).map(p => p[index]).filter(Boolean))];
           return <div key={index}><label htmlFor={`level-${index}`}>{index + 1}</label><input id={`level-${index}`} list={`suggestions-${index}`} maxLength={100} value={level} required onChange={e => setLevels(levels.map((v,i) => i === index ? e.target.value : v))} /><datalist id={`suggestions-${index}`}>{suggestions.map(s => <option key={s} value={s} />)}</datalist>{levels.length > 1 && <button type="button" aria-label={t("removeLevel")} onClick={() => setLevels(levels.slice(0,index).concat(levels.slice(index+1)))}>×</button>}</div>;
         })}</div>
-        <p className="note-breadcrumb">{[...levels.map(l => l || "…"), title || "…"].join(" → ")}</p>
+        <p className="note-breadcrumb">{[...levels.map(l => l || "…"), title || "…"].join(" / ")}</p>
         <label htmlFor="note-tags">{t("tags")}</label><input id="note-tags" value={tags} onChange={e => setTags(e.target.value)} placeholder={t("tagsHelp")} />
         <div className="note-tags">{tags.split(/[,，]/).map(t => t.trim()).filter(Boolean).map((tag,i) => <span className="article-tag" key={i}>{tag}</span>)}</div>
         <div className="note-level-heading"><label htmlFor="note-content">{t("content")}</label><div className="admin-cover-tools">

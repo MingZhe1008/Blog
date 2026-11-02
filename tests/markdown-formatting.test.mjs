@@ -36,6 +36,8 @@ test("inline formats toggle, preserve selections and do not confuse italic with 
   assert.equal(apply("***both***", 3, 7, "italic").source, "**both**");
   assert.equal(apply("**bold**", 0, 8, "italic").source, "***bold***");
   assert.equal(apply("a\n\nb", 0, 4, "underline").source, "<u>a</u>\n\n<u>b</u>");
+  assert.equal(apply("# first\n## second", 0, 17, "bold").source, "# **first**\n## **second**");
+  const headingBold=apply("# first",0,7,"bold"); assert.equal(headingBold.source.slice(headingBold.from,headingBold.to),"first");
 });
 
 test("lists switch types and toggle without duplicating prefixes", () => {

@@ -12,13 +12,16 @@ export function markdownEdit(source: string, from: number, to: number, command: 
   const wrap = (open: string, close: string, placeholder: string) => {
     const italicBoundary = open !== "*" || (((source.slice(0, from).match(/\*+$/)?.[0].length || 0) % 2 === 1) && ((source.slice(to).match(/^\*+/)?.[0].length || 0) % 2 === 1));
     if (italicBoundary && source.slice(from - open.length, from) === open && source.slice(to, to + close.length) === close) return edit(from - open.length, to + close.length, selected);
-    const lines = selected.split("\n");
-    if (selected && lines.every(line => !line || (line.startsWith(open) && line.endsWith(close) && line.length >= open.length + close.length && (open !== "*" || ((line.match(/^\*+/)?.[0].length || 0) % 2 === 1))))) {
-      return edit(from, to, lines.map(line => line ? line.slice(open.length, -close.length) : line).join("\n"));
+    const lines = selected.split("\n").map((line, index) => {
+      const marker = (index || from === 0 || source[from - 1] === "\n") ? line.match(/^(?: {0,3}#{1,6}[\t ]+|>\s?|[-+*]\s+(?:\[[ xX]\]\s*)?|\d+[.)]\s+)/)?.[0] || "" : "";
+      return { marker, body: line.slice(marker.length) };
+    });
+    if (selected && lines.every(({body:line}) => !line || (line.startsWith(open) && line.endsWith(close) && line.length >= open.length + close.length && (open !== "*" || ((line.match(/^\*+/)?.[0].length || 0) % 2 === 1))))) {
+      return edit(from, to, lines.map(({marker,body:line}) => marker + (line ? line.slice(open.length, -close.length) : line)).join("\n"));
     }
     const text = selected || placeholder;
-    const wrapped = text.split("\n").map(line => line ? open + line + close : line).join("\n");
-    return edit(from, to, wrapped, from + (text.includes("\n") ? 0 : open.length), from + wrapped.length - (text.includes("\n") ? 0 : close.length));
+    const wrapped = selected ? lines.map(({marker,body:line}) => marker + (line ? open + line + close : line)).join("\n") : open + text + close;
+    return edit(from, to, wrapped, from + (text.includes("\n") ? 0 : open.length + (selected ? lines[0].marker.length : 0)), from + wrapped.length - (text.includes("\n") ? 0 : close.length));
   };
   if (command === "bold") return wrap("**", "**", en ? "bold text" : "加粗文字");
   if (command === "italic") return wrap("*", "*", en ? "italic text" : "斜体文字");

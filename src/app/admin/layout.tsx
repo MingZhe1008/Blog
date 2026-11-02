@@ -5,7 +5,7 @@ import "./admin.css";
 import { useTranslations } from "next-intl";
 import Link, { useLinkStatus } from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FileText, FolderKanban, NotebookPen, Quote, Import, Images, ArrowLeft, Layers } from "lucide-react";
+import { FileText, FolderKanban, NotebookPen, Quote, Import, Images, Layers } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const t = useTranslations("admin");
@@ -32,7 +32,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             href="/"
             className="admin-back-link"
           >
-            <ArrowLeft size={16} />{t("backToBlog").replace(/^←\s*/, "")}
+            {t("backToBlog")}
           </Link>
         </div>
       </aside>
