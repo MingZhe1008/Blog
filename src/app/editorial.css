@@ -147,7 +147,9 @@ body.search-is-open { overflow:hidden; }
 .archive-heading h1 { margin:0 0 18px; }
 .archive-heading p { max-width:640px; line-height:1.9; text-wrap:pretty; }
 .archive-page .archive-search { max-width:560px; min-height:52px; margin-bottom:20px; border-color:var(--color-border); border-radius:999px; padding:4px 5px 4px 8px; }
-.archive-page .archive-search button { border-radius:999px; padding-inline:22px; background:transparent; border:1px solid var(--color-border); }
+.archive-page .archive-search button { border-radius:999px; padding-inline:22px; background:transparent; border:0; color:var(--color-text-secondary); transition:background .2s,color .2s; }
+.archive-page .archive-search button:hover { background:color-mix(in srgb,var(--color-text-primary) 8%,transparent); color:var(--color-text-primary); }
+.archive-page .archive-search button:focus-visible { outline-offset:-3px; }
 .archive-page .archive-search:focus-within { border-color:var(--color-text-secondary); }
 .archive-page .archive-search input:focus-visible { outline:none; }
 .archive-page .journal-card--list { border:0; border-bottom:1px solid var(--color-border); border-radius:0; overflow:visible; }
