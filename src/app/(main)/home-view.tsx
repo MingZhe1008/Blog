@@ -5,12 +5,14 @@ import type { Article } from "@/lib/data";
 import { GitHubLink } from "@/components/github-link";
 import { ReadingExcerpt } from "@/components/reading-excerpt";
 import type { ReadingExcerpt as Excerpt } from "@/lib/reading-excerpts";
+import { useHeroEntrance } from "@/components/use-hero-entrance";
 
-export function HomeView({ articles, excerpts }: { articles: Article[]; excerpts: Excerpt[] }) {
+export function HomeView({ articles, excerpts, previewMotion = false }: { articles: Article[]; excerpts: Excerpt[]; previewMotion?: boolean }) {
+  const heroRef = useHeroEntrance(previewMotion);
   const t = useTranslations("home");
   const topics = [...new Set(articles.flatMap(a => a.tags ?? []))].slice(0, 8);
   return <main className="editorial-page">
-    <section className="editorial-hero">
+    <section ref={heroRef} className="editorial-hero">
       <div>
         <h1>Ming<span>Zhe.</span></h1>
         <p className="hero-intro">{t("bio")}</p>

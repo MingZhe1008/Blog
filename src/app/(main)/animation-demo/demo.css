@@ -1,7 +1,3 @@
-.entrance-demo-stage .editorial-hero :is(h1,.hero-intro,.hero-actions,.hero-note) {
-  /* The explicit demo uses Web Animations after hydration and font loading. */
-  opacity: 0;
-}
 .entrance-demo-controls {
   position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 40;
   display: flex; align-items: center; gap: 28px; max-width: calc(100% - 32px);
