@@ -11,7 +11,6 @@ export function ReadingExcerpt({ excerpts: readingExcerpts }: { excerpts: Excerp
   if (!excerpt) return null;
   const next = () => setIndex(current => (current + 1 + Math.floor(Math.random() * (readingExcerpts.length - 1))) % readingExcerpts.length);
   return <section className="reading-excerpt" aria-label={t("excerptLabel")}>
-    <span className="reading-excerpt__label">{t("excerptLabel")}</span>
     <figure aria-live="polite" aria-atomic="true">
       <p>“{excerpt.text}”</p><figcaption>— {excerpt.source}</figcaption>
     </figure>
