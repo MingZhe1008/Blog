@@ -11,6 +11,15 @@ export async function middleware(request: NextRequest) {
   const expected = await sessionToken(process.env.ADMIN_PASSWORD || "admin123");
   if (request.cookies.get(COOKIE_NAME)?.value === expected) return NextResponse.next();
   const loginUrl = new URL(sitePath("/admin-login"), request.url);
+  // Next's internal request URL can contain localhost behind a reverse proxy.
+  // Nginx supplies the original public host and scheme for redirects.
+  const publicHost = request.headers.get("x-forwarded-host") || request.headers.get("host");
+  if (publicHost) {
+    loginUrl.port = "";
+    loginUrl.host = publicHost;
+  }
+  const publicProtocol = request.headers.get("x-forwarded-proto");
+  if (publicProtocol === "https" || publicProtocol === "http") loginUrl.protocol = `${publicProtocol}:`;
   loginUrl.searchParams.set("next", sitePath(`${request.nextUrl.pathname}${request.nextUrl.search}`));
   return NextResponse.redirect(loginUrl);
 }

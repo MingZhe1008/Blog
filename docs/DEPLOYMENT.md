@@ -41,7 +41,29 @@ location ^~ /blog/ {
 }
 ```
 
-本次未连接服务器验证 Nginx。生产认证 Cookie 使用 Secure 属性，对外应通过 HTTPS 访问。
+生产认证 Cookie 使用 Secure 属性，对外应通过 HTTPS 访问。
+
+## 已部署环境（2026-11-02）
+
+- 入口：`https://www.lyy12.cn/blog`，IP 的 `/blog` 入口也可通过现有 HTTP → HTTPS 跳转访问。
+- 目录：`/home/zmz/item/blog/`；运行用户 `zmz`。本地内容首次迁移后，后续更新不得用本地数据库或 uploads 覆盖服务器内容。
+- 博客独立使用 `/opt/blog-node/bin/node`（Node 22），没有更换 ToZ 使用的系统 Node。
+- systemd 服务 `mingzhe-blog`，仅监听 `127.0.0.1:3000`，已启用开机启动与失败重启。模板见 `scripts/deploy/mingzhe-blog.service`。
+- 复用现有 Nginx 和域名证书，`/etc/nginx/conf.d/toz-domain.conf` 与 `toz-sync.conf` 的 HTTPS server 中包含 `/etc/nginx/snippets/mingzhe-blog.conf`，模板见 `scripts/deploy/nginx-blog.conf`。原 `/toz/` 和同步接口保留。
+- 配置凭据保存在服务器 `.env.local`，权限 600，不入 Git；沿用本地管理台凭据，不是 SSH 凭据。
+- 本次上传本地生产构建，在 Linux 上安装依赖；本机 Windows 的 node_modules 不上传。TypeScript 配置在启动时需要 TypeScript，因此安装完整锁定依赖：`PATH=/opt/blog-node/bin:$PATH npm ci --no-audit --no-fund`。依赖安装验证通过，后续可在服务器运行 `npm run build` 再重启。
+- 反向代理下的管理台跳转使用公网 Host/协议，并清除内部监听端口；代理必须覆盖 `X-Forwarded-Host` 和 `X-Forwarded-Proto`。
+
+服务维护：
+
+```bash
+systemctl status mingzhe-blog
+journalctl -u mingzhe-blog -n 100 --no-pager
+systemctl restart mingzhe-blog
+nginx -t && systemctl reload nginx
+```
+
+部署前 Nginx 配置备份位于服务器 `/root/blog-deploy-backup-20261102/`；本地内容备份位于 `E:\Blog\Backups\deploy-20261102\content-before-deploy.zip`。更新前分别备份服务器 `data/blog.db` 和 `public/uploads/`，构建成功后再重启服务；不要多进程同时写 SQLite 文件。
 
 ## 内容兼容与开发约定
 

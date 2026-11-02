@@ -1,0 +1,19 @@
+[Unit]
+Description=MingZhe Blog Next.js
+After=network.target
+
+[Service]
+Type=simple
+User=zmz
+Group=zmz
+WorkingDirectory=/home/zmz/item/blog
+Environment=NODE_ENV=production
+Environment=PATH=/opt/blog-node/bin:/usr/bin:/bin
+ExecStart=/opt/blog-node/bin/node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3000
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

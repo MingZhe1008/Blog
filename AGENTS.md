@@ -61,6 +61,8 @@ Next.js 15 App Router、React 19、TypeScript、Tailwind v4、SQLite（sql.js WA
 
 部署固定使用 Next.js `basePath: "/blog"`，规范见 `docs/DEPLOYMENT.md`。Next Link、router 和 Server Action redirect 使用应用内路径（例如 `/admin`），原生链接/图片/表单/fetch 使用 `sitePath()`；缓存失效使用 `revalidateSitePath()`。历史正文和数据库 URL 通过展示适配兼容，不批量重写。
 
+云端运行于 `/home/zmz/item/blog/`，公网入口 `https://www.lyy12.cn/blog`；复用已有 Nginx，博客独立使用 Node 22 与 `mingzhe-blog` systemd 服务，仅监听 `127.0.0.1:3000`。后续更新先备份服务器内容，禁止直接用本地数据库与 uploads 覆盖云端内容；Git 推送不自动部署。反向代理需覆盖 `X-Forwarded-Host` / `X-Forwarded-Proto`，登录跳转使用公网地址，不能带内部端口。具体维护见 `docs/DEPLOYMENT.md`。
+
 ## 数据与持久化
 
 - 数据库页面必须声明 `export const dynamic = "force-dynamic"`，避免静态生成时执行 sql.js WASM。
