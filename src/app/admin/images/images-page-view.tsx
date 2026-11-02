@@ -89,16 +89,16 @@ export function ImagesPageView({ images }: { images: UploadedImage[] }) {
 
   return <div className="admin-media-library">
     <div className="admin-media-heading"><div><h1>{t("images")}</h1><p>{images.length} {en ? "images" : "张图片"} · {formatSize(images.reduce((sum, image) => sum + image.size, 0))}</p></div>
-      <button type="button" className="admin-media-button" disabled={!!busy || refreshing} onClick={() => startRefresh(() => router.refresh())}><RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />{en ? "Refresh status" : "刷新状态"}</button>
+      <button type="button" className="admin-media-button" aria-busy={refreshing} disabled={!!busy || refreshing} onClick={() => startRefresh(() => router.refresh())}><RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />{en ? "Refresh status" : "刷新状态"}</button>
     </div>
     <p className="admin-media-help">{en ? "Drafts, published content and projects protect their images. Unreferenced uploads are kept for 7 days. Uploading again or copying renews that period; cleanup requires your confirmation." : "草稿、已发布内容和项目引用的图片均受保护。未引用图片保留 7 天，重新上传或复制会续期；过期后由你确认清理。"}</p>
     <div className="admin-media-toolbar">
       <div className="admin-media-filters" role="group" aria-label={en ? "Filter images" : "图片状态筛选"}>{(["all", "used", "temporary", "unused"] as Filter[]).map(key => <button type="button" key={key} aria-pressed={filter === key} onClick={() => setFilter(key)}>{labels[key]}<span>{key === "all" ? images.length : images.filter(image => image.status === key).length}</span></button>)}</div>
-      <button type="button" className="admin-media-button" disabled={!!busy || !eligible.length} onClick={() => void cleanup(eligible)}><Trash2Icon size={14} />{busy === "cleanup" ? (en ? "Cleaning…" : "清理中…") : (en ? "Clean expired images" : "清理过期图片")}</button>
+      <button type="button" className="admin-media-button" aria-busy={busy === "cleanup"} disabled={!!busy || !eligible.length} onClick={() => void cleanup(eligible)}><Trash2Icon size={14} />{busy === "cleanup" ? (en ? "Cleaning…" : "清理中…") : (en ? "Clean expired images" : "清理过期图片")}</button>
     </div>
     {!!eligible.length && <div className="admin-media-selection"><label><input type="checkbox" checked={!!visibleEligible.length && visibleEligible.every(image => selected.includes(image.name))} disabled={!!busy || !visibleEligible.length} onChange={event => {
       const names = visibleEligible.map(image => image.name); setSelected(current => event.target.checked ? [...new Set([...current, ...names])] : current.filter(name => !names.includes(name)));
-    }} />{en ? "Select cleanable images on this view" : "选择当前可清理图片"}</label><button type="button" disabled={!!busy || !selectedEligible.length} onClick={() => void cleanup(selectedEligible)}>{en ? `Clean selected (${selectedEligible.length})` : `清理所选（${selectedEligible.length}）`}</button><span>{en ? "Up to 200 per operation" : "每次最多清理 200 张"}</span></div>}
+    }} />{en ? "Select cleanable images on this view" : "选择当前可清理图片"}</label><button type="button" aria-busy={busy === "cleanup"} disabled={!!busy || !selectedEligible.length} onClick={() => void cleanup(selectedEligible)}>{en ? `Clean selected (${selectedEligible.length})` : `清理所选（${selectedEligible.length}）`}</button><span>{en ? "Up to 200 per operation" : "每次最多清理 200 张"}</span></div>}
     {error && <p role="alert">{error}</p>}{message && <p role="status" className="admin-feedback">{message}</p>}
     {!visible.length ? <div className="admin-media-empty"><ImageIcon size={36} /><p>{images.length ? (en ? "No images with this status." : "当前状态下暂无图片。") : t("noImages")}</p></div> : <div className="admin-media-grid">{visible.map(image => <article key={image.name} className="admin-media-card" data-image-name={image.name}>
       <AdminImagePreview src={image.url} alt={image.name} />

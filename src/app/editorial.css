@@ -42,7 +42,8 @@
 @keyframes admin-spin { to { transform: rotate(360deg); } }
 .admin-content h1 { font-size: 26px; }
 .admin-content button { cursor: pointer; }
-.admin-content button:disabled { cursor: wait; opacity: .55; }
+.admin-content button:disabled { cursor: not-allowed; opacity: .55; }
+.admin-content button[aria-busy="true"] { cursor: wait; }
 .admin-feedback { min-height: 24px; margin: 12px 0; color: var(--color-text-secondary); }
 .admin-project-form { max-width: 720px; padding: 24px; margin-bottom: 28px; border: 1px solid var(--color-border); border-radius: 12px; }
 .admin-project-form fieldset { display: grid; gap: 18px; border: 0; padding: 20px 0 0; min-width: 0; }
