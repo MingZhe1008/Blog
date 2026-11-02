@@ -1,6 +1,6 @@
 "use server";
 import { withImageContentWrite } from "@/lib/image-library";
-import { revalidatePath } from "next/cache";
+import { revalidateSitePath as revalidatePath } from "@/lib/revalidate-site";
 import { persistNote } from "@/lib/notes";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 

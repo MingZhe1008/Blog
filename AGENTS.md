@@ -26,7 +26,7 @@ MingZhe 的个人技术博客，用于分享编程、AI、Agent 工具实践，�
 ## 启动与检查
 
 ```bash
-npm run dev           # 本地开发，默认 http://localhost:3000
+npm run dev           # 本地开发，默认 http://localhost:3000/blog
 npm run build         # 生产构建
 npm run start         # 运行已构建的生产版本
 npx tsc --noEmit      # 类型检查
@@ -53,16 +53,18 @@ Next.js 15 App Router、React 19、TypeScript、Tailwind v4、SQLite（sql.js WA
 | `src/components/header.tsx` | 导航、搜索、语言和主题按钮 |
 | `src/lib/admin-auth.ts`、`src/middleware.ts` | 会话校验、管理台路由保护 |
 
-前台路由：`/`、`/blog`、`/blog/[slug]`、`/notes`、`/notes/[id]`、`/projects`、`/about`。
+前台对外路由：`/blog`、`/blog/articles`、`/blog/articles/[slug]`、`/blog/notes`、`/blog/notes/[id]`、`/blog/projects`、`/blog/about`。
 
-管理台路由：`/admin`（文章）、`/admin/editor`、`/admin/editor/[id]`、`/admin/notes`、`/admin/notes/new`、`/admin/notes/[id]`、`/admin/projects`、`/admin/excerpts`、`/admin/images`、`/admin/import`。
+管理台对外路由：`/blog/admin`（文章）、`/blog/admin/editor`、`/blog/admin/editor/[id]`、`/blog/admin/notes`、`/blog/admin/notes/new`、`/blog/admin/notes/[id]`、`/blog/admin/projects`、`/blog/admin/excerpts`、`/blog/admin/images`、`/blog/admin/import`。
 
-登录：`/admin-login`。搜索接口：`/api/search`，供 Ctrl+F 模糊背景弹层检索公开博客与笔记。
+登录：`/blog/admin-login`。搜索接口：`/blog/api/search`，供 Ctrl+F 模糊背景弹层检索公开博客与笔记。
+
+部署固定使用 Next.js `basePath: "/blog"`，规范见 `docs/DEPLOYMENT.md`。Next Link、router 和 Server Action redirect 使用应用内路径（例如 `/admin`），原生链接/图片/表单/fetch 使用 `sitePath()`；缓存失效使用 `revalidateSitePath()`。历史正文和数据库 URL 通过展示适配兼容，不批量重写。
 
 ## 数据与持久化
 
 - 数据库页面必须声明 `export const dynamic = "force-dynamic"`，避免静态生成时执行 sql.js WASM。
-- 使用 `getDb()`，避免自行重复初始化；写入后调用 `saveDb()`，Server Action 使用 `revalidatePath()` 更新相关前后台页面。
+- 使用 `getDb()`，避免自行重复初始化；写入后调用 `saveDb()`，Server Action 使用 `revalidateSitePath()` 更新相关前后台页面。
 - 现有表：文章、笔记、读书摘录、项目。数据库变更必须兼容已有数据，禁止为升级功能清空内容。
 - 项目表首次创建时插入博客示例；用户删除已有项目后不自动补回。
 - `data/blog.db` 与 `public/uploads/` 是本地内容资产，不由 Git 备份。迁移或高风险操作前单独备份二者。

@@ -10,6 +10,7 @@ import { ImageUploadButton } from "@/components/image-upload-button";
 import { uploadImageFile } from "@/server-actions/upload";
 import { renderMarkdown } from "@/server-actions/preview";
 import type { Article } from "@/lib/data";
+import { sitePath } from "@/lib/site-paths";
 
 interface Props {
   article?: Article;
@@ -355,7 +356,7 @@ export function ArticleEditor({ article }: Props) {
         </button>
         {isEdit && (
           <a
-            href={`/blog/${article.slug}`}
+            href={sitePath(`/articles/${article.slug}`)}
             target="_blank"
             className="ml-auto font-ui text-xs text-text-muted hover:text-accent transition-colors"
           >

@@ -18,8 +18,9 @@ test("global search opens with Ctrl+F and provides accessible keyboard controls"
 test("search endpoint only returns published article and note destinations", async () => {
   const route = await read("src/app/api/search/route.ts");
   assert.match(route, /getPublishedArticles/);
+  assert.match(route, /sitePath/);
   assert.match(route, /getNotes\(\)/);
-  assert.match(route, /\/blog\/\$\{article\.slug\}/);
+  assert.match(route, /\/articles\/\$\{article\.slug\}/);
   assert.match(route, /\/notes\/\$\{note\.id\}/);
   assert.match(route, /slice\(0, 10\)/);
 });

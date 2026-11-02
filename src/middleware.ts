@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sitePath } from "@/lib/site-paths";
 const COOKIE_NAME = "BLOG_ADMIN_SESSION";
 const SESSION_VALUE = "blog-admin-v1";
 async function sessionToken(password: string) {
@@ -9,8 +10,8 @@ async function sessionToken(password: string) {
 export async function middleware(request: NextRequest) {
   const expected = await sessionToken(process.env.ADMIN_PASSWORD || "admin123");
   if (request.cookies.get(COOKIE_NAME)?.value === expected) return NextResponse.next();
-  const loginUrl = new URL("/admin-login", request.url);
-  loginUrl.searchParams.set("next", `${request.nextUrl.pathname}${request.nextUrl.search}`);
+  const loginUrl = new URL(sitePath("/admin-login"), request.url);
+  loginUrl.searchParams.set("next", sitePath(`${request.nextUrl.pathname}${request.nextUrl.search}`));
   return NextResponse.redirect(loginUrl);
 }
 export const config = { matcher: ["/admin/:path*"] };

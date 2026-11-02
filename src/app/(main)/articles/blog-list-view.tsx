@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { ArticleCard } from "@/components/article-card";
 import { TagFilter } from "@/components/tag-filter";
 import type { Article } from "@/lib/data";
+import { sitePath } from "@/lib/site-paths";
 
 export function BlogListView({
   articles,
@@ -23,7 +24,7 @@ export function BlogListView({
   const t = useTranslations("blog");
   const locale = useLocale();
   const common = useTranslations("common");
-  const pageHref = (value: number) => "/blog?" + new URLSearchParams({
+  const pageHref = (value: number) => sitePath("/articles?") + new URLSearchParams({
     ...(activeTag ? { tag: activeTag } : {}),
     ...(query ? { q: query } : {}), page: String(value),
   }).toString();
@@ -38,7 +39,7 @@ export function BlogListView({
           </p>
         </header>
 
-        <form action="/blog" className="archive-search">
+        <form action={sitePath("/articles")} className="archive-search">
           {activeTag && <input type="hidden" name="tag" value={activeTag} />}
           <input key={query} name="q" type="search" defaultValue={query} placeholder={common("searchPlaceholder")} aria-label={common("search")} />
           <button type="submit">{common("search")}</button>

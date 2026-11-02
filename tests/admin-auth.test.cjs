@@ -13,5 +13,6 @@ test("admin auth uses an in-page login and secure session cookie", () => {
   assert.match(form, /defaultValue=\{developmentPassword\}/);
   assert.match(action, /httpOnly:\s*true/);
   assert.match(action, /sameSite:\s*"lax"/);
-  assert.match(action, /startsWith\("\/admin"\)/);
+  assert.match(action, /adminReturnPath\(requested\)/);
+  assert.match(action, /path:\s*BASE_PATH/);
 });

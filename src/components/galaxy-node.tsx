@@ -44,7 +44,7 @@ export function GalaxyNode({ article, index, locale = "zh-CN" }: GalaxyNodeProps
       style={style}
     >
       <Link
-        href={`/blog/${article.slug}`}
+        href={`/articles/${article.slug}`}
         className="galaxy-node__link relative grid min-h-56 grid-cols-[7rem_1fr] items-center gap-5 overflow-visible py-7 text-left outline-none sm:grid-cols-[9rem_1fr] sm:gap-8 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent focus-visible:[&_.galaxy-node__visual]:ring-2 focus-visible:[&_.galaxy-node__visual]:ring-accent focus-visible:[&_.galaxy-node__visual]:ring-offset-4 focus-visible:[&_.galaxy-node__visual]:ring-offset-bg-base"
         aria-label={`${article.title} · ${formattedDate}`}
       >

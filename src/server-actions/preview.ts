@@ -9,6 +9,7 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeStringify from "rehype-stringify";
 import remarkUnderline from "@/lib/remark-underline";
+import rehypeSitePaths from "@/lib/rehype-site-paths";
 
 export async function renderMarkdown(source: string): Promise<string> {
   if (!source.trim()) return "";
@@ -20,6 +21,7 @@ export async function renderMarkdown(source: string): Promise<string> {
     .use(remarkGfm as any)
     .use(remarkUnderline as any)
     .use(remarkRehype as any)
+    .use(rehypeSitePaths as any)
     .use(rehypeSlug as any)
     .use(rehypeAutolinkHeadings as any, { behavior: "wrap" })
     .use(rehypePrettyCode as any, {

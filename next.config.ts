@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
+import { BASE_PATH } from "./src/lib/site-paths";
 
 const nextConfig: NextConfig = {
+  basePath: BASE_PATH,
   serverExternalPackages: ["sql.js"],
   images: {
     remotePatterns: [

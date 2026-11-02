@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { Project } from "@/lib/projects";
 import { useTranslations } from "next-intl";
+import { sitePath, contentUrl, appPath } from "@/lib/site-paths";
 
 export function ProjectsView({ projects }: { projects: Project[] }) {
   const t = useTranslations("projects");
@@ -14,9 +15,9 @@ export function ProjectsView({ projects }: { projects: Project[] }) {
       </header>
       <section className="projects-list" aria-label={t("title")}>
         {projects.map(project => <article className="project-entry" key={project.id}>
-          <Link href={project.url || project.sourceUrl || "/projects"} className="project-cover" aria-label={t("visit")}>
+          <Link href={appPath(contentUrl(project.url || project.sourceUrl || "/projects"))} className="project-cover" aria-label={t("visit")}>
             <div className="project-badges"><span>{project.status}</span><span>{t("type")}</span></div>
-            {project.coverImage ? <img className="project-cover__image" src={project.coverImage} alt={project.title} loading="lazy" /> : <div className="project-preview" aria-hidden="true">
+            {project.coverImage ? <img className="project-cover__image" src={sitePath(project.coverImage)} alt={project.title} loading="lazy" /> : <div className="project-preview" aria-hidden="true">
               <span className="project-preview__brand">MingZhe.</span>
               <span className="project-preview__title">{project.title}</span>
               <span className="project-preview__line" /><span className="project-preview__line" />
@@ -30,8 +31,8 @@ export function ProjectsView({ projects }: { projects: Project[] }) {
             {project.tags.map(tech => <li key={tech}>{tech}</li>)}
           </ul>
           <div className="project-links">
-            {project.sourceUrl && <a className="primary-link" href={project.sourceUrl} target="_blank" rel="noopener noreferrer">{t("source")}</a>}
-            {project.url && <Link className="primary-link" href={project.url}>{t("visit")}</Link>}
+            {project.sourceUrl && <a className="primary-link" href={contentUrl(project.sourceUrl)} target="_blank" rel="noopener noreferrer">{t("source")}</a>}
+            {project.url && <Link className="primary-link" href={appPath(contentUrl(project.url))}>{t("visit")}</Link>}
           </div>
           </div>
         </article>)}

@@ -5,6 +5,7 @@ import { useLocale } from "next-intl";
 import type { Editor, TextMarker } from "codemirror";
 import { getMarkdownImages } from "@/lib/markdown-images";
 import { markdownPresentation, type PresentationTable } from "@/lib/markdown-presentation";
+import { sitePath } from "@/lib/site-paths";
 import { uploadImageFile } from "@/server-actions/upload";
 import "codemirror/lib/codemirror.css";
 import { markdownEdit, type MarkdownCommand } from "@/lib/markdown-formatting";
@@ -162,7 +163,7 @@ export const MarkdownImageEditor = forwardRef<MarkdownImageEditorHandle, {
             wrapper.className = "markdown-inline-image";
             wrapper.contentEditable = "false";
             const img = document.createElement("img");
-            img.src = image.url;
+            img.src = sitePath(image.url);
             img.alt = image.alt || (language.current ? "Image" : "正文图片");
             img.draggable = false;
             const mark = instance.markText(instance.posFromIndex(image.from), instance.posFromIndex(image.to), {

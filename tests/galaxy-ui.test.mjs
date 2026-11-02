@@ -28,7 +28,7 @@ test("home keeps article lists hidden while retaining the blog entry point", asy
   const styles = await read("src/app/editorial.css");
 
   assert.doesNotMatch(home, /ArticleCard|featured-section|recent-section/);
-  assert.match(home, /href="\/blog"/);
+  assert.match(home, /href="\/articles"/);
   assert.match(styles, /\.reading-excerpt[^}]*border-block:/);
   assert.doesNotMatch(styles, /\.topics-section[^}]*border-top:/);
   assert.match(styles, /\.topic-links a,[^}]*background:\s*transparent/);
@@ -80,7 +80,7 @@ test("new visitors enter through the dark galaxy theme", async () => {
 test("navigation and blog filter labels stay inside the locale message catalog", async () => {
   const messages = await read("src/components/i18n-provider.tsx");
   const home = await read("src/app/(main)/home-view.tsx");
-  const blog = await read("src/app/(main)/blog/blog-list-view.tsx");
+  const blog = await read("src/app/(main)/articles/blog-list-view.tsx");
   const header = await read("src/components/header.tsx");
 
   assert.match(messages, /navLabel:\s*"主导航"/);

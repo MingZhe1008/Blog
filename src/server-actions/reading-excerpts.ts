@@ -1,5 +1,5 @@
 "use server";
-import { revalidatePath } from "next/cache";
+import { revalidateSitePath as revalidatePath } from "@/lib/revalidate-site";
 import { persistReadingExcerpt, type ExcerptInput } from "@/lib/reading-excerpts";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 export async function saveReadingExcerpt(input: ExcerptInput) {

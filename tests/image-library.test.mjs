@@ -61,7 +61,7 @@ test("isolated library: deduplication, draft protection, renewal, reference tran
     assert.deepEqual((await removeImages([name], true)).deleted, []);
     const old = new Date(Date.now() - 8 * 86400000).toISOString();
     await fs.writeFile(path.join(root, "public/uploads/legacy.png"), Buffer.from("legacy bytes"));
-    const legacy = await storeImage(Buffer.from("legacy bytes"), ".png"); assert.equal(legacy.url, "/uploads/legacy.png"); assert.equal(legacy.reused, true);
+    const legacy = await storeImage(Buffer.from("legacy bytes"), ".png"); assert.equal(legacy.url, "/blog/uploads/legacy.png"); assert.equal(legacy.reused, true);
     await withImageContentWrite(async () => {
       db.insert(schema.articles).values({ title: "Draft", slug: "draft", content: `![a](${first.url})`, status: "draft", createdAt: old, updatedAt: old }).run();
       db.insert(schema.notes).values({ title: "Note", path: [], tags: [], content: `<img src="${first.url}" />`, status: "published", createdAt: old, updatedAt: old }).run();

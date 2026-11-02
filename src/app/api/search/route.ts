@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPublishedArticles } from "@/lib/data";
 import { getNotes } from "@/lib/notes";
+import { sitePath } from "@/lib/site-paths";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
     type: "article" as const,
     title: article.title,
     description: article.excerpt || (article.tags ?? []).join(" · "),
-    href: `/blog/${article.slug}`,
+    href: sitePath(`/articles/${article.slug}`),
   }));
   const noteResults = notes.filter(note =>
     [note.title, ...note.path, ...note.tags].join(" ").toLocaleLowerCase().includes(normalized)
@@ -24,7 +25,7 @@ export async function GET(request: NextRequest) {
     type: "note" as const,
     title: note.title,
     description: [...note.path, ...note.tags].join(" · "),
-    href: `/notes/${note.id}`,
+    href: sitePath(`/notes/${note.id}`),
   }));
   return NextResponse.json({ results: [...articleResults, ...noteResults].slice(0, 10) });
 }

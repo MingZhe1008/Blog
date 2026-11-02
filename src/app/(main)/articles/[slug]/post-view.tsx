@@ -5,6 +5,7 @@ import Link from "next/link";
 import { GiscusComments } from "@/components/giscus";
 import { TableOfContents } from "@/components/toc";
 import type { Article } from "@/lib/data";
+import { sitePath } from "@/lib/site-paths";
 
 export function PostView({
   article,
@@ -24,7 +25,7 @@ export function PostView({
     <main className="reading-page min-h-screen">
       <div className="max-w-5xl mx-auto px-6 pt-8 pb-24">
         <Link
-          href="/blog"
+          href="/articles"
           className="inline-block font-ui text-xs text-text-muted hover:text-accent transition-colors mb-12"
         >
           {t("backToArticles")}
@@ -48,7 +49,7 @@ export function PostView({
                 {(article.tags ?? []).map((tag) => (
                   <a
                     key={tag}
-                    href={`/blog?tag=${encodeURIComponent(tag)}`}
+                    href={sitePath(`/articles?tag=${encodeURIComponent(tag)}`)}
                     className="font-ui text-xs text-accent bg-accent/10 px-2.5 py-0.5 rounded-full hover:bg-accent/20 transition-colors"
                   >
                     {tag}
@@ -69,7 +70,7 @@ export function PostView({
             <nav className="grid grid-cols-2 gap-8">
               {prev ? (
                 <Link
-                  href={`/blog/${prev.slug}`}
+                  href={`/articles/${prev.slug}`}
                   className="group p-4 rounded-lg border border-border hover:border-border-hover transition-colors"
                 >
                   <span className="font-ui text-xs text-text-muted">← {t("previous")}</span>
@@ -82,7 +83,7 @@ export function PostView({
               )}
               {next ? (
                 <Link
-                  href={`/blog/${next.slug}`}
+                  href={`/articles/${next.slug}`}
                   className="group p-4 rounded-lg border border-border hover:border-border-hover transition-colors text-right"
                 >
                   <span className="font-ui text-xs text-text-muted">{t("next")} →</span>

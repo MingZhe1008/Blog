@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import crypto from "crypto";
+import { sitePath } from "./site-paths";
 import { eq } from "drizzle-orm";
 import { getDb, saveDb, schema } from "./db";
 import { collectImageUsage, imageLifecycle, validImageName, type ImageSource, type ImageUsage } from "./image-policy";
@@ -55,7 +56,7 @@ async function synchronize(): Promise<UploadedImage[]> {
       }
     }
     known.delete(entry.name);
-    images.push({ name: entry.name, url: `/uploads/${entry.name}`, size: stat.size, lastModified: asset.createdAt, references,
+    images.push({ name: entry.name, url: sitePath(`/uploads/${entry.name}`), size: stat.size, lastModified: asset.createdAt, references,
       ...imageLifecycle(references.length, asset.lastUploadedAt, asset.unreferencedSince, Date.parse(now)) });
   }
   for (const name of known.keys()) { db.delete(schema.imageAssets).where(eq(schema.imageAssets.name, name)).run(); dirty = true; }
@@ -92,7 +93,7 @@ export function storeImage(buffer: Buffer, extension: string) {
     db.insert(schema.imageAssets).values({ name, createdAt: now, lastUploadedAt: now, unreferencedSince: now })
       .onConflictDoUpdate({ target: schema.imageAssets.name, set: { lastUploadedAt: now } }).run();
     saveDb();
-    return { url: `/uploads/${name}`, reused };
+    return { url: sitePath(`/uploads/${name}`), reused };
   });
 }
 

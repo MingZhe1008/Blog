@@ -2,6 +2,7 @@
 
 import { NextIntlClientProvider } from "next-intl";
 import { createContext, useContext, useEffect, useState } from "react";
+import { BASE_PATH } from "@/lib/site-paths";
 
 type Locale = "zh" | "en";
 const LocaleContext = createContext<((locale: Locale) => void) | null>(null);
@@ -23,7 +24,7 @@ export function I18nProvider({
   const [locale, setLocale] = useState<Locale>(initialLocale === "en" ? "en" : "zh");
   useEffect(() => { document.documentElement.lang = locale; }, [locale]);
   function updateLocale(next: Locale) {
-    document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`;
+    document.cookie = `NEXT_LOCALE=${next}; path=${BASE_PATH}; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`;
     setLocale(next);
   }
 

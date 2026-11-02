@@ -1,7 +1,7 @@
 "use server";
 
 import { withImageContentWrite } from "@/lib/image-library";
-import { revalidatePath } from "next/cache";
+import { revalidateSitePath as revalidatePath } from "@/lib/revalidate-site";
 import {
   insertArticle,
   updateArticleById,
@@ -23,7 +23,7 @@ export async function createArticle(data: {
   revalidatePath("/admin");
   revalidatePath("/admin/images");
   revalidatePath("/");
-  revalidatePath("/blog");
+  revalidatePath("/articles");
 }
 
 export async function updateArticle(
@@ -40,8 +40,8 @@ export async function updateArticle(
   revalidatePath("/admin/images");
   revalidatePath(`/admin/editor/${id}`);
   revalidatePath("/");
-  revalidatePath("/blog");
-  if (data.slug) revalidatePath(`/blog/${data.slug}`);
+  revalidatePath("/articles");
+  if (data.slug) revalidatePath(`/articles/${data.slug}`);
 }
 
 export async function deleteArticle(id: number) {
@@ -50,7 +50,7 @@ export async function deleteArticle(id: number) {
   revalidatePath("/admin");
   revalidatePath("/admin/images");
   revalidatePath("/");
-  revalidatePath("/blog");
+  revalidatePath("/articles");
 }
 
 export async function importMarkdownFile(filePath: string) {

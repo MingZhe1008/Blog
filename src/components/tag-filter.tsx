@@ -21,7 +21,7 @@ export function TagFilter({
     params.delete("page");
     if (tag) params.set("tag", tag);
     else params.delete("tag");
-    router.push("/blog" + (params.size ? "?" + params.toString() : ""));
+    router.push("/articles" + (params.size ? "?" + params.toString() : ""));
   }
 
   if (tags.length === 0) return null;

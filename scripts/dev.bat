@@ -4,7 +4,7 @@ title Blog - Dev Server
 
 echo ================================
 echo   Blog Dev Server
-echo   http://localhost:3000
+echo   http://localhost:3000/blog
 echo ================================
 echo.
 echo [33mStarting Next.js dev server...[0m

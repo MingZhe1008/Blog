@@ -4,7 +4,7 @@ title Blog - Production Server
 
 echo ================================
 echo   Blog Production Server
-echo   http://localhost:3000
+echo   http://localhost:3000/blog
 echo ================================
 echo.
 echo [33mStarting Next.js production server...[0m

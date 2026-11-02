@@ -1,6 +1,6 @@
 "use server";
 import { withImageContentWrite } from "@/lib/image-library";
-import { revalidatePath } from "next/cache";
+import { revalidateSitePath as revalidatePath } from "@/lib/revalidate-site";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { persistProject, removeProject } from "@/lib/projects";
 export async function saveProject(input: Parameters<typeof persistProject>[0]) {

@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { sitePath, appPath } from "@/lib/site-paths";
 
 type SearchResult = { type: "article" | "note"; title: string; description: string; href: string };
 
@@ -41,7 +42,7 @@ export function GlobalSearch() {
     setLoading(true);
     const timer = window.setTimeout(async () => {
       try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(value)}`, { signal: controller.signal });
+        const response = await fetch(sitePath(`/api/search?q=${encodeURIComponent(value)}`), { signal: controller.signal });
         const data = await response.json();
         setResults(data.results ?? []); setActive(0);
       } catch (error) { if (!(error instanceof DOMException && error.name === "AbortError")) setResults([]); }
@@ -49,7 +50,7 @@ export function GlobalSearch() {
     }, 120);
     return () => { window.clearTimeout(timer); controller.abort(); };
   }, [query]);
-  const choose = (result: SearchResult) => { setOpen(false); setQuery(""); router.push(result.href); };
+  const choose = (result: SearchResult) => { setOpen(false); setQuery(""); router.push(appPath(result.href)); };
 
   return <>
     <button type="button" className="search-trigger" onClick={() => setOpen(true)} aria-label={t("open")}>
