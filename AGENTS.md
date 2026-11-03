@@ -62,7 +62,7 @@ Next.js 15 App Router、React 19、TypeScript、Tailwind v4、SQLite（sql.js WA
 
 部署固定使用 Next.js `basePath: "/blog"`，规范见 `docs/DEPLOYMENT.md`。Next Link、router 和 Server Action redirect 使用应用内路径（例如 `/admin`），原生链接/图片/表单/fetch 使用 `sitePath()`；缓存失效使用 `revalidateSitePath()`。历史正文和数据库 URL 通过展示适配兼容，不批量重写。
 
-云端运行于 `/home/zmz/item/blog/`，公网入口 `https://www.lyy12.cn/blog`；复用已有 Nginx，博客独立使用 Node 22 与 `mingzhe-blog` systemd 服务，仅监听 `127.0.0.1:3000`。后续更新先备份服务器内容，禁止直接用本地数据库与 uploads 覆盖云端内容；Git 推送不自动部署。反向代理需覆盖 `X-Forwarded-Host` / `X-Forwarded-Proto`，登录跳转使用公网地址，不能带内部端口。具体维护见 `docs/DEPLOYMENT.md`。
+云端运行于 `/home/zmz/item/blog/`，公网入口 `https://www.lyy12.cn/blog`；复用已有 Nginx，博客独立使用 Node 22 与 `mingzhe-blog` systemd 服务，仅监听 `127.0.0.1:3000`。后续更新先备份服务器内容，禁止直接用本地数据库与 uploads 覆盖云端内容；Git 推送本身不触发部署，但助手每次完成改动后必须继续同步云端；用户明确要求仅本地、仅 demo 或不部署时例外。反向代理需覆盖 `X-Forwarded-Host` / `X-Forwarded-Proto`，登录跳转使用公网地址，不能带内部端口。具体维护见 `docs/DEPLOYMENT.md`。
 
 ## 数据与持久化
 
@@ -98,4 +98,5 @@ Next.js 15 App Router、React 19、TypeScript、Tailwind v4、SQLite（sql.js WA
 1. 按改动运行合适的检查；文档修改无需重跑应用构建。关键交互实际验证，类型检查不等于浏览器验收。
 2. 更新 `docs/STATUS.md`：日期、完成事项、验证范围、未解决问题与待办；长期架构与规范变化同步更新本文件。
 3. Git 操作前阅读 `docs/GIT.md`。按用户约定，每完成一个功能点或维护任务自动 `git add -A`、中文 `git commit`、`git push`，无需再次确认。提交前检查，避免混入无关或敏感内容。
-4. 推送失败时保留本地提交并说明；未验证事项不能写为完成，Git 推送不代表云端部署。
+4. 提交推送后继续同步云端，无需再次确认；应用更新须先构建、备份服务器应用与内容，保留云端数据库、uploads 和环境配置，验证通过后按策略只保留最近一份备份。纯文档更新同步服务器对应文档即可，无需重启应用。用户明确要求仅本地、仅 demo 或不部署时遵从该次要求。
+5. 推送或部署失败时保留本地提交并说明；未验证事项不能写为完成，Git 推送不代表云端部署。
