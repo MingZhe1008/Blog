@@ -69,7 +69,7 @@ nginx -t && systemctl reload nginx
 
 ### 云端备份保留策略
 
-云端博客部署备份最多保留最近一份，统一放在 `/home/zmz/item/blog-backups/`。当前保留 `before-note-design-20261103-141429/`，包括旧应用、独立数据库/图片快照、原构建目录以及服务和 Nginx 配置。早期 `/root/blog-deploy-backup-20261102/` 和上传临时包已清理，不能再使用这些旧路径恢复。
+云端博客部署备份最多保留最近一份，统一放在 `/home/zmz/item/blog-backups/`。当前保留 `before-interview-import-20261103-143623/`，包括旧应用、独立数据库/图片快照、原构建目录以及服务和 Nginx 配置。早期 `/root/blog-deploy-backup-20261102/` 和上传临时包已清理，不能再使用这些旧路径恢复。
 
 后续部署先生成并校验新备份，分别保存 `data/blog.db` 与 `public/uploads/`；部署和健康检查成功后，删除上一份备份，仅保留本次更新前的快照。轮换期间可短暂并存，任务结束时最多一份。删除前核对绝对路径，禁止删除当前应用目录或尚未校验的新备份；部署失败时保留恢复所需备份，优先回滚。上传临时包使用完即清理，不在 `/root` 另存旧版副本。
 
@@ -83,3 +83,5 @@ nginx -t && systemctl reload nginx
 - 缓存失效统一使用 `revalidateSitePath()`，覆盖应用布局标签和带前缀的具体 URL 标签。
 - 数据库和图片的磁盘位置仍为 `data/blog.db`、`public/uploads/`，跨机器部署需单独迁移并备份。不得将 Next.js 反向代理配置为移除 `/blog` 后再转发。
 - 不再提供旧根路径下的 `/admin`、`/notes` 等入口；同域其他应用可使用自己的路径。历史内容中的链接兼容不等于旧浏览器书签重定向。
+
+导入资料原 PDF 保存在 public/imports/，属于持久化内容资产，不提交 Git；后续部署不得覆盖或删除，备份时与 data/、public/uploads/ 一并归档。当前面试导入备份附 import-receipt.json，保存导入前内容快照。
