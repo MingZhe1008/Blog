@@ -34,9 +34,6 @@ export function BlogListView({
       <div className="mx-auto max-w-5xl px-6 pb-24 pt-20 md:pt-28">
         <header className="archive-heading">
           <h1 className="mb-4 font-display text-4xl font-black md:text-6xl">{t("title")}</h1>
-          <p className="max-w-xl font-body text-base text-text-secondary md:text-lg">
-            {t("subtitle")}
-          </p>
         </header>
 
         <form action={sitePath("/articles")} className="archive-search">

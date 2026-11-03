@@ -11,7 +11,6 @@ export function ProjectsView({ projects }: { projects: Project[] }) {
     <main className="editorial-page projects-page">
       <header className="archive-heading">
         <h1>{t("title")}</h1>
-        <p className="hero-intro">{t("intro")}</p>
       </header>
       <section className="projects-list" aria-label={t("title")}>
         {projects.map(project => <article className="project-entry" key={project.id}>
