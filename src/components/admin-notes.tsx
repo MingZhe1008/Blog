@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { ChevronDown, ChevronRight, FileText, Folder, GripVertical, MoreHorizontal } from "lucide-react";
+import { ChevronDown, ChevronRight, FileText, Folder, GripVertical } from "lucide-react";
 import type { NoteSummary, NoteTreeChange } from "@/lib/notes";
 import { moveNote, moveFolder, manageNoteTree } from "@/server-actions/notes";
 type Branch = { path: string[]; folders: Map<string, Branch>; notes: NoteSummary[]; count: number };
@@ -128,7 +128,7 @@ export function AdminNotes({ notes }: { notes: NoteSummary[] }) {
         <span className="admin-folder-grip" draggable={!pending} title={en ? "Drag folder" : "拖动文件夹"} onDragStart={e => { setDragId(null); setDragFolder(folder.path); e.dataTransfer.effectAllowed="move"; e.dataTransfer.setData("text/plain",folderKey); }} onDragEnd={() => {setDragFolder(null);setOver(null);}}><GripVertical size={15}/></span>
         <button type="button" aria-expanded={!closed} onClick={() => setCollapsed(previous => { const next = new Set(previous); if (closed) next.delete(folderKey); else next.add(folderKey); return next; })}>
           {closed ? <ChevronRight size={15}/> : <ChevronDown size={15}/>}<Folder size={17}/><span>{folder.path.at(-1)}</span><small>{folder.count}</small>
-        </button><button type="button" className="admin-folder-move-button" disabled={pending} onClick={() => {setFolderMoving(folder.path);setTarget(key(folder.path.slice(0,-1)));}}>{en ? "Move to" : "移动到"}</button><button type="button" className="admin-context-trigger" aria-label={en ? "Folder actions" : "文件夹快捷操作"} onClick={e => openMenu(e,{kind:"folder",path:folder.path})}><MoreHorizontal size={17}/></button><span className="admin-note-drop-label">{en ? "Drop here" : "移到此目录"}</span>
+        </button><span className="admin-note-drop-label">{en ? "Drop here" : "移到此目录"}</span>
       </div>{!closed && render(folder)}</li>;
     })}{branch.notes.map(note => <li key={note.id} className={`admin-note-row ${dragId === note.id ? "is-dragging" : ""}`} data-note-id={note.id} onContextMenu={e => openMenu(e,{kind:"note",id:note.id})}>
       <div className="admin-note-identity" draggable={!pending} onDragStart={e => { setDragFolder(null); setDragId(note.id); e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", String(note.id)); }} onDragEnd={() => { setDragId(null); setOver(null); }}>
@@ -136,9 +136,6 @@ export function AdminNotes({ notes }: { notes: NoteSummary[] }) {
       </div><span className={`admin-note-status ${note.status === "published" ? "is-published" : ""}`}>{note.status === "published" ? t("published") : t("draftStatus")}</span>
       <div className="admin-note-tags">{note.tags.slice(0,3).map(tag => <span key={tag}>{tag}</span>)}</div>
       <time className="admin-note-updated" dateTime={new Date(note.updatedAt).toISOString()}>{new Date(note.updatedAt).toLocaleDateString("zh-CN")}</time>
-      <div className="admin-note-actions">
-      <button type="button" disabled={pending} onClick={() => { setMoving(note.id); setTarget(key(note.path)); }}>{en ? "Move to" : "移动到"}</button>
-      <Link href={`/admin/notes/${note.id}`}>{en ? "Edit" : "编辑"}</Link><button type="button" className="admin-context-trigger" aria-label={en ? "Note actions" : "笔记快捷操作"} onClick={e => openMenu(e,{kind:"note",id:note.id})}><MoreHorizontal size={17}/></button></div>
     </li>)}</ul>;
   }
   return <div className="note-admin" onContextMenu={e => openMenu(e,null)}><div className="section-heading"><h1>{t("manage")}</h1><Link href="/admin/notes/new" className="primary-link">+ {t("new")}</Link></div>
@@ -157,6 +154,6 @@ export function AdminNotes({ notes }: { notes: NoteSummary[] }) {
     {folderMoving && <form className="admin-note-move" onSubmit={e => {e.preventDefault();moveBranch(folderMoving,JSON.parse(target));}}><label htmlFor="folder-move-target">{en ? "Move folder:" : "移动文件夹："} {folderMoving.join(" / ")}</label><select id="folder-move-target" value={target} onChange={e => setTarget(e.target.value)} disabled={pending}><option value="[]">{en ? "Top level" : "顶层目录"}</option>{folders.filter(f => !starts(f.path,folderMoving)).map(f => <option key={key(f.path)} value={key(f.path)}>{f.path.join(" / ")}</option>)}</select><button type="submit" disabled={pending || target===key(folderMoving.slice(0,-1))}>{en ? "Move" : "确认移动"}</button><button type="button" disabled={pending} onClick={() => setFolderMoving(null)}>{en ? "Cancel" : "取消"}</button></form>}
     {notes.length > 0 && <div className={`admin-folder-root ${over==="root" ? "is-drop-target" : ""}`} onDragOver={e => {if(validTarget([])&&!pending){e.preventDefault();setOver("root");}}} onDragLeave={() => setOver(null)} onDrop={e => {e.preventDefault();if(validTarget([])&&!pending)drop([]);}}>{en ? "Drop here to move to top level" : "拖到这里，移至顶层目录"}</div>}
     {moving !== null && <form className="admin-note-move" onSubmit={e => { e.preventDefault(); if (target) move(moving, JSON.parse(target)); }}><label htmlFor="note-move-target">{en ? "Move note:" : "移动笔记："} {notes.find(n => n.id === moving)?.title}</label><select id="note-move-target" value={target} onChange={e => setTarget(e.target.value)} disabled={pending}>{folders.map(f => <option key={key(f.path)} value={key(f.path)}>{f.path.join(" / ")}</option>)}</select><button type="submit" disabled={pending || target === key(notes.find(n => n.id === moving)?.path ?? [])}>{en ? "Move" : "确认移动"}</button><button type="button" disabled={pending} onClick={() => setMoving(null)}>{en ? "Cancel" : "取消"}</button></form>}
-    {notes.length ? <nav className="admin-notes-tree" aria-label={t("directory")} aria-busy={pending}><div className="admin-notes-columns" aria-hidden="true"><span>{en ? "Title / Directory" : "标题 / 目录"}</span><span>{en ? "Status" : "状态"}</span><span>{en ? "Tags" : "标签"}</span><span>{en ? "Updated" : "更新时间"}</span><span>{en ? "Actions" : "操作"}</span></div>{render(root)}</nav> : <p className="empty-message">{t("empty")}</p>}
+    {notes.length ? <nav className="admin-notes-tree" aria-label={t("directory")} aria-busy={pending}><div className="admin-notes-columns" aria-hidden="true"><span>{en ? "Title / Directory" : "标题 / 目录"}</span><span>{en ? "Status" : "状态"}</span><span>{en ? "Tags" : "标签"}</span><span>{en ? "Updated" : "更新时间"}</span></div>{render(root)}</nav> : <p className="empty-message">{t("empty")}</p>}
   </div>;
 }

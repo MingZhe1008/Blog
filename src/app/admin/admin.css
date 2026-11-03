@@ -295,7 +295,7 @@
 .note-admin .admin-folder-root { position:static; padding:9px 14px; margin:0 0 14px; background:transparent; border-color:var(--color-border); text-align:left; font-size:12px; color:var(--color-text-muted); }
 .note-admin .admin-folder-root.is-drop-target { background:var(--color-bg-elevated); color:var(--color-text-primary); }
 .note-admin .admin-notes-tree { padding:0; overflow:hidden; }
-.admin-notes-columns,.note-admin .admin-note-row { display:grid; grid-template-columns:minmax(120px,1fr) 68px 110px 92px 142px; gap:14px; align-items:center; }
+.admin-notes-columns,.note-admin .admin-note-row { display:grid; grid-template-columns:minmax(120px,1fr) 68px 110px 92px; gap:14px; align-items:center; }
 .admin-notes-columns { padding:14px 18px; background:color-mix(in srgb,var(--color-bg-elevated) 65%,transparent); border-bottom:1px solid var(--color-border); color:var(--color-text-secondary); font-size:11px; letter-spacing:.04em; }
 .admin-notes-tree>ul { padding:8px 12px 12px; }
 .note-admin .admin-notes-tree li>ul { margin-left:14px; padding-left:10px; }
@@ -310,11 +310,8 @@
 .admin-note-tags { display:flex; flex-wrap:wrap; gap:4px; min-width:0; }
 .admin-note-tags span { padding:1px 5px; border-radius:3px; background:var(--color-bg-muted); color:var(--color-text-muted); font-size:10px; overflow-wrap:anywhere; }
 .admin-note-updated { font-size:11px; color:var(--color-text-muted); white-space:nowrap; }
-.admin-note-actions { display:flex; align-items:center; justify-content:flex-end; gap:12px; color:var(--color-text-secondary); white-space:nowrap; font-size:12px; }
-.admin-note-actions .admin-context-trigger { display:flex; padding:5px; border-radius:4px; }
-.admin-note-actions :is(a,button):hover { color:var(--color-text-primary); }
 @media(max-width:1100px) {
-  .admin-notes-columns,.note-admin .admin-note-row { grid-template-columns:minmax(100px,1fr) 68px 92px 132px; gap:10px; }
+  .admin-notes-columns,.note-admin .admin-note-row { grid-template-columns:minmax(100px,1fr) 68px 92px; gap:10px; }
   .admin-note-tags,.admin-notes-columns>span:nth-child(3) { display:none; }
 }
 @media(max-width:700px) {
@@ -324,7 +321,6 @@
   .note-admin .admin-note-identity { grid-column:1/-1; }
   .note-admin .admin-note-status { margin:0 0 0 23px; }
   .admin-note-updated { display:none; }
-  .admin-note-actions { gap:10px; }
   .note-admin .admin-note-folder>.admin-folder-move-button { padding-inline:6px; font-size:11px; }
   .note-admin .admin-notes-tree li>ul { margin-left:6px; padding-left:6px; }
 }
