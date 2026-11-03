@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { saveNote } from "@/server-actions/notes";
 import type { Note } from "@/lib/notes";
+import { FolderChoice } from "@/components/folder-choice";
 
 export function NoteEditor({ note, paths }: { note?: Note; paths: string[][] }) {
   const t = useTranslations("notes");
@@ -37,16 +38,18 @@ export function NoteEditor({ note, paths }: { note?: Note; paths: string[][] }) 
   return <div className="note-admin"><Link href="/admin/notes">{admin("backToNotes")}</Link><h1>{note ? t("edit") : t("new")}</h1>
     <form className="note-editor" onSubmit={e => { e.preventDefault(); void submit("draft"); }}>
       <fieldset disabled={busy}>
-        <label htmlFor="note-title">{t("name")}</label><input id="note-title" maxLength={200} value={title} onChange={e => setTitle(e.target.value)} required />
+        <div className="note-field"><label htmlFor="note-title">{t("name")}</label><input id="note-title" maxLength={200} value={title} onChange={e => setTitle(e.target.value)} required /></div>
+        <section className="note-hierarchy" aria-label={t("hierarchy")}>
         <div className="note-level-heading"><label>{t("hierarchy")}</label><button type="button" disabled={levels.length >= 12} onClick={() => setLevels([...levels, ""])}>+ {t("addLevel")}</button></div>
         <p className="note-path">{t("hierarchyHelp")}</p>
         <div className="note-levels">{levels.map((level, index) => {
           const suggestions = [...new Set(paths.filter(p => levels.slice(0,index).every((v,i) => p[i] === v.trim())).map(p => p[index]).filter(Boolean))];
-          return <div key={index}><label htmlFor={`level-${index}`}>{index + 1}</label><div className="note-level-picker"><input id={`level-${index}`} maxLength={100} value={level} required onChange={e => setLevels(levels.map((v,i) => i === index ? e.target.value : v))} /><select aria-label={`${t("selectExistingLevel")} ${index + 1}`} value="" disabled={!suggestions.length} onChange={e => { const selected = e.target.value; if (selected) setLevels(levels.map((v,i) => i === index ? selected : v)); }}><option value="">{suggestions.length ? t("selectExistingLevel") : t("noExistingLevel")}</option>{suggestions.map(s => <option key={s} value={s}>{s}</option>)}</select></div>{levels.length > 1 && <button type="button" aria-label={t("removeLevel")} onClick={() => setLevels(levels.slice(0,index).concat(levels.slice(index+1)))}>×</button>}</div>;
+          return <div key={index}><label className="note-level-number" htmlFor={`level-${index}`}>{index + 1}</label><div className="note-level-picker"><input id={`level-${index}`} maxLength={100} value={level} required onChange={e => setLevels(levels.map((v,i) => i === index ? e.target.value : v))} /><FolderChoice options={suggestions} label={t("selectExistingLevel")} emptyLabel={t("noExistingLevel")} onSelect={selected => setLevels(levels.map((v,i) => i === index ? selected : v))} /></div>{levels.length > 1 && <button className="note-level-remove" type="button" aria-label={`${t("removeLevel")} ${index + 1}`} onClick={() => setLevels(levels.slice(0,index).concat(levels.slice(index+1)))}>×</button>}</div>;
         })}</div>
         <p className="note-breadcrumb">{[...levels.map(l => l || "…"), title || "…"].join(" / ")}</p>
-        <label htmlFor="note-tags">{t("tags")}</label><input id="note-tags" value={tags} onChange={e => setTags(e.target.value)} placeholder={t("tagsHelp")} />
-        <div className="note-tags">{tags.split(/[,，]/).map(t => t.trim()).filter(Boolean).map((tag,i) => <span className="article-tag" key={i}>{tag}</span>)}</div>
+        </section>
+        <div className="note-field"><label htmlFor="note-tags">{t("tags")}</label><input id="note-tags" value={tags} onChange={e => setTags(e.target.value)} placeholder={t("tagsHelp")} />
+        {!!tags.trim() && <div className="note-tags">{tags.split(/[,，]/).map(t => t.trim()).filter(Boolean).map((tag,i) => <span className="article-tag" key={i}>{tag}</span>)}</div>}</div>
         <div className="note-level-heading"><label htmlFor="note-content">{t("content")}</label><div className="admin-cover-tools">
           <button type="button" disabled={previewing} onClick={async () => {
             if (preview) { setPreview(false); return; }

@@ -40,17 +40,43 @@
 .admin-content .note-card h2 { font-size: 19px; margin: 14px 0; }
 .admin-content .note-path { font-size: 12px; color: var(--color-text-muted); margin: 10px 0; }
 .admin-content .note-tags { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0 22px; }
-.admin-content .note-editor { max-width: none; border: 1px solid var(--color-border); border-radius: 12px; padding: 28px; margin-top: 24px; }
-.admin-content .note-editor fieldset { display: flex; flex-direction: column; gap: 12px; min-width: 0; border: 0; padding: 0; }
-.admin-content .note-editor label:not(:first-child) { margin-top: 10px; }
+.admin-content .note-editor { max-width: 1100px; border: 1px solid var(--color-border); border-radius: 16px; padding: clamp(18px,3vw,32px); margin-top: 24px; }
+.admin-content .note-editor fieldset { display: flex; flex-direction: column; gap: 26px; min-width: 0; border: 0; padding: 0; }
+.admin-content .note-editor label { margin: 0; font-size: 13px; }
+.note-field { display: grid; gap: 10px; min-width: 0; }
+.admin-content .note-field .note-tags { margin: 0; }
+.note-hierarchy { border-block: 1px solid var(--color-border); padding: 22px 0; }
+.admin-content .note-hierarchy .note-path { margin: 8px 0 18px; line-height: 1.8; }
+.admin-content .note-level-heading>label { font-weight: 600; color: var(--color-text-primary); }
+.admin-content .note-level-heading>button { padding: 7px 12px; font-size: 12px; }
 .admin-content .note-editor textarea { resize: vertical; }
 .admin-content .note-editor #note-content { font-family: var(--font-mono); min-height: 420px; }
 .admin-content .note-levels { display: grid; gap: 10px; }
 .admin-content .note-levels>div { display: flex; align-items: center; gap: 12px; }
 .admin-content .note-levels input { flex: 1; }
-.admin-content .note-level-picker { display: flex; flex: 1; min-width: 0; gap: 8px; flex-wrap: wrap; }
+.admin-content .note-level-picker { display: flex; flex: 1; min-width: 0; gap: 8px; }
 .admin-content .note-level-picker input { width: 0; min-width: 100px; }
 .admin-content .note-level-picker select { flex: 0 1 200px; max-width: 100%; }
+.admin-content .note-level-number { display: grid; place-items: center; flex: 0 0 26px; height: 26px; border: 1px solid var(--color-border); border-radius: 50%; color: var(--color-text-muted); font: 11px var(--font-mono); }
+.admin-content .note-level-remove { flex: 0 0 34px; min-height: 34px; padding: 0; border-color: transparent; color: var(--color-text-muted); }
+.admin-content .note-level-remove:hover { border-color: var(--color-border); color: var(--color-text-primary); }
+.folder-choice { position: relative; flex: 0 0 190px; min-width: 0; }
+.admin-content .folder-choice-trigger { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 46px; padding: 10px 12px; font-size: 12px; border-radius: 8px; background: transparent; color: var(--color-text-secondary); }
+.folder-choice-trigger>span { flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.folder-choice-trigger[aria-expanded=true] { border-color: var(--color-text-muted); }
+.folder-choice-menu { position: absolute; z-index: 40; top: calc(100% + 6px); right: 0; width: max(100%,220px); max-width: min(320px,75vw); max-height: 260px; overflow: auto; padding: 6px; border: 1px solid var(--color-border-hover); border-radius: 10px; background: var(--color-bg-surface); box-shadow: 0 12px 32px #0003; }
+.admin-content .folder-choice-menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px; text-align: left; border: 0; border-radius: 6px; font-size: 13px; color: var(--color-text-secondary); overflow-wrap: anywhere; }
+.folder-choice-menu button>svg { flex-shrink: 0; }
+.admin-content .folder-choice-menu button:hover,.admin-content .folder-choice-menu button:focus-visible { background: var(--color-bg-elevated); color: var(--color-text-primary); outline: none; }
+.admin-content .note-hierarchy .note-breadcrumb { margin: 18px 0 0; border: 0; border-radius: 8px; background: color-mix(in srgb,var(--color-text-primary) 4%,transparent); padding: 10px 12px; font-size: 12px; }
+@media (max-width: 650px) {
+  .admin-content .note-level-picker { flex-wrap: wrap; }
+  .admin-content .note-level-picker input { flex-basis: 100%; }
+  .folder-choice { flex-basis: 100%; }
+  .admin-content .note-levels>div { align-items: flex-start; gap: 8px; }
+  .admin-content .note-level-number { margin-top: 10px; }
+  .admin-content .note-level-remove { margin-top: 6px; }
+}
 .admin-content .note-level-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .admin-content .note-breadcrumb { padding: 12px 16px; border-left: 2px solid var(--color-border); color: var(--color-text-muted); overflow-wrap: anywhere; }
 .admin-content .excerpt-enabled { display: flex; align-items: center; gap: 10px; }
