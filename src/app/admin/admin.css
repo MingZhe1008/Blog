@@ -48,6 +48,9 @@
 .admin-content .note-levels { display: grid; gap: 10px; }
 .admin-content .note-levels>div { display: flex; align-items: center; gap: 12px; }
 .admin-content .note-levels input { flex: 1; }
+.admin-content .note-level-picker { display: flex; flex: 1; min-width: 0; gap: 8px; flex-wrap: wrap; }
+.admin-content .note-level-picker input { width: 0; min-width: 100px; }
+.admin-content .note-level-picker select { flex: 0 1 200px; max-width: 100%; }
 .admin-content .note-level-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .admin-content .note-breadcrumb { padding: 12px 16px; border-left: 2px solid var(--color-border); color: var(--color-text-muted); overflow-wrap: anywhere; }
 .admin-content .excerpt-enabled { display: flex; align-items: center; gap: 10px; }
