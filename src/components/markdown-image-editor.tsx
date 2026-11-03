@@ -9,6 +9,7 @@ import { sitePath } from "@/lib/site-paths";
 import { uploadImageFile } from "@/server-actions/upload";
 import "codemirror/lib/codemirror.css";
 import { markdownEdit, type MarkdownCommand } from "@/lib/markdown-formatting";
+import { orderedListNumber } from "@/lib/markdown-list-indent";
 import { Bold, Italic, Underline, Strikethrough, Code, Code2, Quote, List, ListOrdered, ListTodo, Link, Minus, Table, Undo2, Redo2 } from "lucide-react";
 
 export interface MarkdownImageEditorHandle { insertImage: (url: string) => void }
@@ -83,10 +84,33 @@ export const MarkdownImageEditor = forwardRef<MarkdownImageEditorHandle, {
       cm = CodeMirror(host.current, {
         value: callbacks.current.value, mode: { name: "markdown", taskLists: true, strikethrough: true }, lineWrapping: true,
         viewportMargin: 10, readOnly: callbacks.current.disabled, tabSize: 4, indentUnit: 4, indentWithTabs: false, styleSelectedText: true,
-        extraKeys: { Enter: "newlineAndIndentContinueMarkdownList", Tab: "indentMore", "Shift-Tab": "indentLess" },
+        extraKeys: { Enter: "newlineAndIndentContinueMarkdownList", Tab: instance => indentList(instance, "add"), "Shift-Tab": instance => indentList(instance, "subtract") },
         inputStyle: "contenteditable", screenReaderLabel: language.current ? "Markdown content" : "正文编辑",
       });
       editor.current = cm;
+      function indentList(instance: Editor, direction: "add" | "subtract") {
+        if (callbacks.current.disabled) return;
+        const lines = new Set<number>();
+        for (const selection of instance.listSelections()) {
+          const from = Math.min(selection.anchor.line, selection.head.line);
+          let to = Math.max(selection.anchor.line, selection.head.line);
+          const end = selection.anchor.line > selection.head.line ? selection.anchor : selection.head;
+          if (to > from && end.ch === 0) to--;
+          for (let line = from; line <= to; line++) lines.add(line);
+        }
+        const previousIndent = new Map([...lines].map(line => [line, instance.getLine(line).match(/^[\t ]*/)?.[0]]));
+        instance.operation(() => {
+          instance.indentSelection(direction);
+          for (const line of [...lines].sort((a, b) => a - b)) {
+            const raw = instance.getLine(line);
+            const match = raw.match(/^([\t ]*)(\d+)([.)])(?:[\t ]|$)/);
+            if (!match || match[1] === previousIndent.get(line)) continue;
+            const number = orderedListNumber(instance.getValue(), line);
+            if (number !== null && String(number) !== match[2]) instance.replaceRange(String(number),
+              { line, ch: match[1].length }, { line, ch: match[1].length + match[2].length }, "+input");
+          }
+        });
+      }
       cm.getInputField().setAttribute("role", "textbox");
       cm.getInputField().setAttribute("aria-multiline", "true");
       setReady(true);

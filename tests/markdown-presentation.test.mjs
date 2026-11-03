@@ -7,6 +7,15 @@ registerHooks({ resolve(specifier, context, nextResolve) {
   catch (error) { if (specifier.startsWith("./") && context.parentURL?.includes("/src/lib/")) return nextResolve(specifier + ".ts", context); throw error; }
 } });
 const { markdownPresentation } = await import("../src/lib/markdown-presentation.ts");
+const { orderedListNumber } = await import("../src/lib/markdown-list-indent.ts");
+
+test("indented ordered items restart or continue their destination level", () => {
+  assert.equal(orderedListNumber("1. Parent\n    2. ", 1), 1);
+  assert.equal(orderedListNumber("1. Parent\n    1. Child\n    3. Next", 2), 2);
+  assert.equal(orderedListNumber("1. Parent\n    1. Child\n2. Next", 2), 2);
+  assert.equal(orderedListNumber("```md\n    2. example\n```", 1), null);
+  assert.equal(orderedListNumber("1. Parent\n    - bullet", 1), null);
+});
 function visible(source) {
   const { marks } = markdownPresentation(source);
   return marks.filter(mark => mark.kind !== "style").sort((a,b) => b.from - a.from).reduce((text,mark) => text.slice(0,mark.from) + (mark.kind === "bullet" ? mark.text : mark.kind === "task" ? "☐" : "") + text.slice(mark.to), source);
