@@ -15,6 +15,18 @@ export async function getNotes(publishedOnly = true): Promise<NoteSummary[]> {
 export async function getNote(id: number) {
   return (await getDb()).select().from(schema.notes).where(eq(schema.notes.id, id)).get();
 }
+export async function moveNotePath(id: number, path: string[], expectedPath: string[]) {
+  if (!Number.isSafeInteger(id) || id < 1 || !Array.isArray(path) || !path.length || path.length > 12 ||
+      path.some(p => typeof p !== "string" || !p.trim() || p.length > 100) || !Array.isArray(expectedPath)) throw new Error("Invalid move");
+  const db = await getDb();
+  const note = await getNote(id);
+  if (!note || JSON.stringify(note.path) !== JSON.stringify(expectedPath)) throw new Error("Stale note");
+  const target = path.map(p => p.trim());
+  if (!(await getNotes(false)).some(n => target.every((p, i) => n.path[i] === p))) throw new Error("Folder not found");
+  // Update only location; preserve the latest content, tags and publication state.
+  db.update(schema.notes).set({ path: target, updatedAt: new Date().toISOString() }).where(eq(schema.notes.id, id)).run();
+  saveDb();
+}
 export async function persistNote(input: {
   id?: number; title: string; path: string[]; tags: string[]; content: string; status: "draft" | "published";
 }) {
