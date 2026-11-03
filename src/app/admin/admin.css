@@ -33,7 +33,7 @@
 .admin-content :is(th,td) { padding: 18px 16px; border-bottom: 1px solid var(--color-border); }
 .admin-content td:first-child { width: 38%; min-width: 200px; overflow-wrap: anywhere; }
 .admin-content .overflow-x-auto { border: 1px solid var(--color-border); border-radius: 12px; }
-.admin-content .note-admin { max-width: none; padding: 0; margin: 0; }
+.admin-content .note-admin { max-width: 1180px; padding: 0; margin-inline: auto; }
 .admin-content .note-admin>h1 { margin: 16px 0; }
 .admin-content .notes-cards { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; margin-top: 28px; }
 .admin-content .journal-card { padding: 26px; border: 1px solid var(--color-border); border-radius: 12px; background: transparent; min-width: 0; overflow-wrap: anywhere; }
@@ -283,6 +283,50 @@
 .admin-tree-context>.admin-context-delete { border-top:1px solid var(--color-border); border-radius:0 0 5px 5px; margin-top:4px; }
 .admin-note-folder>.admin-context-trigger { flex:0 0 auto; padding:10px; }
 .admin-note-row>.admin-context-trigger { padding:4px; }
+
+/* Notes share the article archive's quiet, aligned list rhythm. */
+.note-admin .section-heading { align-items:center; gap:16px; }
+.note-admin .admin-note-toolbar { padding:0 0 16px; gap:12px; }
+.admin-note-toolbar>div { gap:4px; }
+.admin-note-toolbar button { padding:6px 10px; border-radius:6px; }
+.admin-note-toolbar button:hover { background:var(--color-bg-elevated); color:var(--color-text-primary); }
+.admin-note-feedback:empty { min-height:0; margin:0; }
+.note-admin .admin-folder-root { position:static; padding:9px 14px; margin:0 0 14px; background:transparent; border-color:var(--color-border); text-align:left; font-size:12px; color:var(--color-text-muted); }
+.note-admin .admin-folder-root.is-drop-target { background:var(--color-bg-elevated); color:var(--color-text-primary); }
+.note-admin .admin-notes-tree { padding:0; overflow:hidden; }
+.admin-notes-columns,.note-admin .admin-note-row { display:grid; grid-template-columns:minmax(120px,1fr) 68px 110px 92px 142px; gap:14px; align-items:center; }
+.admin-notes-columns { padding:14px 18px; background:color-mix(in srgb,var(--color-bg-elevated) 65%,transparent); border-bottom:1px solid var(--color-border); color:var(--color-text-secondary); font-size:11px; letter-spacing:.04em; }
+.admin-notes-tree>ul { padding:8px 12px 12px; }
+.note-admin .admin-notes-tree li>ul { margin-left:14px; padding-left:10px; }
+.note-admin .admin-note-folder { margin:0; min-height:40px; }
+.note-admin .admin-note-folder>button { padding-block:8px; gap:8px; font-size:13px; }
+.note-admin .admin-note-folder small { margin-left:2px; font-size:10px; }
+.note-admin .admin-note-row { padding:12px 6px; min-height:56px; border-radius:0; border-bottom:1px solid var(--color-border); }
+.note-admin .admin-note-identity { gap:8px; }
+.note-admin .admin-note-identity a { font-size:13px; font-weight:500; line-height:1.6; }
+.note-admin .admin-note-status { justify-self:start; padding:2px 7px; border:1px solid var(--color-border); border-radius:4px; font-size:10px; }
+.admin-note-status.is-published { background:var(--color-bg-muted); color:var(--color-text-secondary); }
+.admin-note-tags { display:flex; flex-wrap:wrap; gap:4px; min-width:0; }
+.admin-note-tags span { padding:1px 5px; border-radius:3px; background:var(--color-bg-muted); color:var(--color-text-muted); font-size:10px; overflow-wrap:anywhere; }
+.admin-note-updated { font-size:11px; color:var(--color-text-muted); white-space:nowrap; }
+.admin-note-actions { display:flex; align-items:center; justify-content:flex-end; gap:12px; color:var(--color-text-secondary); white-space:nowrap; font-size:12px; }
+.admin-note-actions .admin-context-trigger { display:flex; padding:5px; border-radius:4px; }
+.admin-note-actions :is(a,button):hover { color:var(--color-text-primary); }
+@media(max-width:1100px) {
+  .admin-notes-columns,.note-admin .admin-note-row { grid-template-columns:minmax(100px,1fr) 68px 92px 132px; gap:10px; }
+  .admin-note-tags,.admin-notes-columns>span:nth-child(3) { display:none; }
+}
+@media(max-width:700px) {
+  .admin-notes-columns { display:none; }
+  .admin-notes-tree>ul { padding:6px; }
+  .note-admin .admin-note-row { grid-template-columns:minmax(0,1fr) auto; gap:8px; padding:12px 6px; }
+  .note-admin .admin-note-identity { grid-column:1/-1; }
+  .note-admin .admin-note-status { margin:0 0 0 23px; }
+  .admin-note-updated { display:none; }
+  .admin-note-actions { gap:10px; }
+  .note-admin .admin-note-folder>.admin-folder-move-button { padding-inline:6px; font-size:11px; }
+  .note-admin .admin-notes-tree li>ul { margin-left:6px; padding-left:6px; }
+}
 
 .admin-sidebar-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:24px; }
 .admin-sidebar-heading>span { display:flex; align-items:center; gap:10px; font-size:18px; font-weight:650; white-space:nowrap; }
