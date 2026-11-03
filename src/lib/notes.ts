@@ -43,6 +43,25 @@ export async function moveNoteFolder(source: string[], parent: string[], expecte
   db.transaction(tx => { for (const n of updates) tx.update(schema.notes).set({path:n.path,updatedAt}).where(eq(schema.notes.id,n.id)).run(); });
   saveDb();
 }
+export type NoteTreeChange = { kind: "note"; id: number } | { kind: "folder"; path: string[] };
+export async function changeNoteTree(target: NoteTreeChange, operation: "rename" | "delete", name: string, expected: NoteSummary[]) {
+  if (!target || !["note","folder"].includes(target.kind) || !["rename","delete"].includes(operation) || !Array.isArray(expected)) throw new Error("Invalid operation");
+  if (target.kind === "note" && (!Number.isSafeInteger(target.id) || target.id < 1)) throw new Error("Invalid note");
+  if (target.kind === "folder" && (!Array.isArray(target.path) || !target.path.length || target.path.length > 12 || target.path.some(p => typeof p !== "string" || !p.trim()))) throw new Error("Invalid path");
+  const notes = await getNotes(false);
+  const affected = notes.filter(n => target.kind === "note" ? n.id === target.id : target.path.every((p,i) => n.path[i] === p));
+  const snapshot = (items: NoteSummary[]) => JSON.stringify(items.map(n => ({id:n.id,path:n.path,updatedAt:n.updatedAt})).sort((a,b) => a.id-b.id));
+  if (!affected.length || snapshot(affected) !== snapshot(expected)) throw new Error("Content changed");
+  if (operation === "rename" && (typeof name !== "string" || !name.trim() || name.length > (target.kind === "folder" ? 100 : 200))) throw new Error("Invalid name");
+  const destination = target.kind === "folder" ? [...target.path.slice(0,-1),name.trim()] : [];
+  if (operation === "rename" && target.kind === "folder" && notes.some(n => destination.every((p,i) => n.path[i] === p))) throw new Error("Folder already exists");
+  const db = await getDb(), updatedAt = new Date().toISOString();
+  db.transaction(tx => { for (const note of affected) {
+    if (operation === "delete") tx.delete(schema.notes).where(eq(schema.notes.id,note.id)).run();
+    else tx.update(schema.notes).set(target.kind === "note" ? {title:name.trim(),updatedAt} : {path:[...destination,...note.path.slice(target.path.length)],updatedAt}).where(eq(schema.notes.id,note.id)).run();
+  }});
+  saveDb();
+}
 export async function persistNote(input: {
   id?: number; title: string; path: string[]; tags: string[]; content: string; status: "draft" | "published";
 }) {

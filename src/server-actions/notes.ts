@@ -1,8 +1,19 @@
 "use server";
 import { withImageContentWrite } from "@/lib/image-library";
 import { revalidateSitePath as revalidatePath } from "@/lib/revalidate-site";
-import { persistNote, moveNotePath, moveNoteFolder } from "@/lib/notes";
+import { persistNote, moveNotePath, moveNoteFolder, changeNoteTree, type NoteTreeChange, type NoteSummary } from "@/lib/notes";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+
+export async function manageNoteTree(target: NoteTreeChange, operation: "rename" | "delete", name: string, expected: NoteSummary[]) {
+  if (!await isAdminAuthenticated()) return {error:"unauthorized"} as const;
+  try {
+    await withImageContentWrite(() => changeNoteTree(target,operation,name,expected));
+    revalidatePath("/notes", "layout");
+    revalidatePath("/admin/notes", "layout");
+    revalidatePath("/admin/images");
+    return {success:true} as const;
+  } catch { return {error:"operationFailed"} as const; }
+}
 
 export async function moveNote(id: number, path: string[], expectedPath: string[]) {
   if (!await isAdminAuthenticated()) return { error: "unauthorized" } as const;

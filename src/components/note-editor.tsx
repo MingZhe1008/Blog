@@ -10,12 +10,12 @@ import { saveNote } from "@/server-actions/notes";
 import type { Note } from "@/lib/notes";
 import { FolderChoice } from "@/components/folder-choice";
 
-export function NoteEditor({ note, paths }: { note?: Note; paths: string[][] }) {
+export function NoteEditor({ note, paths, initialPath }: { note?: Note; paths: string[][]; initialPath?: string[] }) {
   const t = useTranslations("notes");
   const admin = useTranslations("admin");
   const router = useRouter();
   const [title, setTitle] = useState(note?.title ?? "");
-  const [levels, setLevels] = useState(note?.path.length ? note.path : [""]);
+  const [levels, setLevels] = useState(note?.path.length ? note.path : initialPath ?? [""]);
   const [tags, setTags] = useState(note?.tags.join(", ") ?? "");
   const [content, setContent] = useState(note?.content ?? "");
   const textarea = useRef<MarkdownImageEditorHandle>(null);

@@ -276,3 +276,10 @@
 .admin-note-folder>.admin-folder-move-button { flex:0 0 auto; font-size:12px; color:var(--color-text-muted); }
 .admin-folder-root { position:sticky; top:12px; z-index:5; border:1px dashed var(--color-text-muted); border-radius:8px; padding:20px; margin-bottom:16px; background:var(--color-bg-elevated); text-align:center; font-size:13px; }
 .admin-folder-root.is-drop-target { border-style:solid; border-color:var(--color-text-primary); }
+.admin-tree-context { position:fixed; z-index:100; width:224px; max-height:calc(100dvh - 16px); overflow:auto; padding:6px; border:1px solid var(--color-border); border-radius:10px; background:var(--color-bg-elevated); box-shadow:0 16px 48px #0005; }
+.admin-tree-context>span { display:block; padding:8px 10px; font-size:11px; color:var(--color-text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; border-bottom:1px solid var(--color-border); margin-bottom:4px; }
+.admin-tree-context>button { display:block; width:100%; text-align:left; padding:10px; border-radius:5px; font-size:13px; }
+.admin-tree-context>button:hover,.admin-tree-context>button:focus-visible { background:color-mix(in srgb,var(--color-text-primary) 9%,transparent); outline:none; }
+.admin-tree-context>.admin-context-delete { border-top:1px solid var(--color-border); border-radius:0 0 5px 5px; margin-top:4px; }
+.admin-note-folder>.admin-context-trigger { flex:0 0 auto; padding:10px; }
+.admin-note-row>.admin-context-trigger { padding:4px; }
