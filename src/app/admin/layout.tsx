@@ -6,13 +6,19 @@ import { useTranslations } from "next-intl";
 import Link, { useLinkStatus } from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FileText, FolderKanban, NotebookPen, Quote, Import, Images, Layers } from "lucide-react";
+import {SidebarToggle,useSidebarState} from "@/components/sidebar-toggle";
+import {useLocale} from "next-intl";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const t = useTranslations("admin");
+  const en=useLocale()==="en";
+  const {collapsed,toggle}=useSidebarState("admin-sidebar");
 
   return (
-    <div className="admin-shell">
+    <div className={`admin-shell ${collapsed?"is-sidebar-collapsed":""}`}>
       <aside className="admin-sidebar">
+        <div className="admin-sidebar-heading"><span hidden={collapsed}><Layers size={22}/>{t("title")}</span><SidebarToggle collapsed={collapsed} onClick={toggle} controls="admin-main-menu" label={en?"main menu":"主菜单"}/></div>
+        <div id="admin-main-menu" hidden={collapsed}>
         <Link
           href="/admin"
           className="admin-brand"
@@ -34,6 +40,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           >
             {t("backToBlog")}
           </Link>
+        </div>
         </div>
       </aside>
       <main className="admin-content">{children}</main>

@@ -46,3 +46,15 @@
  .note-editor { padding:18px; }
  .note-card { padding:20px; }
 }
+
+.sidebar-toggle { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; width:34px; height:34px; padding:0; border:1px solid var(--color-border); border-radius:7px; color:var(--color-text-secondary); background:transparent; cursor:pointer; }
+.sidebar-toggle:hover { background:var(--color-bg-elevated); color:var(--color-text-primary); }
+.sidebar-toggle:focus-visible { outline:2px solid var(--color-text-primary); outline-offset:3px; }
+.notes-sidebar-heading,.toc-heading { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px; font:12px var(--font-ui); color:var(--color-text-muted); }
+.notes-workspace.is-sidebar-collapsed { grid-template-columns:48px minmax(0,1fr); gap:24px; }
+.notes-workspace.is-sidebar-collapsed .notes-sidebar { padding:6px; border:0; overflow:visible; }
+.notes-workspace.is-sidebar-collapsed .notes-sidebar-heading { margin:0; }
+.notes-workspace.is-sidebar-collapsed .notes-sidebar-heading>span { display:none; }
+.article-toc.is-collapsed .toc-heading { justify-content:flex-end; }
+aside:has(>.article-toc.is-collapsed) { width:40px; }
+@media(max-width:800px) { .notes-workspace.is-sidebar-collapsed { grid-template-columns:minmax(0,1fr);gap:12px; } .notes-workspace.is-sidebar-collapsed .notes-sidebar { justify-self:start; } }

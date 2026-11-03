@@ -283,3 +283,13 @@
 .admin-tree-context>.admin-context-delete { border-top:1px solid var(--color-border); border-radius:0 0 5px 5px; margin-top:4px; }
 .admin-note-folder>.admin-context-trigger { flex:0 0 auto; padding:10px; }
 .admin-note-row>.admin-context-trigger { padding:4px; }
+
+.admin-sidebar-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:24px; }
+.admin-sidebar-heading>span { display:flex; align-items:center; gap:10px; font-size:18px; font-weight:650; white-space:nowrap; }
+.admin-sidebar .admin-brand { display:none; }
+.admin-sidebar #admin-main-menu { flex:1; min-height:0; }
+.admin-sidebar #admin-main-menu:not([hidden]) { display:flex; flex-direction:column; }
+.admin-shell.is-sidebar-collapsed .admin-sidebar { width:62px; flex:0 0 62px; padding:28px 14px; }
+.admin-shell.is-sidebar-collapsed .admin-sidebar-heading { margin:0; }
+@media(max-width:700px) { .admin-shell.is-sidebar-collapsed .admin-sidebar { width:100%; height:auto; flex:auto; padding:14px 18px; } .admin-sidebar-heading { margin-bottom:12px; } }
+.admin-sidebar-heading>span[hidden] { display:none; }

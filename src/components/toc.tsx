@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import {SidebarToggle,useSidebarState} from "./sidebar-toggle";
 
 interface TocItem {
   id: string;
@@ -11,6 +12,7 @@ interface TocItem {
 
 export function TableOfContents({ content }: { content: string }) {
   const t = useTranslations("post");
+  const {collapsed,toggle}=useSidebarState("article-toc");
   const [activeId, setActiveId] = useState<string>("");
   const [headings, setHeadings] = useState<TocItem[]>([]);
 
@@ -54,11 +56,9 @@ export function TableOfContents({ content }: { content: string }) {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="sticky top-20">
-      <h4 className="font-ui text-xs text-text-muted uppercase tracking-wider mb-3">
-        {t("toc")}
-      </h4>
-      <ul className="space-y-0.5 border-l border-border">
+    <nav className={`sticky top-20 article-toc ${collapsed?"is-collapsed":""}`}>
+      <div className="toc-heading"><span hidden={collapsed}>{t("toc")}</span><SidebarToggle collapsed={collapsed} onClick={toggle} controls="article-toc-items" label={t("toc")}/></div>
+      <ul id="article-toc-items" hidden={collapsed} className="space-y-0.5 border-l border-border">
         {headings.map((h) => (
           <li key={h.id}>
             <a
