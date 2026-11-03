@@ -1,11 +1,5 @@
-import { AdminPageHeading } from "@/components/admin-page-heading";
-import { ImportForm } from "./import-form";
+import { redirect } from "next/navigation";
 
 export default function ImportPage() {
-  return (
-    <div>
-      <AdminPageHeading message="importMD" />
-      <ImportForm />
-    </div>
-  );
+  redirect("/admin/editor");
 }

@@ -285,6 +285,7 @@
 .admin-note-row>.admin-context-trigger { padding:4px; }
 
 /* Notes share the article archive's quiet, aligned list rhythm. */
+.markdown-editor-mode-actions { display:flex; align-items:center; flex-wrap:wrap; justify-content:flex-end; gap:8px; }
 .note-admin .section-heading { align-items:center; gap:16px; }
 .note-admin .admin-note-toolbar { padding:0 0 16px; gap:12px; }
 .admin-note-toolbar>div { gap:4px; }

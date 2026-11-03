@@ -31,6 +31,10 @@ export const MarkdownImageEditor = forwardRef<MarkdownImageEditorHandle, {
   const uploadBusy = useRef(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const importInput = useRef<HTMLInputElement>(null);
+  const importBusy = useRef(false);
+  const [importing, setImporting] = useState(false);
+  const [importMessage, setImportMessage] = useState("");
   const [ready, setReady] = useState(false);
   const [headingLevel, setHeadingLevel] = useState(0);
   const [history, setHistory] = useState({ undo: 0, redo: 0 });
@@ -40,6 +44,31 @@ export const MarkdownImageEditor = forwardRef<MarkdownImageEditorHandle, {
   const en = useLocale() === "en";
   const language = useRef(en);
   language.current = en;
+
+  async function importMarkdown(file: File) {
+    if (importBusy.current || callbacks.current.disabled || !editor.current) return;
+    setError(""); setImportMessage("");
+    if (!/\.mdx?$/i.test(file.name) || file.size > 2 * 1024 * 1024) {
+      setError(en ? "Choose a Markdown file (.md/.mdx) up to 2 MB." : "请选择不超过 2MB 的 Markdown 文件（.md/.mdx）。"); return;
+    }
+    importBusy.current = true; setImporting(true);
+    const before = editor.current.getValue();
+    try {
+      const text = (await file.text()).replace(/^\uFEFF/, "");
+      const cm = editor.current;
+      if (!cm || callbacks.current.disabled) return;
+      if (!text.trim()) { setError(en ? "The file is empty." : "文件为空，未导入。"); return; }
+      if (cm.getValue() !== before) { setError(en ? "Content changed while reading. Import again." : "读取期间正文已变化，请重新导入。"); return; }
+      if (before.trim() && !window.confirm(en ? "Replace the current content with this file? You can undo this change." : "确认用文件内容替换当前正文？导入后可撤销。")) return;
+      cm.operation(() => {
+        cm.replaceRange(text, { line: 0, ch: 0 }, cm.posFromIndex(before.length), "markdown-import");
+        cm.setCursor({ line: 0, ch: 0 });
+      });
+      cm.focus();
+      setImportMessage(en ? `Imported ${file.name}. Save to keep your changes.` : `已导入 ${file.name}，请保存以保留更改。`);
+    } catch { setError(en ? "Could not read the file. Please retry." : "文件读取失败，请重试。"); }
+    finally { importBusy.current = false; setImporting(false); }
+  }
 
   function format(command: MarkdownCommand | "undo" | "redo") {
     const cm = editor.current;
@@ -278,15 +307,22 @@ export const MarkdownImageEditor = forwardRef<MarkdownImageEditorHandle, {
     </div>
     <div className="markdown-image-editor-bar">
       <span>{uploading ? (en ? "Uploading image…" : "图片上传中…") : (en ? "Visual editing" : "可视化编辑")}</span>
+      <div className="markdown-editor-mode-actions">
+      <input ref={importInput} type="file" accept=".md,.mdx" hidden aria-label={en ? "Import Markdown file" : "导入 Markdown 文件"} onChange={event => {
+        const file = event.target.files?.[0]; event.target.value = ""; if (file) void importMarkdown(file);
+      }} />
+      <button type="button" disabled={disabled || !ready || importing} onClick={() => importInput.current?.click()}>{importing ? (en ? "Importing…" : "导入中…") : (en ? "Import" : "导入")}</button>
       <button type="button" aria-pressed={sourceMode} onClick={() => {
         sourceModeRef.current = !sourceMode; setSourceMode(!sourceMode); redraw.current();
       }}>{sourceMode ? (en ? "Visual editing" : "可视化编辑") : (en ? "Markdown source" : "Markdown 源码")}</button>
+      </div>
     </div>
     <div className="markdown-image-editor-body">
       {!value && <span className="markdown-editor-placeholder">{placeholder}</span>}
       <div ref={host} />
     </div>
     {error && <p role="alert">{error}</p>}
+    {importMessage && <p role="status" aria-live="polite">{importMessage}</p>}
     <dialog ref={tableDialog} className="markdown-table-dialog" onClose={() => setEditingTable(null)} aria-label={en ? "Edit table" : "编辑表格"} onKeyDown={event => { if (event.key === "Enter") { event.preventDefault(); event.stopPropagation(); applyTable(); } }}>
       <div>
         <h2>{en ? "Edit table" : "编辑表格"}</h2><div className="markdown-table-inputs">{tableValues.map((row, rowIndex) => <div key={rowIndex}>{row.map((value, column) => <input key={column} aria-label={en ? `Row ${rowIndex + 1} column ${column + 1}` : `第 ${rowIndex + 1} 行第 ${column + 1} 列`} value={value} onChange={event => setTableValues(current => current.map((row, index) => index === rowIndex ? row.map((value, index) => index === column ? event.target.value : value) : row))} />)}</div>)}</div>

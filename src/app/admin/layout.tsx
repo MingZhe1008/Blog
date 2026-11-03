@@ -5,7 +5,7 @@ import "./admin.css";
 import { useTranslations } from "next-intl";
 import Link, { useLinkStatus } from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FileText, FolderKanban, NotebookPen, Quote, Import, Images, Layers } from "lucide-react";
+import { FileText, FolderKanban, NotebookPen, Quote, Images, Layers } from "lucide-react";
 import {SidebarToggle,useSidebarState} from "@/components/sidebar-toggle";
 import {useLocale} from "next-intl";
 
@@ -30,7 +30,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <SidebarLink href="/admin/projects"><FolderKanban size={17} />项目管理</SidebarLink>
           <SidebarLink href="/admin/notes"><NotebookPen size={17} />{t("notes")}</SidebarLink>
           <SidebarLink href="/admin/excerpts"><Quote size={17} />{t("excerpts")}</SidebarLink>
-          <SidebarLink href="/admin/import"><Import size={17} />{t("importMD")}</SidebarLink>
           <SidebarLink href="/admin/images"><Images size={17} />{t("images")}</SidebarLink>
         </nav>
         <div className="mt-auto pt-4 border-t border-border">
