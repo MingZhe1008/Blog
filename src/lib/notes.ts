@@ -27,6 +27,22 @@ export async function moveNotePath(id: number, path: string[], expectedPath: str
   db.update(schema.notes).set({ path: target, updatedAt: new Date().toISOString() }).where(eq(schema.notes.id, id)).run();
   saveDb();
 }
+export async function moveNoteFolder(source: string[], parent: string[], expected: {id: number; path: string[]}[]) {
+  const valid = (path: string[]) => Array.isArray(path) && path.length <= 12 && path.every(p => typeof p === "string" && !!p.trim() && p.length <= 100 && p === p.trim());
+  const starts = (path: string[], prefix: string[]) => prefix.every((p,i) => path[i] === p);
+  if (!valid(source) || !source.length || !valid(parent) || starts(parent, source) || !Array.isArray(expected)) throw new Error("Invalid folder move");
+  const notes = await getNotes(false), destination = [...parent, source[source.length - 1]];
+  if (parent.length && !notes.some(n => starts(n.path, parent))) throw new Error("Missing parent");
+  if (notes.some(n => starts(n.path, destination))) throw new Error("Folder already exists");
+  const affected = notes.filter(n => starts(n.path, source));
+  const snapshot = (items: {id: number; path: string[]}[]) => JSON.stringify(items.map(n => ({id:n.id,path:n.path})).sort((a,b) => a.id-b.id));
+  if (!affected.length || snapshot(affected) !== snapshot(expected)) throw new Error("Stale folder");
+  const updates = affected.map(n => ({id:n.id,path:[...destination,...n.path.slice(source.length)]}));
+  if (updates.some(n => n.path.length > 12)) throw new Error("Folder too deep");
+  const db = await getDb(), updatedAt = new Date().toISOString();
+  db.transaction(tx => { for (const n of updates) tx.update(schema.notes).set({path:n.path,updatedAt}).where(eq(schema.notes.id,n.id)).run(); });
+  saveDb();
+}
 export async function persistNote(input: {
   id?: number; title: string; path: string[]; tags: string[]; content: string; status: "draft" | "published";
 }) {

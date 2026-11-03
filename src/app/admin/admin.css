@@ -272,3 +272,7 @@
 .admin-note-move button:disabled { opacity:.45; }
 .admin-notes-tree :is(a,button):focus-visible { outline:2px solid var(--color-text-primary); outline-offset:3px; }
 @media(max-width:700px) { .admin-notes-tree { padding:8px; } .admin-notes-tree li>ul { margin-left:8px; padding-left:8px; } .admin-note-row { flex-wrap:wrap; gap:12px; } .admin-note-identity { flex-basis:100%; } .admin-note-status { margin-left:24px; } .admin-note-drop-label { display:none!important; } }
+.admin-folder-grip { padding:10px 4px 10px 10px; display:flex; cursor:grab; color:var(--color-text-muted); }
+.admin-note-folder>.admin-folder-move-button { flex:0 0 auto; font-size:12px; color:var(--color-text-muted); }
+.admin-folder-root { position:sticky; top:12px; z-index:5; border:1px dashed var(--color-text-muted); border-radius:8px; padding:20px; margin-bottom:16px; background:var(--color-bg-elevated); text-align:center; font-size:13px; }
+.admin-folder-root.is-drop-target { border-style:solid; border-color:var(--color-text-primary); }
