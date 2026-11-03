@@ -63,7 +63,13 @@ systemctl restart mingzhe-blog
 nginx -t && systemctl reload nginx
 ```
 
-部署前 Nginx 配置备份位于服务器 `/root/blog-deploy-backup-20261102/`；本地内容备份位于 `E:\Blog\Backups\deploy-20261102\content-before-deploy.zip`。更新前分别备份服务器 `data/blog.db` 和 `public/uploads/`，构建成功后再重启服务；不要多进程同时写 SQLite 文件。
+### 云端备份保留策略
+
+云端博客部署备份最多保留最近一份，统一放在 `/home/zmz/item/blog-backups/`。当前保留 `before-renumber-20261103-140135/`，包括旧应用、独立数据库/图片快照、原构建目录以及服务和 Nginx 配置。早期 `/root/blog-deploy-backup-20261102/` 和上传临时包已清理，不能再使用这些旧路径恢复。
+
+后续部署先生成并校验新备份，分别保存 `data/blog.db` 与 `public/uploads/`；部署和健康检查成功后，删除上一份备份，仅保留本次更新前的快照。轮换期间可短暂并存，任务结束时最多一份。删除前核对绝对路径，禁止删除当前应用目录或尚未校验的新备份；部署失败时保留恢复所需备份，优先回滚。上传临时包使用完即清理，不在 `/root` 另存旧版副本。
+
+恢复应用时不要默认恢复旧数据库与图片，避免覆盖部署后新增内容。构建成功后再重启服务，不要多进程同时写 SQLite 文件。本地内容备份保留在 `E:\Blog\Backups\`，本次云端清理不涉及本地归档。
 
 ## 内容兼容与开发约定
 

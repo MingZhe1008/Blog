@@ -71,6 +71,7 @@ Next.js 15 App Router、React 19、TypeScript、Tailwind v4、SQLite（sql.js WA
 - 现有表：文章、笔记、读书摘录、项目。数据库变更必须兼容已有数据，禁止为升级功能清空内容。
 - 项目表首次创建时插入博客示例；用户删除已有项目后不自动补回。
 - `data/blog.db` 与 `public/uploads/` 是本地内容资产，不由 Git 备份。迁移或高风险操作前单独备份二者。
+- 云端部署备份统一放在 `/home/zmz/item/blog-backups/`，任务完成时最多保留最近一份。新备份校验、部署与健康检查成功后再删除旧备份，上传临时包用完即清理；禁止覆盖当前应用或云端新增内容。具体轮换规则见 `docs/DEPLOYMENT.md`。
 - Server Component 获取数据，传给客户端 View 组件渲染交互和翻译。
 - 管理台文章列表使用 `getArticleSummaries()`，不传输全部正文；编辑页用 `getArticleById()` 按 ID 查询。`/admin/loading.tsx` 提供切页反馈，侧栏悬停或聚焦预加载。
 - Server Action 已对当前页面执行 `revalidatePath()` 时，优先使用同次响应更新数据，不额外调用 `router.refresh()`；修改后需验证列表确实更新。
