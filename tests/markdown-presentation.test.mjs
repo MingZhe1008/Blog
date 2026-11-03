@@ -26,6 +26,20 @@ test("list markers become bullets or checkboxes and quotes lose their source pre
   assert.equal(visible("> quote\n\n- bullet\n- [ ] task\n\n3. three"), "quote\n\n•bullet\n☐task\n\n3.three");
   assert.equal(markdownPresentation("- [x] done").marks.find(mark=>mark.kind==="task").checked,true);
 });
+
+test("empty nested list items keep their source marker editable", () => {
+  for (const marker of ["1. ", "- ", "- [ ] "]) {
+    const source = "1. Parent\n    " + marker;
+    const offset = source.indexOf(marker, source.indexOf("\n"));
+    assert.equal(markdownPresentation(source).marks.some(mark =>
+      ["bullet", "task"].includes(mark.kind) && mark.from >= offset), false);
+    const filled = source + "子项";
+    const nested = markdownPresentation(filled).marks.find(mark =>
+      ["bullet", "task"].includes(mark.kind) && mark.from >= offset);
+    assert.ok(nested);
+    assert.equal(filled.slice(nested.to), "子项");
+  }
+});
 test("setext headings and escaped formatting are not confused with ATX headings", () => {
   assert.equal(visible("Title\n====="), "Title");
   assert.equal(markdownPresentation("\\## literal").marks.some(mark=>mark.className?.includes("mdv-heading")),false);

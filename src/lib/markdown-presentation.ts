@@ -63,7 +63,10 @@ export function markdownPresentation(source: string) {
       add(from, to, "style", { className: "mdv-quote" });
     } else if (node.type === "listItem") {
       const prefix = source.slice(from, to).match(/^(?:[-+*]|\d+[.)])[\t ]+(?:\[([ xX])\][\t ]+)?/);
-      if (prefix) add(from, from + prefix[0].length, typeof node.checked === "boolean" ? "task" : "bullet", { text: parent?.ordered ? `${(parent.start || 1) + itemIndex}.` : "•", checked: !!node.checked });
+      // Empty items must retain an editable text position after their marker.
+      // Replacing the entire line with an atomic widget traps contenteditable input.
+      const firstLine = source.slice(from).split("\n", 1)[0];
+      if (prefix && firstLine.slice(prefix[0].length).trim()) add(from, from + prefix[0].length, typeof node.checked === "boolean" ? "task" : "bullet", { text: parent?.ordered ? `${(parent.start || 1) + itemIndex}.` : "•", checked: !!node.checked });
     } else if (node.type === "thematicBreak") add(from, to, "rule");
     else if (node.type === "definition") add(from, to, "hide");
     // Code, definitions and tables are opaque. Never interpret formatting in code examples.

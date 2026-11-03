@@ -77,11 +77,13 @@ export const MarkdownImageEditor = forwardRef<MarkdownImageEditorHandle, {
     async function init() {
       const { default: CodeMirror } = await import("codemirror");
       await import("codemirror/mode/markdown/markdown");
+      await import("codemirror/addon/edit/continuelist");
       await import("codemirror/addon/selection/mark-selection");
       if (disposed || !host.current) return;
       cm = CodeMirror(host.current, {
         value: callbacks.current.value, mode: { name: "markdown", taskLists: true, strikethrough: true }, lineWrapping: true,
-        viewportMargin: 10, readOnly: callbacks.current.disabled, tabSize: 2, styleSelectedText: true,
+        viewportMargin: 10, readOnly: callbacks.current.disabled, tabSize: 4, indentUnit: 4, indentWithTabs: false, styleSelectedText: true,
+        extraKeys: { Enter: "newlineAndIndentContinueMarkdownList", Tab: "indentMore", "Shift-Tab": "indentLess" },
         inputStyle: "contenteditable", screenReaderLabel: language.current ? "Markdown content" : "正文编辑",
       });
       editor.current = cm;
